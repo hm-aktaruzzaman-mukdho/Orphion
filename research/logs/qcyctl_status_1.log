@@ -1,0 +1,13 @@
+[2m2026-10-12T12:47:00.808163Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T12:47:00.817261Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T12:47:00.821414Z[0m [32m INFO[0m found endpoint [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T12:47:00.821520Z[0m [32m INFO[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T12:47:00.822974Z[0m [34mDEBUG[0m connecting [3mattempt[0m[2m=[0m1
+[2m2026-10-12T12:47:20.824425Z[0m [33m WARN[0m connect failed: timed out while connecting to the earbuds; retrying [3mattempt[0m[2m=[0m1
+[2m2026-10-12T12:47:21.325394Z[0m [34mDEBUG[0m connecting [3mattempt[0m[2m=[0m2
+[2m2026-10-12T12:47:21.326321Z[0m [33m WARN[0m connect failed: D-Bus error: org.bluez.Error.InProgress: In Progress; retrying [3mattempt[0m[2m=[0m2
+[2m2026-10-12T12:47:22.327653Z[0m [34mDEBUG[0m connecting [3mattempt[0m[2m=[0m3
+Error: D-Bus error: org.bluez.Error.InProgress: In Progress
+
+Caused by:
+    org.bluez.Error.InProgress: In Progress

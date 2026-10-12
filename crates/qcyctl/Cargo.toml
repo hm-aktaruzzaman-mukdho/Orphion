@@ -1,0 +1,16 @@
+[package]
+name = "qcyctl"
+description = "Command line control for QCY earbuds"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+qcy-protocol.workspace = true
+qcy-bluez.workspace = true
+anyhow.workspace = true
+clap.workspace = true
+tokio = { workspace = true, features = ["signal"] }
+tracing.workspace = true
+tracing-subscriber.workspace = true

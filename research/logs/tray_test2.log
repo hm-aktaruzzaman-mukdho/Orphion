@@ -1,0 +1,14 @@
+[2m2026-10-12T13:08:29.876643Z[0m [32m INFO[0m [2mqcy_bluez::discovery[0m[2m:[0m found endpoint [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:08:29.876858Z[0m [32m INFO[0m [2mqcy_bluez::client[0m[2m:[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:08:35.121542Z[0m [32m INFO[0m [2mqcy_bluez::discovery[0m[2m:[0m found endpoint [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:08:35.121919Z[0m [32m INFO[0m [2mqcy_bluez::client[0m[2m:[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:08:52.282195Z[0m [32m INFO[0m [2mqcy_bluez::manager[0m[2m:[0m connected [3mname[0m[2m=[0mQCY MeloBuds Pro
+[2m2026-10-12T13:09:50.022470Z[0m [32m INFO[0m [2mqcy_bluez::discovery[0m[2m:[0m endpoint already connected [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:09:50.022650Z[0m [32m INFO[0m [2mqcy_bluez::client[0m[2m:[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:09:50.735309Z[0m [32m INFO[0m [2mqcy_bluez::manager[0m[2m:[0m connected [3mname[0m[2m=[0mQCY MeloBuds Pro
+[2m2026-10-12T13:09:55.874248Z[0m [32m INFO[0m [2mqcy_bluez::client[0m[2m:[0m BLE link lost
+[2m2026-10-12T13:09:55.941804Z[0m [33m WARN[0m [2mqcy_bluez::discovery[0m[2m:[0m failed to stop discovery: org.bluez.Error.Failed: No discovery started
+[2m2026-10-12T13:09:55.942003Z[0m [32m INFO[0m [2mqcy_bluez::discovery[0m[2m:[0m found endpoint [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:09:55.942075Z[0m [32m INFO[0m [2mqcy_bluez::client[0m[2m:[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:09:58.339629Z[0m [32m INFO[0m [2mqcy_bluez::manager[0m[2m:[0m connected [3mname[0m[2m=[0mQCY MeloBuds Pro
+[2m2026-10-12T13:10:33.087683Z[0m [32m INFO[0m [2mqcy_tray[0m[2m:[0m quitting

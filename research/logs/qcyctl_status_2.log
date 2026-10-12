@@ -1,0 +1,18 @@
+[2m2026-10-12T12:48:19.963260Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T12:48:19.967459Z[0m [32m INFO[0m endpoint already connected [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T12:48:19.967533Z[0m [32m INFO[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T12:48:19.974894Z[0m [34mDEBUG[0m GATT session ready [3mmtu[0m[2m=[0m220 [3mcharacteristics[0m[2m=[0m6
+[2m2026-10-12T12:48:20.287245Z[0m [35mTRACE[0m read [3mc[0m[2m=[0mVersion [3mdata[0m[2m=[0m02 00 06 02 00 06
+[2m2026-10-12T12:48:20.387127Z[0m [35mTRACE[0m read [3mc[0m[2m=[0mBattery [3mdata[0m[2m=[0m3d 4a 00
+[2m2026-10-12T12:48:20.387164Z[0m [35mTRACE[0m notification [3mc[0m[2m=[0mBattery [3mdata[0m[2m=[0m3d 4a 00
+[2m2026-10-12T12:48:20.582467Z[0m [35mTRACE[0m read [3mc[0m[2m=[0mSettings [3mdata[0m[2m=[0mff 30 2c 04 00 01 01 01 08 03 46 46 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+[2m2026-10-12T12:48:20.582501Z[0m [35mTRACE[0m notification [3mc[0m[2m=[0mSettings [3mdata[0m[2m=[0mff 30 2c 04 00 01 01 01 08 03 46 46 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+[2m2026-10-12T12:48:20.679051Z[0m [35mTRACE[0m read [3mc[0m[2m=[0mKeys [3mdata[0m[2m=[0m01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+[2m2026-10-12T12:48:20.823037Z[0m [35mTRACE[0m read [3mc[0m[2m=[0mEq [3mdata[0m[2m=[0m01 00 00 00 00 00 00 00 00 00 00
+[2m2026-10-12T12:48:20.823348Z[0m [35mTRACE[0m write [3mc[0m[2m=[0mCommand [3mdata[0m[2m=[0mff 03 fe 01 18
+[2m2026-10-12T12:48:20.865403Z[0m [35mTRACE[0m write [3mc[0m[2m=[0mCommand [3mdata[0m[2m=[0mff 03 fe 01 22
+[2m2026-10-12T12:48:20.908433Z[0m [35mTRACE[0m write [3mc[0m[2m=[0mCommand [3mdata[0m[2m=[0mff 03 fe 01 14
+[2m2026-10-12T12:48:20.950169Z[0m [35mTRACE[0m write [3mc[0m[2m=[0mCommand [3mdata[0m[2m=[0mff 03 fe 01 44
+[2m2026-10-12T12:48:20.964611Z[0m [35mTRACE[0m notification [3mc[0m[2m=[0mSettings [3mdata[0m[2m=[0mff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[2m2026-10-12T12:48:21.311387Z[0m [35mTRACE[0m notification [3mc[0m[2m=[0mSettings [3mdata[0m[2m=[0mff 91 22 8f 01 00 00 1e 00 00 00 46 00 00 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+[2m2026-10-12T12:48:21.311682Z[0m [35mTRACE[0m notification [3mc[0m[2m=[0mSettings [3mdata[0m[2m=[0mff 06 14 04 ff ff 00 00

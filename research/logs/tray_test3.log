@@ -1,0 +1,3 @@
+[2m2026-10-12T13:11:12.197300Z[0m [32m INFO[0m [2mqcy_bluez::discovery[0m[2m:[0m found endpoint [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:11:12.197430Z[0m [32m INFO[0m [2mqcy_bluez::client[0m[2m:[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:11:37.239613Z[0m [33m WARN[0m [2mzbus::connection[0m[2m:[0m Failed to parse `NameLost` signal: I/O error: failed to read from socket

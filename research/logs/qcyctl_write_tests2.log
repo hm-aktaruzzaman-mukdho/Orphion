@@ -1,0 +1,43 @@
+[2m2026-10-12T13:18:09.935415Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T13:18:09.943267Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T13:18:22.159985Z[0m [34mDEBUG[0m discovery stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.
+[2m2026-10-12T13:18:22.170218Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T13:18:22.177784Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T13:18:33.170602Z[0m [34mDEBUG[0m discovery stopped
+[2m2026-10-12T13:18:33.170757Z[0m [32m INFO[0m found endpoint [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:18:33.170844Z[0m [32m INFO[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:18:33.173151Z[0m [34mDEBUG[0m connecting [3mattempt[0m[2m=[0m1
+Error: the connection attempt was aborted; the earbuds need to be found again
+[2m2026-10-12T13:19:15.184023Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T13:19:16.698743Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T13:19:28.908840Z[0m [34mDEBUG[0m discovery stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.
+[2m2026-10-12T13:19:28.919057Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T13:19:28.926949Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T13:19:41.134786Z[0m [34mDEBUG[0m discovery stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.
+[2m2026-10-12T13:19:41.144730Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T13:19:41.152579Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T13:19:53.362433Z[0m [34mDEBUG[0m discovery stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.
+[2m2026-10-12T13:19:53.372362Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T13:19:53.379999Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T13:20:05.590108Z[0m [34mDEBUG[0m discovery stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.
+[2m2026-10-12T13:20:05.600007Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T13:20:05.607805Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T13:20:17.812928Z[0m [34mDEBUG[0m discovery stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.
+[2m2026-10-12T13:20:17.823216Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T13:20:17.830990Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T13:20:30.047921Z[0m [34mDEBUG[0m discovery stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.
+[2m2026-10-12T13:20:30.058136Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T13:20:30.065757Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T13:20:42.279591Z[0m [34mDEBUG[0m discovery stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.
+[2m2026-10-12T13:20:42.289537Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T13:20:42.296820Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T13:20:54.510128Z[0m [34mDEBUG[0m discovery stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.

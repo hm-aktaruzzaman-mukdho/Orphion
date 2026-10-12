@@ -1,0 +1,10 @@
+/target
+
+# The analysed app: third-party binary, kept locally only
+/*.apk
+
+# Large or regenerable research artifacts (see research/README.md)
+/research/apk_extracted/
+/research/decompiled/
+/research/tools/
+/research/screenshots/

@@ -1,0 +1,4 @@
+[2m2026-10-12T13:06:31.665158Z[0m [32m INFO[0m [2mqcy_bluez::discovery[0m[2m:[0m endpoint already connected [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:06:31.665264Z[0m [32m INFO[0m [2mqcy_bluez::client[0m[2m:[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T13:06:32.612554Z[0m [32m INFO[0m [2mqcy_bluez::manager[0m[2m:[0m connected [3mname[0m[2m=[0mQCY MeloBuds Pro
+[2m2026-10-12T13:08:11.350518Z[0m [32m INFO[0m [2mqcy_tray[0m[2m:[0m quitting

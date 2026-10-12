@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=QCY Earbuds
+GenericName=Earbuds Control
+Comment=Noise control, equalizer and settings for QCY earbuds
+Exec=qcy-gui
+Icon=audio-headphones
+Terminal=false
+Categories=AudioVideo;Audio;Settings;HardwareSettings;
+Keywords=bluetooth;headphones;earbuds;anc;noise;equalizer;qcy;
+StartupWMClass=io.github.qcy_linux.Control

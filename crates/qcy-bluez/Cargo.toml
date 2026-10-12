@@ -1,0 +1,15 @@
+[package]
+name = "qcy-bluez"
+description = "BlueZ (D-Bus) transport and high level client for QCY earbuds"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+qcy-protocol.workspace = true
+futures-util.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+zbus.workspace = true

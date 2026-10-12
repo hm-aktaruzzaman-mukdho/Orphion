@@ -1,0 +1,17 @@
+[2m2026-10-12T12:48:59.892456Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T12:48:59.902710Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T12:48:59.907318Z[0m [34mDEBUG[0m discovery stopped
+[2m2026-10-12T12:48:59.907419Z[0m [32m INFO[0m found endpoint [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T12:48:59.907522Z[0m [32m INFO[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T12:48:59.909544Z[0m [34mDEBUG[0m connecting [3mattempt[0m[2m=[0m1
+[2m2026-10-12T12:49:19.912216Z[0m [33m WARN[0m connect failed: timed out while connecting to the earbuds; retrying [3mattempt[0m[2m=[0m1
+[2m2026-10-12T12:49:20.413242Z[0m [34mDEBUG[0m connecting [3mattempt[0m[2m=[0m2
+[2m2026-10-12T12:49:20.414136Z[0m [33m WARN[0m connect failed: D-Bus error: org.freedesktop.DBus.Error.UnknownObject: Method "Connect" with signature "" on interface "org.bluez.Device1" doesn't exist
+; retrying [3mattempt[0m[2m=[0m2
+[2m2026-10-12T12:49:21.415587Z[0m [34mDEBUG[0m connecting [3mattempt[0m[2m=[0m3
+Error: D-Bus error: org.freedesktop.DBus.Error.UnknownObject: Method "Connect" with signature "" on interface "org.bluez.Device1" doesn't exist
+
+
+Caused by:
+    org.freedesktop.DBus.Error.UnknownObject: Method "Connect" with signature "" on interface "org.bluez.Device1" doesn't exist
+    

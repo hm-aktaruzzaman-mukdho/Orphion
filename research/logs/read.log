@@ -1,0 +1,96 @@
+Waiting to connect to bluetoothd...[0;94m[bluetoothctl]> [0m        [0;94m[QCY MeloBuds Pro]> [0m                                                                               [[0;92mNEW[0m] Media /org/bluez/hci0 
+[0;94m[QCY MeloBuds Pro]> [0m                                                                               	SupportedUUIDs: 0000110a-0000-1000-8000-00805f9b34fb
+[0;94m[QCY MeloBuds Pro]> [0m                                                                               	SupportedUUIDs: 0000110b-0000-1000-8000-00805f9b34fb
+[0;94m[QCY MeloBuds Pro]> [0m                                                                               [[0;92mNEW[0m] Endpoint /org/bluez/hci0/dev_84_AC_60_89_A4_B0/sep4 
+[0;94m[QCY MeloBuds Pro]> [0m                                                                               [[0;92mNEW[0m] Endpoint /org/bluez/hci0/dev_84_AC_60_89_A4_B0/sep2 
+[0;94m[QCY MeloBuds Pro]> [0m                                                                               [[0;92mNEW[0m] Transport /org/bluez/hci0/dev_84_AC_60_89_A4_B0/fd0 
+[0;94m[QCY MeloBuds Pro]> [0m                                                                               Agent registered
+[0;94m[QCY MeloBuds Pro]> [0mconnect C4:AC:60:89:A4:B1
+Attempting to connect to C4:AC:60:89:A4:B1
+[0;94m[QCY MeloBuds Pro]> [0m                                                                               Connection successful
+[0;94m[QCY MeloBuds Pro]> [0m<uez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char001b
+[0;94m[QCY MeloBuds Pro:/service0013/char001b]> [0mgatt.attribute-info
+Characteristic - ATT
+	UUID: ATT                       (00000007-0000-1000-8000-00805f9b34fb)
+	Service: /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013
+	Flags: read
+	MTU: 0x00dc (220)
+[0;94m[QCY MeloBuds Pro:/service0013/char001b]> [0mgatt.read
+Attempting to read /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char001b
+[0;94m[QCY MeloBuds Pro:/service0013/char001b]> [0m                                                                               [[0;93mCHG[0m] Attribute /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char001b Value:
+[0;94m[QCY MeloBuds Pro:/service0013/char001b]> [0m                                                                                 02 00 06 02 00 06                                ......          
+[0;94m[QCY MeloBuds Pro:/service0013/char001b]> [0m                                                                                 02 00 06 02 00 06                                ......          
+[0;94m[QCY MeloBuds Pro:/service0013/char001b]> [0m<uez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char001d 
+[0;94m[QCY MeloBuds Pro:/service0013/char001d]> [0mgatt.attribute-info
+Characteristic - OBEX
+	UUID: OBEX                      (00000008-0000-1000-8000-00805f9b34fb)
+	Service: /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013
+	Notifying: no
+	Flags: read
+	Flags: notify
+	MTU: 0x00dc (220)
+[0;94m[QCY MeloBuds Pro:/service0013/char001d]> [0mgatt.read
+Attempting to read /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char001d
+[0;94m[QCY MeloBuds Pro:/service0013/char001d]> [0m                                                                               [[0;93mCHG[0m] Attribute /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char001d Value:
+[0;94m[QCY MeloBuds Pro:/service0013/char001d]> [0m                                                                                 41 4b 00                                         AK.             
+[0;94m[QCY MeloBuds Pro:/service0013/char001d]> [0m                                                                                 41 4b 00                                         AK.             
+[0;94m[QCY MeloBuds Pro:/service0013/char001d]> [0m<uez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0020 
+[0;94m[QCY MeloBuds Pro:/service0013/char0020]> [0mgatt.attribute-info
+Characteristic - Unknown
+	UUID: Unknown                   (0000000b-0000-1000-8000-00805f9b34fb)
+	Service: /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013
+	Flags: read
+	Flags: write-without-response
+	MTU: 0x00dc (220)
+[0;94m[QCY MeloBuds Pro:/service0013/char0020]> [0mgatt.read
+Attempting to read /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0020
+[0;94m[QCY MeloBuds Pro:/service0013/char0020]> [0m                                                                               [[0;93mCHG[0m] Attribute /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0020 Value:
+[0;94m[QCY MeloBuds Pro:/service0013/char0020]> [0m                                                                                 01 00 00 00 00 00 00 00 00 00 00                 ...........     
+[0;94m[QCY MeloBuds Pro:/service0013/char0020]> [0m                                                                                 01 00 00 00 00 00 00 00 00 00 00                 ...........     
+[0;94m[QCY MeloBuds Pro:/service0013/char0020]> [0m<uez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0019 
+[0;94m[QCY MeloBuds Pro:/service0013/char0019]> [0mgatt.attribute-info
+Characteristic - Unknown
+	UUID: Unknown                   (0000000d-0000-1000-8000-00805f9b34fb)
+	Service: /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013
+	Flags: read
+	Flags: write-without-response
+	MTU: 0x00dc (220)
+[0;94m[QCY MeloBuds Pro:/service0013/char0019]> [0mgatt.read
+Attempting to read /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0019
+[0;94m[QCY MeloBuds Pro:/service0013/char0019]> [0m                                                                               [[0;93mCHG[0m] Attribute /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0019 Value:
+[0;94m[QCY MeloBuds Pro:/service0013/char0019]> [0m                                                                                 01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00  ................
+[0;94m[QCY MeloBuds Pro:/service0013/char0019]> [0m                                                                                 00 00 00 00                                      ....            
+[0;94m[QCY MeloBuds Pro:/service0013/char0019]> [0m                                                                                 01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00  ................
+[0;94m[QCY MeloBuds Pro:/service0013/char0019]> [0m                                                                                 00 00 00 00                                      ....            
+[0;94m[QCY MeloBuds Pro:/service0013/char0019]> [0m<uez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0016 
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0mgatt.attribute-info
+Characteristic - Public Browse Root
+	UUID: Public Browse Root        (00001002-0000-1000-8000-00805f9b34fb)
+	Service: /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013
+	Notifying: no
+	Flags: read
+	Flags: notify
+	MTU: 0x00dc (220)
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0mgatt.read
+Attempting to read /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0016
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0m                                                                               [[0;93mCHG[0m] Attribute /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0016 Value:
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0m                                                                                 ff 30 2c 04 00 01 01 01 08 03 46 46 0f 09 01 02  .0,.......FF....
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0m                                                                                 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01  ..........2...#.
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0m                                                                                 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51  .$............WQ
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0m                                                                                 30 30                                            00              
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0m                                                                                 ff 30 2c 04 00 01 01 01 08 03 46 46 0f 09 01 02  .0,.......FF....
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0m                                                                                 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01  ..........2...#.
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0m                                                                                 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51  .$............WQ
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0m                                                                                 30 30                                            00              
+[0;94m[QCY MeloBuds Pro:/service0013/char0016]> [0m<uez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0014 
+[0;94m[QCY MeloBuds Pro:/service0013/char0014]> [0mgatt.attribute-info
+Characteristic - Browse Group Descriptor Service Class
+	UUID: Browse Group Descriptor.. (00001001-0000-1000-8000-00805f9b34fb)
+	Service: /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013
+	Flags: write-without-response
+	MTU: 0x00dc (220)
+[0;94m[QCY MeloBuds Pro:/service0013/char0014]> [0mgatt.read
+Attempting to read /org/bluez/hci0/dev_C4_AC_60_89_A4_B1/service0013/char0014
+[0;94m[QCY MeloBuds Pro:/service0013/char0014]> [0m                                                                               Failed to read: org.bluez.Error.NotPermitted
+[0;94m[QCY MeloBuds Pro:/service0013/char0014]> [0mquit
+[0;94m[QCY MeloBuds Pro:/service0013/char0014]> [0m                                                     
