@@ -1,0 +1,624 @@
+{
+ "model": "HT08",
+ "vendorID": 19785,
+ "chip": "WuQi",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": {
+   "firmwareVersions": "999.0.0",
+   "firmwareversionGte": "0.0.0",
+   "firmwareversionLte": "999.999.999",
+   "controlPanel": {
+    "layouts": [
+     {
+      "voice": {
+       "name": "Call mode",
+       "event": [
+        {
+         "left": "Answer/end call",
+         "name": "Double touch",
+         "right": "Answer/end call"
+        },
+        {
+         "left": "Ignore call",
+         "name": "Keep touching1.5S",
+         "right": "Ignore call"
+        }
+       ]
+      },
+      "leftImg": "http://img.qcymall.com/app_qcy_ht07_left.png",
+      "rightImg": "http://img.qcymall.com/app_qcy_ht07_right.png",
+      "music": {
+       "name": "Music mode",
+       "event": [
+        {
+         "left": {
+          "eventID": 1,
+          "default": "Not work",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 0
+         },
+         "name": "Touch",
+         "right": {
+          "eventID": 2,
+          "default": "Not work",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 0
+         }
+        },
+        {
+         "left": {
+          "eventID": 3,
+          "default": "Playback/pause",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 1
+         },
+         "name": "Double touch",
+         "right": {
+          "eventID": 4,
+          "default": "Playback/pause",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 1
+         }
+        },
+        {
+         "left": {
+          "eventID": 5,
+          "default": "Voice Assistant",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 4
+         },
+         "name": "Triple touch",
+         "right": {
+          "eventID": 6,
+          "default": "Skip track forward",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 3
+         }
+        }
+       ]
+      },
+      "name": "Customizing button function",
+      "type": 10,
+      "info": "You may customize touch controls here.<br/><font  color='#303030'  size='15'>Audio mode：</font>Custom touch function for music play, voice assistant and so on<br/><font  color='#303030'  size='15'>Call mode：</font>Custom touch function for calling"
+     },
+     {
+      "name": "Noise canceling mode",
+      "info": "<font color='#303030' size='15'>ANC：</font>You may adjust noise-canceling level here",
+      "type": 9,
+      "modes": [
+       {
+        "name": "Noise canceling",
+        "viewtype": 1,
+        "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+        "startcmdid": 65792,
+        "endcmdid": 131071,
+        "defaultcmd": 65794,
+        "items": [
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 66816,
+          "endcmdid": 66816,
+          "name": "AdaptiveNoise canceling",
+          "viewtype": 3,
+          "defaultcmd": 66816,
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/zsy_black.png",
+          "img_white": "http://img.qcymall.com/zsy_white.png"
+         },
+         {
+          "name": "Indoor",
+          "describe": "quiet environment",
+          "startcmdid": 65792,
+          "endcmdid": 65794,
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/shinei_black.png",
+          "img_white": "http://img.qcymall.com/shinei_white.png"
+         },
+         {
+          "name": "Commuting",
+          "describe": "Very noisy environment",
+          "startcmdid": 66048,
+          "endcmdid": 66050,
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/tongxing_black.png",
+          "img_white": "http://img.qcymall.com/tongxing_white.png"
+         },
+         {
+          "name": "Noisy",
+          "describe": "Noisy environment",
+          "startcmdid": 66304,
+          "endcmdid": 66306,
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/caoza_black.png",
+          "img_white": "http://img.qcymall.com/caoza_white.png"
+         },
+         {
+          "name": "Anti-wind noise",
+          "describe": "Anti-wind noise",
+          "startcmdid": 66560,
+          "endcmdid": 66560,
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/kangfengzao_black.png",
+          "img_white": "http://img.qcymall.com/kangfengzao_white.png"
+         }
+        ],
+        "img_black": "http://img.qcymall.com/noise_reduction_on_black.png",
+        "img_white": "http://img.qcymall.com/noise_reduction_on_white.png"
+       },
+       {
+        "img": "http://img.qcymall.com/qcy_app_anc_03_b.png",
+        "startcmdid": 196864,
+        "endcmdid": 196870,
+        "name": "Transparency",
+        "voicecmdid": 196864,
+        "viewtype": 2,
+        "defaultcmd": 196868,
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_03_a.png",
+        "img_black": "http://img.qcymall.com/tongtou_black.png",
+        "img_white": "http://img.qcymall.com/tongtou_white.png"
+       },
+       {
+        "name": "Normal",
+        "viewtype": 3,
+        "startcmdid": 131072,
+        "endcmdid": 131072,
+        "img": "http://img.qcymall.com/qcy_app_anc_04_b.png",
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_04_a.png",
+        "defaultcmd": 131072,
+        "img_black": "http://img.qcymall.com/noise_reduction_off_black.png",
+        "img_white": "http://img.qcymall.com/noise_reduction_off_white.png"
+       }
+      ]
+     },
+     {
+      "name": "Equalizer",
+      "info": "<font color='#303030' size='15'>Equalizer：</font>You may tune your favorite sound effect via equalizer",
+      "type": 2,
+      "count": 10,
+      "mindb": 8,
+      "maxdb": 8,
+      "basedb": 0,
+      "character": "0000000B-0000-1000-8000-00805f9b34fb",
+      "q": "1,1,1,1,1,1,1,1,1,1",
+      "freq": "31,62,125,250,500,1000,2000,4000,8000,16000",
+      "eqs": "0,0,0,0,0,0,0,0,0,0",
+      "iitType": "0,0,0,0,0,0,0,0,0,0",
+      "volumelevel": 0,
+      "sys_eq": [
+       {
+        "name": "Default",
+        "eqs": "2,-12,3,6,-10",
+        "mastergain": -7,
+        "q": "0.8,1,1.5,1.5,1.5",
+        "freq": "35,200,2000,3000,5000",
+        "iitType": "0,0,0,0,0"
+       },
+       {
+        "name": "Pop",
+        "eqs": "-1,-10,6,-6,-8,2",
+        "mastergain": -7,
+        "q": "0.6,1,0.8,1.5,0.8,3",
+        "freq": "40,200,2500,5000,9000,16000",
+        "iitType": "1,2,1,3,0,0"
+       },
+       {
+        "name": "Bass",
+        "eqs": "6,-12,-2,3,-10,-8",
+        "mastergain": -7,
+        "q": "0.6,1,0.5,1,1.5,0.8",
+        "freq": "40,200,600,2500,5000,9000",
+        "iitType": "0,1,2,3,4,0"
+       },
+       {
+        "name": "Rock",
+        "eqs": "5,-8,-5,6,-6,1",
+        "mastergain": -7,
+        "q": "0.6,1,0.5,0.8,1.5,0.8",
+        "freq": "30,200,1000,2500,5000,9000",
+        "iitType": "0,0,0,0,0,0"
+       },
+       {
+        "name": "Soft",
+        "eqs": "-3,-8,-5,5,-10,-8",
+        "mastergain": -7,
+        "q": "0.6,1,0.5,0.8,1.5,0.8",
+        "freq": "40,150,1000,2500,5000,9000",
+        "iitType": "0,0,0,0,0,0"
+       },
+       {
+        "name": "Classic",
+        "eqs": "4,-10,-5,5,-6,-2",
+        "mastergain": -7,
+        "q": "0.6,1,0.5,0.8,1.5,0.8",
+        "freq": "40,200,600,2500,5000,9000",
+        "iitType": "0,0,0,0,0,0"
+       }
+      ]
+     },
+     {
+      "name": "Sound channel balance",
+      "type": 8,
+      "info": "<font color='#303030' size='15'>ANC：</font>You may adjust noise-canceling level here"
+     },
+     {
+      "latitude": "23.345",
+      "name": "Find headset",
+      "type": 3,
+      "info": "<font color='#303030' size='15'>Find headset：</font>APP will record the location of your headsets to let you find them on the map or allow your headsets to ring to attract your attention.",
+      "longitude": "116.102"
+     },
+     {
+      "msg": "Please upgrade the APP",
+      "name": "Please name the device",
+      "hasValue": true,
+      "id": 101,
+      "type": 101,
+      "jump": "1"
+     },
+     {
+      "msg": "Please upgrade the APP",
+      "cmdid": 20,
+      "repeat": 50000,
+      "name": "Timing power-off",
+      "hasValue": true,
+      "id": 102,
+      "type": 102,
+      "jump": "1"
+     },
+     {
+      "type": 4,
+      "items": [
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 9,
+        "sub_items": [
+         {
+          "cmd": "FF03090101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03090102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Gaming mode",
+        "type": 203,
+        "jump": "0"
+       },
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 6,
+        "sub_items": [
+         {
+          "cmd": "FF03060101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03060102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "In-ear sensor",
+        "type": 200,
+        "jump": "0"
+       },
+       {
+        "msg": "Touch control will be banned after Sleeping Mode is activated. * Push earbuds back into charging case to quit Sleep Mode.",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 16,
+        "sub_items": [
+         {
+          "cmd": "FF03100101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03100102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Sleeping Mode",
+        "type": 200,
+        "jump": "0"
+       },
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 35,
+        "sub_items": [
+         {
+          "cmd": "FF03230101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03230102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "LDAC Switch",
+        "type": 200,
+        "jump": "0"
+       },
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 36,
+        "sub_items": [
+         {
+          "cmd": "FF03240101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03240102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Multi-Device Connection",
+        "type": 200,
+        "jump": "0"
+       },
+       {
+        "manufacturers": 6,
+        "id": 0,
+        "title": "Firmware update",
+        "type": 1,
+        "jump": "0"
+       },
+       {
+        "msg": "Do you want to restore to factory settings?",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "FF020100",
+        "title": "Reset to default",
+        "type": 3,
+        "jump": "1"
+       },
+       {
+        "msg": "Do you want to restore to factory settings?",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "FF020300",
+        "title": "Reset to factory",
+        "type": 100,
+        "jump": "1"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "time": "2026-10-13 02:08:50"
+ }
+}

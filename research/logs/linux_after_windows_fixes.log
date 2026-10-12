@@ -1,0 +1,8 @@
+[2m2026-10-12T18:15:26.867688Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T18:15:26.869929Z[0m [32m INFO[0m endpoint already connected [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T18:15:26.870148Z[0m [32m INFO[0m connecting [3mname[0m[2m=[0mQCY MeloBuds Pro [3maddress[0m[2m=[0mC4:AC:60:89:A4:B1
+[2m2026-10-12T18:15:26.874948Z[0m [34mDEBUG[0m GATT session ready [3mmtu[0m[2m=[0m220 [3mcharacteristics[0m[2m=[0m6
+
+thread 'main' (19395) panicked at /rustc/b940084d7eb6a299eb4bfeb8e34901bc051e7ac4/library/std/src/io/stdio.rs:1168:9:
+failed printing to stdout: Broken pipe (os error 32)
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace

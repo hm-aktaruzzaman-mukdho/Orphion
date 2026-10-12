@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Builds the project and installs it for the current user (no root needed).
+# Installs QCY Earbuds for the current user (no root needed). From the source
+# tree it builds first; from a release tarball (made by build-linux.sh) it
+# installs the prebuilt binaries in bin/.
 #
 #   packaging/install.sh              install qcy-gui, qcy-tray and qcyctl
 #   packaging/install.sh --autostart  additionally start the tray on login
@@ -13,11 +15,16 @@ BIN="$PREFIX/bin"
 APPS="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
 AUTOSTART_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/autostart"
 
-echo "==> Building (release)…"
-cargo build --release --workspace
+if [[ -x bin/qcy-gui && -x bin/qcy-tray && -x bin/qcyctl ]]; then
+    SRC=bin
+else
+    echo "==> Building (release)…"
+    cargo build --release --workspace
+    SRC=target/release
+fi
 
 echo "==> Installing binaries to $BIN"
-install -Dm755 target/release/qcy-gui target/release/qcy-tray target/release/qcyctl -t "$BIN"
+install -Dm755 "$SRC/qcy-gui" "$SRC/qcy-tray" "$SRC/qcyctl" -t "$BIN"
 
 # Desktop sessions often do not have ~/.local/bin in PATH, so use absolute paths.
 install_desktop() { # <source> <destination dir> <binary>

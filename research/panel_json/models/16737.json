@@ -1,0 +1,12 @@
+{
+ "model": "QCY Crossky Link",
+ "vendorID": 16737,
+ "chip": "Generic",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": null,
+  "time": "2026-10-13 02:08:33"
+ }
+}

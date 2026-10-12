@@ -58,12 +58,20 @@ yet.
 
 **Linux**
 
+- Any x86_64 distribution. Built from source it runs anywhere Rust does; the
+  portable release build needs glibc 2.31+ (Ubuntu 20.04+, Debian 11+,
+  Fedora 32+, RHEL/Rocky/Alma 9, openSUSE Leap 15.3+, Mint 20+, Arch, Manjaro
+  and derivatives)
 - BlueZ 5 with `bluetoothd` running and the adapter powered (tested with 5.87)
-- For the GUI: a Wayland or X11 session with OpenGL. The libraries ship with
-  any desktop (`libxkbcommon`, `libwayland-client`, `libGL`/`libEGL`) and are
-  loaded at run time.
-- For the tray: KDE Plasma, or any desktop with a StatusNotifier host (on
-  GNOME, the "AppIndicator and KStatusNotifierItem Support" extension)
+- For the GUI: any Wayland or X11 desktop with OpenGL: GNOME, KDE Plasma,
+  Xfce, Cinnamon, MATE, Budgie, LXQt, tiling window managers. The libraries
+  ship with every desktop (`libxkbcommon`, `libwayland-client`,
+  `libGL`/`libEGL`) and are loaded at run time. On compositors without
+  server-side decorations (GNOME) the window draws its own title bar.
+- For the tray: a StatusNotifierItem host. Built in on KDE Plasma, Ubuntu's
+  GNOME, Cinnamon, Budgie and LXQt; on Xfce add the "Status Notifier Plugin"
+  to the panel; on plain GNOME (Fedora, Debian) install the "AppIndicator and
+  KStatusNotifierItem Support" extension.
 - To build: Rust ≥ 1.85 and a C linker. No `-dev` packages are needed: the
   D-Bus client is pure Rust.
 
@@ -81,6 +89,21 @@ yet.
 
 Everything is installed for the current user; no root is needed except for
 installing the build tools.
+
+### From a release tarball (no compiler needed)
+
+`packaging/build-linux.sh` produces
+`dist/qcy-earbuds-<version>-linux-x64.tar.gz` with portable binaries (see
+below). On any supported distribution:
+
+```bash
+tar xzf qcy-earbuds-<version>-linux-x64.tar.gz
+cd qcy-earbuds-<version>-linux-x64
+./packaging/install.sh --autostart   # or run bin/qcy-gui directly
+```
+
+`install.sh` notices the prebuilt `bin/` folder and skips compiling. To build
+from source instead, follow the steps below.
 
 ### 1. Prerequisites
 
@@ -177,6 +200,22 @@ packaging/uninstall.sh
 removes the programs, menu entries, icon and autostart entry. The GUI
 settings in `~/.config/qcy-earbuds/` are kept; delete that folder to remove
 them too.
+
+### Build a portable release tarball
+
+A normal `cargo build` links against the glibc of the build machine, so a
+binary built on a rolling distribution (Arch, Kali, Fedora rawhide) refuses
+to start on older ones. `packaging/build-linux.sh` links against glibc 2.31
+instead, using [cargo-zigbuild](https://github.com/rust-cross/cargo-zigbuild):
+
+```bash
+cargo install --locked cargo-zigbuild
+pip install ziglang            # or the distribution's zig package
+packaging/build-linux.sh       # → dist/qcy-earbuds-<version>-linux-x64.tar.gz
+```
+
+The only hard dependency of the resulting binaries is glibc; everything
+graphical is loaded at run time.
 
 ## Install on Windows
 

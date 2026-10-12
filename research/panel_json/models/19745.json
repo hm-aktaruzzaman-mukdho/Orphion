@@ -1,0 +1,292 @@
+{
+ "model": "T5",
+ "vendorID": 19745,
+ "chip": "Generic",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": {
+   "firmwareVersions": "999.0.0",
+   "firmwareversionGte": "0.0.0",
+   "firmwareversionLte": "999.999.999",
+   "controlPanel": {
+    "layouts": [
+     {
+      "left": {
+       "image": "http://img.qcymall.com/app_qcy_T5_left.png",
+       "three_click": {
+        "character": "00000005-0000-1000-8000-00805f9b34fb",
+        "music": "Voice Assistant",
+        "name": "Triple touch",
+        "list": [
+         {
+          "name": "Playback/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Skip track backward",
+          "cmd": "02"
+         },
+         {
+          "name": "Skip track forward",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         }
+        ]
+       },
+       "double_click": {
+        "voice": "Answer/end call",
+        "character": "00000003-0000-1000-8000-00805f9b34fb",
+        "music": "Playback/pause",
+        "name": "Double touch",
+        "list": [
+         {
+          "name": "Playback/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Skip track backward",
+          "cmd": "02"
+         },
+         {
+          "name": "Skip track forward",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         }
+        ]
+       }
+      },
+      "name": "Customizing button function",
+      "right": {
+       "image": "http://img.qcymall.com/app_qcy_T5_right.png",
+       "three_click": {
+        "character": "00000006-0000-1000-8000-00805f9b34fb",
+        "music": "Gaming mode",
+        "name": "Triple touch",
+        "list": [
+         {
+          "name": "Playback/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Skip track backward",
+          "cmd": "02"
+         },
+         {
+          "name": "Skip track forward",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         }
+        ]
+       },
+       "double_click": {
+        "voice": "Answer/end call",
+        "character": "00000004-0000-1000-8000-00805f9b34fb",
+        "music": "Playback/pause",
+        "name": "Double touch",
+        "list": [
+         {
+          "name": "Playback/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Skip track backward",
+          "cmd": "02"
+         },
+         {
+          "name": "Skip track forward",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         }
+        ]
+       }
+      },
+      "type": 1,
+      "info": "You may customize touch controls here.<br/><font color='#303030' size='15'>Audio mode：</font>Custom touch function for music play, voice assistant and so on<br/><font color='#303030' size='15'>Call mode：</font>Custom touch function for calling"
+     },
+     {
+      "mindb": 8,
+      "character": "0000000B-0000-1000-8000-00805f9b34fb",
+      "sys_eq": [
+       {
+        "img": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1571809231422&di=b650de7d12bfdab59c62a016322e4929&imgtype=0&src=http%3A%2F%2Ff.hiphotos.baidu.com%2Fimage%2Fpic%2Fitem%2Fb151f8198618367aa7f3cc7424738bd4b31ce525.jpg",
+        "eqs": "0,0,0,0,0,0,0,0,0,0",
+        "name": "Default"
+       },
+       {
+        "eqs": "-6,5,-3,-2,5,4,-4,-3,6,4",
+        "name": "Pop"
+       },
+       {
+        "img": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1571809278179&di=03fb6b8827a9387bf38b4b10702ac3e2&imgtype=0&src=http%3A%2F%2Fb.zol-img.com.cn%2Fsoft%2F5%2F493%2FceNcIqcSrEEgE.jpg",
+        "eqs": "8,7,5,4,0,0,0,0,0,0",
+        "name": "Bass"
+       },
+       {
+        "img": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1571809278179&di=03fb6b8827a9387bf38b4b10702ac3e2&imgtype=0&src=http%3A%2F%2Fb.zol-img.com.cn%2Fsoft%2F5%2F493%2FceNcIqcSrEEgE.jpg",
+        "eqs": "7,6,2,1,-3,-4,2,1,4,5",
+        "name": "Rock"
+       },
+       {
+        "img": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1571809278179&di=03fb6b8827a9387bf38b4b10702ac3e2&imgtype=0&src=http%3A%2F%2Fb.zol-img.com.cn%2Fsoft%2F5%2F493%2FceNcIqcSrEEgE.jpg",
+        "eqs": "5,-5,-4,-4,3,2,4,4,0,0",
+        "name": "Soft"
+       },
+       {
+        "img": "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1571809278179&di=03fb6b8827a9387bf38b4b10702ac3e2&imgtype=0&src=http%3A%2F%2Fb.zol-img.com.cn%2Fsoft%2F5%2F493%2FceNcIqcSrEEgE.jpg",
+        "eqs": "6,7,1,2,-1,1,-4,-6,-7,-8",
+        "name": "Classic"
+       }
+      ],
+      "name": "Equalizer",
+      "count": 10,
+      "freq": "31,62,125,250,500,1k,2k,4k,8k,16k",
+      "type": 2,
+      "info": "<font color='#303030' size='15'>Equalizer：</font>You may tune your favorite sound effect via equalizer",
+      "maxdb": 8
+     },
+     {
+      "latitude": "23.345",
+      "name": "Find headset",
+      "type": 3,
+      "info": "<font color='#303030' size='15'>Find headset：</font>APP will record the location of your headsets to let you find them on the map or allow your headsets to ring to attract your attention.",
+      "longitude": "116.102"
+     },
+     {
+      "type": 4,
+      "items": [
+       {
+        "manufacturers": 1,
+        "id": 0,
+        "title": "Firmware update",
+        "type": 1,
+        "jump": "0"
+       },
+       {
+        "character": "00000009-0000-1000-8000-00805f9b34fb",
+        "sub_items": [
+         {
+          "name": "Mandarin",
+          "cmd": "01"
+         },
+         {
+          "name": "English",
+          "cmd": "02"
+         },
+         {
+          "name": "Japanese",
+          "cmd": "03"
+         },
+         {
+          "name": "Korean",
+          "cmd": "04"
+         },
+         {
+          "name": "German",
+          "cmd": "05"
+         },
+         {
+          "name": "French",
+          "cmd": "06"
+         },
+         {
+          "name": "Italian",
+          "cmd": "07"
+         },
+         {
+          "name": "Spanish",
+          "cmd": "08"
+         }
+        ],
+        "id": 1,
+        "title": "Headphone voice language",
+        "type": 2,
+        "jump": "0"
+       },
+       {
+        "msg": "Do you reset factory?",
+        "character": "0000000A-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "01",
+        "title": "Reset to default",
+        "type": 3,
+        "jump": "1"
+       },
+       {
+        "msg": "Are you sure to clear pairing records?",
+        "character": "0000000A-0000-1000-8000-00805f9b34fb",
+        "id": 4,
+        "cmd": "02",
+        "title": "Delete pairing records",
+        "type": 100,
+        "jump": "1"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "time": "2026-10-13 02:10:03"
+ }
+}

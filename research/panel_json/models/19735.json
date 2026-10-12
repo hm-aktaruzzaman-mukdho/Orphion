@@ -1,0 +1,527 @@
+{
+ "model": "QCY-QT11S",
+ "vendorID": 19735,
+ "chip": "Generic",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": {
+   "firmwareVersions": "999.0.0",
+   "firmwareversionGte": "0.0.0",
+   "firmwareversionLte": "999.999.999",
+   "controlPanel": {
+    "layouts": [
+     {
+      "left": {
+       "image": "http://img.qcymall.com/app_qcy_qt11s_left.png",
+       "three_click": {
+        "character": "00000005-0000-1000-8000-00805f9b34fb",
+        "music": "Voice Assistant",
+        "name": "Triple touch",
+        "list": [
+         {
+          "name": "Playback/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Skip track backward",
+          "cmd": "02"
+         },
+         {
+          "name": "Skip track forward",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         }
+        ]
+       },
+       "double_click": {
+        "voice": "Answer/end call",
+        "character": "00000003-0000-1000-8000-00805f9b34fb",
+        "music": "Playback/pause",
+        "name": "Double touch",
+        "list": [
+         {
+          "name": "Playback/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Skip track backward",
+          "cmd": "02"
+         },
+         {
+          "name": "Skip track forward",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         }
+        ]
+       }
+      },
+      "name": "Customizing button function",
+      "right": {
+       "image": "http://img.qcymall.com/app_qcy_qt11s_right.png",
+       "three_click": {
+        "character": "00000006-0000-1000-8000-00805f9b34fb",
+        "music": "Gaming mode",
+        "name": "Triple touch",
+        "list": [
+         {
+          "name": "Playback/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Skip track backward",
+          "cmd": "02"
+         },
+         {
+          "name": "Skip track forward",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         }
+        ]
+       },
+       "double_click": {
+        "voice": "Answer/end call",
+        "character": "00000004-0000-1000-8000-00805f9b34fb",
+        "music": "Playback/pause",
+        "name": "Double touch",
+        "list": [
+         {
+          "name": "Playback/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Skip track backward",
+          "cmd": "02"
+         },
+         {
+          "name": "Skip track forward",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         }
+        ]
+       }
+      },
+      "type": 1,
+      "info": "You may customize touch controls here.<br/><font color='#303030' size='15'>Audio mode：</font>Custom touch function for music play, voice assistant and so on<br/><font color='#303030' size='15'>Call mode：</font>Custom touch function for calling"
+     },
+     {
+      "voice": {
+       "name": "Call mode",
+       "event": [
+        {
+         "left": "Answer/end call",
+         "name": "Double touch",
+         "right": "Answer/end call"
+        },
+        {
+         "left": "Ignore call",
+         "name": "Keep touching1.5S",
+         "right": "Ignore call"
+        }
+       ]
+      },
+      "leftImg": "http://img.qcymall.com/app_qcy_qt11s_left.png",
+      "rightImg": "http://img.qcymall.com/app_qcy_qt11s_right.png",
+      "music": {
+       "name": "Music mode",
+       "event": [
+        {
+         "left": {
+          "eventID": 1,
+          "default": "Not work",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 0
+         },
+         "name": "Touch",
+         "right": {
+          "eventID": 2,
+          "default": "Not work",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 0
+         }
+        },
+        {
+         "left": {
+          "eventID": 3,
+          "default": "Playback/pause",
+          "list": [
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 1
+         },
+         "name": "Double touch",
+         "right": {
+          "eventID": 4,
+          "default": "Playback/pause",
+          "list": [
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 1
+         }
+        },
+        {
+         "left": {
+          "eventID": 5,
+          "default": "Voice Assistant",
+          "list": [
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 4
+         },
+         "name": "Triple touch",
+         "right": {
+          "eventID": 6,
+          "default": "Gaming mode",
+          "list": [
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 7
+         }
+        }
+       ]
+      },
+      "name": "Customizing button function",
+      "type": 10,
+      "info": "You may customize touch controls here.<br/><font  color='#303030'  size='15'>Audio mode：</font>Custom touch function for music play, voice assistant and so on<br/><font  color='#303030'  size='15'>Call mode：</font>Custom touch function for calling"
+     },
+     {
+      "mindb": 8,
+      "character": "0000000B-0000-1000-8000-00805f9b34fb",
+      "sys_eq": [
+       {
+        "eqs": "0,0,0,0,0,0,0,0,0,0",
+        "name": "Default"
+       },
+       {
+        "eqs": "-6,5,-3,-2,5,4,-4,-3,6,4",
+        "name": "Pop"
+       },
+       {
+        "eqs": "8,7,5,4,0,0,0,0,0,0",
+        "name": "Bass"
+       },
+       {
+        "eqs": "7,6,2,1,-3,-4,2,1,4,5",
+        "name": "Rock"
+       },
+       {
+        "eqs": "5,-5,-4,-4,3,2,4,4,0,0",
+        "name": "Soft"
+       },
+       {
+        "eqs": "6,7,1,2,-1,1,-4,-6,-7,-8",
+        "name": "Classic"
+       }
+      ],
+      "name": "Equalizer",
+      "count": 10,
+      "freq": "31,62,125,250,500,1k,2k,4k,8k,16k",
+      "type": 2,
+      "info": "<font color=#303030' size='15'>Equalizer：</font>You may tune your favorite sound effect via equalizer",
+      "maxdb": 8
+     },
+     {
+      "latitude": "23.345",
+      "name": "Find headset",
+      "type": 3,
+      "info": "<font color='#303030' size='15'>Find headset：</font>APP will record the location of your headsets to let you find them on the map or allow your headsets to ring to attract your attention.",
+      "longitude": "116.102"
+     },
+     {
+      "type": 4,
+      "items": [
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 6,
+        "sub_items": [
+         {
+          "cmd": "FF03060101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03060102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "In-ear sensor",
+        "type": 203,
+        "jump": "0"
+       },
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 9,
+        "sub_items": [
+         {
+          "cmd": "FF03090101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03090102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Gaming mode",
+        "type": 203,
+        "jump": "0"
+       },
+       {
+        "manufacturers": 5,
+        "id": 0,
+        "title": "Firmware update",
+        "type": 1,
+        "jump": "0"
+       },
+       {
+        "msg": "Do you want to restore to factory settings?",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "FF020100",
+        "title": "Reset to default",
+        "type": 100,
+        "jump": "1"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "time": "2026-10-13 02:09:36"
+ }
+}

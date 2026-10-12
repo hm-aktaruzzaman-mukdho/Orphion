@@ -1,0 +1,739 @@
+{
+ "model": "QCY Crossky R70",
+ "vendorID": 19791,
+ "chip": "WuQi",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": {
+   "firmwareVersions": "999.0.0",
+   "firmwareversionGte": "0.0.0",
+   "firmwareversionLte": "999.999.999",
+   "controlPanel": {
+    "layouts": [
+     {
+      "leftImg": "http://img.qcymall.com/app_qcy_ht07_left.png",
+      "rightImg": "http://img.qcymall.com/app_qcy_ht07_right.png",
+      "music": {
+       "name": "Bluetooth mode",
+       "event": [
+        {
+         "left": {
+          "eventID": 1,
+          "default": "Not work",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 0
+         },
+         "name": "Touch",
+         "right": {
+          "eventID": 2,
+          "default": "Not work",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 0
+         }
+        },
+        {
+         "left": {
+          "eventID": 3,
+          "default": "Play/pause",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 1
+         },
+         "name": "Double touch",
+         "right": {
+          "eventID": 4,
+          "default": "Play/pause",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 1
+         }
+        },
+        {
+         "left": {
+          "eventID": 5,
+          "default": "Voice Assistant",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "Focus Mode",
+            "cmd": 14
+           }
+          ],
+          "defaultFun": 4
+         },
+         "name": "Triple touch",
+         "right": {
+          "eventID": 6,
+          "default": "Gaming mode",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "Focus Mode",
+            "cmd": 14
+           }
+          ],
+          "defaultFun": 7
+         }
+        }
+       ]
+      },
+      "sdMode": {
+       "name": "Focus Mode",
+       "event": [
+        {
+         "left": {
+          "eventID": 81,
+          "default": "Volume down",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           }
+          ],
+          "defaultFun": 6
+         },
+         "name": "Touch",
+         "right": {
+          "eventID": 82,
+          "default": "Volume up",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           }
+          ],
+          "defaultFun": 5
+         }
+        },
+        {
+         "left": {
+          "eventID": 83,
+          "default": "Play/pause",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           }
+          ],
+          "defaultFun": 1
+         },
+         "name": "Double touch",
+         "right": {
+          "eventID": 84,
+          "default": "Play/pause",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           }
+          ],
+          "defaultFun": 1
+         }
+        },
+        {
+         "left": {
+          "eventID": 89,
+          "default": "Previous track",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           }
+          ],
+          "defaultFun": 2
+         },
+         "name": "Long press",
+         "right": {
+          "eventID": 90,
+          "default": "Next track",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           }
+          ],
+          "defaultFun": 3
+         }
+        }
+       ]
+      },
+      "name": "Customizing button function",
+      "type": 10,
+      "info": "You may customize touch controls here.<br/><font  color='#303030'  size='15'>Audio mode：</font>Custom touch function for music play, voice assistant and so on<br/><font  color='#303030'  size='15'>Call mode：</font>Custom touch function for calling"
+     },
+     {
+      "name": "Sound effect",
+      "info": "<font color='#303030' size='15'>Equalizer：</font>You can tailor the sound to your preference via the equalizer.",
+      "type": 2,
+      "count": 10,
+      "mindb": 8,
+      "maxdb": 8,
+      "basedb": 0,
+      "character": "0000000B-0000-1000-8000-00805f9b34fb",
+      "q": "1,1,1,1,1,1,1,1,1,1",
+      "freq": "31,62,125,250,500,1000,2000,4000,8000,16000",
+      "eqs": "0,0,0,0,0,0,0,0,0,0",
+      "iitType": "0,0,0,0,0,0,0,0,0,0",
+      "volumelevel": 8,
+      "sys_eq": [
+       {
+        "name": "Spatial sound effects",
+        "mastergain": -1,
+        "eqs": "0,8,10,-1,-11,-4,12,-12,-4,4",
+        "q": "0.3,1,0.7,1.5,1.2,1.1,5,0.5,10,3",
+        "freq": "33,2000,98,1600,9905,295,13324,4022,10072,5200",
+        "iitType": "4,0,0,0,0,0,0,0,2,0",
+        "id": 10
+       },
+       {
+        "id": 1,
+        "name": "Default",
+        "mastergain": -1,
+        "eqs": "0,8,10,-1,-11,-4,12,-12,-4,4",
+        "q": "0.3,1,0.7,1.5,1.2,1.1,5,0.5,10,3",
+        "freq": "33,2000,98,1600,9905,295,13324,4022,10072,5200",
+        "iitType": "4,0,0,0,0,0,0,0,2,0"
+       },
+       {
+        "id": 2,
+        "name": "Pop",
+        "mastergain": -3,
+        "eqs": "0,5,12,-1,-13,-6,-8,3",
+        "q": "0.3,0.8,0.7,1.5,0.6,1.1,0.5,0.75",
+        "freq": "33,1550,98,1600,2000,295,4022,175",
+        "iitType": "4,0,0,0,2,0,0,1"
+       },
+       {
+        "id": 3,
+        "name": "Heavy Bass",
+        "mastergain": -3,
+        "eqs": "0,6,12,-1,-8.5,-6,-8,3",
+        "q": "0.3,0.8,0.7,1.5,0.65,1.1,0.5,0.75",
+        "freq": "33,1550,98,1600,2000,295,4022,175",
+        "iitType": "4,0,0,0,2,0,0,1"
+       },
+       {
+        "id": 4,
+        "name": "Rock",
+        "mastergain": -3,
+        "eqs": "0,5,12,-1,-1.5,-6,-4,-8,3,-2",
+        "q": "0.3,0.8,0.7,1.5,0.6,1.1,0.7,0.5,0.75,1.6",
+        "freq": "33,1550,98,1600,2000,295,900,4022,175,500",
+        "iitType": "4,0,0,0,2,0,0,0,1,0"
+       },
+       {
+        "id": 5,
+        "name": "Soft",
+        "mastergain": -3,
+        "eqs": "0,6,12,-1,-11,-6,2,-8,1.5,-7",
+        "q": "0.3,0.8,0.7,1.5,0.65,1.1,0.7,0.5,0.75,1.5",
+        "freq": "38,1550,98,1600,2000,295,900,4022,175,13000",
+        "iitType": "4,0,0,0,2,0,0,0,1,0"
+       },
+       {
+        "id": 6,
+        "name": "Classic",
+        "mastergain": -3,
+        "eqs": "0,5,12,-1,-13,-6,-5,-8,2.5,-1.5",
+        "q": "0.3,0.8,0.7,1.5,0.6,1.1,0.7,0.5,0.75,0.9",
+        "freq": "33,1550,98,1600,2000,295,4500,4022,175,900",
+        "iitType": "4,0,0,0,2,0,2,0,1,0"
+       }
+      ]
+     },
+     {
+      "name": "Sound channel balance",
+      "type": 8,
+      "info": "<font color='#303030' size='15'>ANC mode：</font>You can adjust the ANC (Active Noise Cancellation) mode here"
+     },
+     {
+      "name": "Focus Mode",
+      "cmdid": 57,
+      "id": 106,
+      "type": 106,
+      "jump": "1"
+     },
+     {
+      "latitude": "23.345",
+      "name": "Find headset",
+      "type": 3,
+      "info": "<font color='#303030' size='15'>Find headset：</font>The APP will record the location of your earphones, allowing you to locate them on the map or make them emit sound to help you find them.",
+      "longitude": "116.102"
+     },
+     {
+      "itemKey": [
+       "57513030",
+       "57513031"
+      ],
+      "itemName": [
+       "English",
+       "Chinese"
+      ],
+      "cmdid": 25,
+      "name": "Tone Switch",
+      "hasValue": true,
+      "id": 1001,
+      "type": 1001,
+      "jump": "0",
+      "languages": "zh"
+     },
+     {
+      "msg": "Please upgrade the APP to the latest version.",
+      "name": "Rename device",
+      "hasValue": true,
+      "id": 101,
+      "type": 101,
+      "jump": "1"
+     },
+     {
+      "msg": "Please upgrade the APP to the latest version.",
+      "cmdid": 20,
+      "repeat": 50000,
+      "name": "Timing power-off",
+      "hasValue": true,
+      "id": 102,
+      "type": 102,
+      "jump": "1"
+     },
+     {
+      "itemName": {
+       "4": "Lower volume",
+       "6": "Medium volume",
+       "8": "Higher volume",
+       "10": "Maximum volume"
+      },
+      "cmdid": 29,
+      "name": "Beep volume",
+      "hasValue": true,
+      "id": 103,
+      "type": 103,
+      "jump": "1"
+     },
+     {
+      "type": 4,
+      "items": [
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 9,
+        "sub_items": [
+         {
+          "cmd": "FF03090101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03090102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Gaming mode",
+        "type": 203,
+        "jump": "0"
+       },
+       {
+        "msg": "Touch control will be banned after Sleeping Mode is activated. * Place earbuds back into charging case to quit Sleep Mode.",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 16,
+        "sub_items": [
+         {
+          "cmd": "FF03100101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03100102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Sleeping Mode",
+        "type": 200,
+        "jump": "0"
+       },
+       {
+        "msg": "When turned on, the headphones will be restarted and the dual-device connection will be turned off; when turned off, the headphones will be restarted.",
+        "msg_ios": "When turned on, the headphones will be restarted and the dual-device connection will be turned off; when turned off, the headphones will be restarted.",
+        "msg_android": "When turned on, the headphones will be restarted and the dual-device connection will be turned off; when turned off, the headphones will be restarted.",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 35,
+        "sub_items": [
+         {
+          "cmd": "FF03230101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03230102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "LDAC Switch",
+        "type": 200,
+        "jump": "0"
+       },
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 36,
+        "sub_items": [
+         {
+          "cmd": "FF03240101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03240102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Dual Device Connection",
+        "msg": "When turned on, the headphones will be restarted and LDAC will be turned off; when turned off, the headphones will be restarted.",
+        "msg_ios": "When turned on/off, the headphones will be restarted.",
+        "type": 200,
+        "jump": "0"
+       },
+       {
+        "manufacturers": 11,
+        "id": 0,
+        "title": "Firmware update",
+        "type": 1,
+        "jump": "0"
+       },
+       {
+        "msg": "Please take off both earphones and bring them close to each other.",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "FF020100",
+        "title": "Reset to default",
+        "type": 3,
+        "jump": "1"
+       },
+       {
+        "msg": "Please take off both earphones and bring them close to each other.",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "FF020300",
+        "title": "Reset to factory",
+        "type": 100,
+        "jump": "1"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "time": "2026-10-13 02:07:35"
+ }
+}

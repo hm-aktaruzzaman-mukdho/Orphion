@@ -20,5 +20,10 @@ tokio.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
 
+# GNOME (and other compositors without server-side decorations) need the
+# window to draw its own title bar; eframe disables winit's default for it.
+[target.'cfg(target_os = "linux")'.dependencies]
+winit = { version = "0.30", default-features = false, features = ["wayland-csd-adwaita"] }
+
 [build-dependencies]
 embed-resource = "3"

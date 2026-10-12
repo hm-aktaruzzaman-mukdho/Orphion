@@ -1,0 +1,12 @@
+{
+ "model": "HT27",
+ "vendorID": 23885,
+ "chip": "WuQi",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": null,
+  "time": "2026-10-13 02:08:26"
+ }
+}

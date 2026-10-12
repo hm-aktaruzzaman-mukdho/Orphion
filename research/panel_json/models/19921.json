@@ -1,0 +1,472 @@
+{
+ "model": "HT03S",
+ "vendorID": 19921,
+ "chip": "Generic",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": {
+   "firmwareVersions": "999.0.0",
+   "firmwareversionGte": "0.0.0",
+   "firmwareversionLte": "999.999.999",
+   "controlPanel": {
+    "layouts": [
+     {
+      "display": true,
+      "name": "volume",
+      "title": "Volume",
+      "type": 20
+     },
+     {
+      "voice": {
+       "name": "Call mode",
+       "event": [
+        {
+         "left": "Answer/end call",
+         "name": "Double touch",
+         "right": "Answer/end call"
+        },
+        {
+         "left": "Ignore call",
+         "name": "Keep touching1.5S",
+         "right": "Ignore call"
+        }
+       ]
+      },
+      "leftImg": "http://img.qcymall.com/app_qcy_ht03_left.png",
+      "rightImg": "http://img.qcymall.com/app_qcy_ht03_right.png",
+      "music": {
+       "name": "Music mode",
+       "event": [
+        {
+         "left": {
+          "eventID": 1,
+          "default": "Not work",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 0
+         },
+         "name": "Touch",
+         "right": {
+          "eventID": 2,
+          "default": "Not work",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 0
+         }
+        },
+        {
+         "left": {
+          "eventID": 3,
+          "default": "Play/pause",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC mode",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 1
+         },
+         "name": "Double touch",
+         "right": {
+          "eventID": 4,
+          "default": "Play/pause",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC mode",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 1
+         }
+        },
+        {
+         "left": {
+          "eventID": 5,
+          "default": "Voice Assistant",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC mode",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 4
+         },
+         "name": "Triple touch",
+         "right": {
+          "eventID": 6,
+          "default": "Next track",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           },
+           {
+            "name": "ANC mode",
+            "cmd": 11
+           }
+          ],
+          "defaultFun": 3
+         }
+        }
+       ]
+      },
+      "name": "Customizing button function",
+      "type": 10,
+      "info": "You may customize touch controls here.&lt;br/&gt;&lt;font  color='#303030'  size='15'&gt;Audio mode：&lt;/font&gt;Custom touch function for music play, voice assistant and so on&lt;br/&gt;&lt;font  color='#303030'  size='15'&gt;Call mode：&lt;/font&gt;Custom touch function for calling"
+     },
+     {
+      "modes": [
+       {
+        "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+        "cmdid": 1,
+        "name": "ANC",
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+        "img_black": "http://img.qcymall.com/noise_reduction_on_black.png",
+        "img_white": "http://img.qcymall.com/noise_reduction_on_white.png"
+       },
+       {
+        "img": "http://img.qcymall.com/qcy_app_anc_03_b.png",
+        "cmdid": 3,
+        "name": "Transparency",
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_03_a.png",
+        "img_black": "http://img.qcymall.com/tongtou_black.png",
+        "img_white": "http://img.qcymall.com/tongtou_white.png"
+       },
+       {
+        "img": "http://img.qcymall.com/qcy_app_anc_04_b.png",
+        "cmdid": 2,
+        "name": "Normal",
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_04_a.png",
+        "img_black": "http://img.qcymall.com/noise_reduction_off_black.png",
+        "img_white": "http://img.qcymall.com/noise_reduction_off_white.png"
+       }
+      ],
+      "name": "ANC",
+      "type": 6,
+      "info": "&lt;font color='#303030' size='15'&gt;ANC：&lt;/font&gt;You may adjust noise-canceling level here"
+     },
+     {
+      "mindb": 8,
+      "character": "0000000B-0000-1000-8000-00805f9b34fb",
+      "sys_eq": [
+       {
+        "eqs": "0,0,0,0,0,0,0,0,0,0",
+        "name": "Default"
+       },
+       {
+        "eqs": "-6,5,-3,-2,5,4,-4,-3,6,4",
+        "name": "Pop"
+       },
+       {
+        "eqs": "8,7,5,4,0,0,0,0,0,0",
+        "name": "Heavy Bass"
+       },
+       {
+        "eqs": "7,6,2,1,-3,-4,2,1,4,5",
+        "name": "Rock"
+       },
+       {
+        "eqs": "5,-5,-4,-4,3,2,4,4,0,0",
+        "name": "Soft"
+       },
+       {
+        "eqs": "6,7,1,2,-1,1,-4,-6,-7,-8",
+        "name": "Classic"
+       }
+      ],
+      "name": "Equalizer",
+      "count": 10,
+      "freq": "31,62,125,250,500,1k,2k,4k,8k,16k",
+      "type": 2,
+      "info": "&lt;font color='#303030' size='15'&gt;Equalizer：&lt;/font&gt;You may tune your favorite sound effect via equalizer",
+      "maxdb": 8
+     },
+     {
+      "name": "Sound channel balance",
+      "type": 8,
+      "info": "<font color='#303030' size='15'>ANC：</font>You may adjust noise-canceling level here"
+     },
+     {
+      "type": 4,
+      "items": [
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 9,
+        "sub_items": [
+         {
+          "cmd": "FF03090101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03090102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Gaming mode",
+        "type": 203,
+        "jump": "0"
+       },
+       {
+        "msg": "Touch control will be banned after Sleeping Mode is activated. * Place earbuds back into charging case to quit Sleep Mode.",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 16,
+        "sub_items": [
+         {
+          "cmd": "FF03100101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03100102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Sleeping Mode",
+        "type": 200,
+        "jump": "0"
+       },
+       {
+        "id": 0,
+        "title": "Fit detection",
+        "type": 301,
+        "jump": "0"
+       },
+       {
+        "manufacturers": 4,
+        "id": 0,
+        "title": "Firmware update",
+        "type": 1,
+        "jump": "0"
+       },
+       {
+        "msg": "Do you want to restore to factory settings?",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "FF020100",
+        "title": "Reset to default",
+        "type": 3,
+        "jump": "1"
+       },
+       {
+        "msg": "Do you want to restore to factory settings?",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "FF020300",
+        "title": "Reset to factory",
+        "type": 100,
+        "jump": "1"
+       }
+      ]
+     },
+     {
+      "latitude": "23.345",
+      "name": "Find headset",
+      "type": 3,
+      "info": "<font color='#303030' size='15'>Find headset：</font>APP will record the location of your headsets to let you find them on the map or allow your headsets to ring to attract your attention.",
+      "longitude": "116.102"
+     }
+    ]
+   }
+  },
+  "time": "2026-10-13 02:08:41"
+ }
+}

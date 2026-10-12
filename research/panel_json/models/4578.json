@@ -1,0 +1,375 @@
+{
+ "model": "C2",
+ "vendorID": 4578,
+ "chip": "Generic",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": {
+   "firmwareVersions": "999.0.0",
+   "firmwareversionGte": "0.0.0",
+   "firmwareversionLte": "999.999.999",
+   "controlPanel": {
+    "layouts": [
+     {
+      "msg": "Instruction ID to be read",
+      "type": 13,
+      "cmdIndexs": [
+       29
+      ]
+     },
+     {
+      "img": "http://img.qcymall.com/app_qcy_c2.png",
+      "buttons": [
+       {
+        "keyName": "Volume up",
+        "events": [
+         {
+          "eventID": 17,
+          "name": "Touch",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 6
+         }
+        ]
+       },
+       {
+        "keyName": "Volume down",
+        "events": [
+         {
+          "eventID": 18,
+          "name": "Touch",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 5
+         }
+        ]
+       },
+       {
+        "keyName": "MFB",
+        "events": [
+         {
+          "eventID": 19,
+          "name": "Touch",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 1
+         },
+         {
+          "eventID": 20,
+          "name": "Double touch",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 7
+         },
+         {
+          "eventID": 21,
+          "name": "Triple touch",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Playback/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Skip track backward",
+            "cmd": 2
+           },
+           {
+            "name": "Skip track forward",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 4
+         }
+        ]
+       }
+      ],
+      "name": "Customizing button function",
+      "type": 14,
+      "info": "You may customize touch controls here.<br/><font  color='#303030'  size='15'>Audio mode：</font>Custom touch function for music play, voice assistant and so on<br/><font  color='#303030'  size='15'>Call mode：</font>Custom touch function for calling"
+     },
+     {
+      "mindb": 8,
+      "character": "0000000B-0000-1000-8000-00805f9b34fb",
+      "sys_eq": [
+       {
+        "eqs": "0,0,0,0,0,0,0,0,0,0",
+        "name": "Default"
+       },
+       {
+        "eqs": "-1,2,-1,-7,6,2,1,9,-6,3",
+        "name": "Pop"
+       },
+       {
+        "eqs": "3,4,2,-7,3,1,3,6,-2,2",
+        "name": "Bass"
+       },
+       {
+        "eqs": "2,3,2,-9,5,0,2,7,-1,4",
+        "name": "Rock"
+       },
+       {
+        "eqs": "-1,2,1,-8,4,1,2,7,-6,4",
+        "name": "Soft"
+       },
+       {
+        "eqs": "1,3,2,-8,3,0,3,5,1,3",
+        "name": "Classic"
+       }
+      ],
+      "name": "Equalizer",
+      "count": 10,
+      "basedb": -9,
+      "freq": "31,62,125,250,500,1k,2k,4k,8k,16k",
+      "type": 2,
+      "info": "<font color='#303030' size='15'>Equalizer：</font>You may tune your favorite sound effect via equalizer",
+      "maxdb": 8
+     },
+     {
+      "name": "Sound channel balance",
+      "type": 8,
+      "info": "<font color='#303030' size='15'>ANC：</font>You may adjust noise-canceling level here"
+     },
+     {
+      "latitude": "23.345",
+      "name": "Find headset",
+      "type": 3,
+      "info": "<font color='#303030' size='15'>Find headset：</font>APP will record the location of your headsets to let you find them on the map or allow your headsets to ring to attract your attention.",
+      "longitude": "116.102"
+     },
+     {
+      "msg": "Please upgrade the APP",
+      "name": "Please name the device",
+      "hasValue": true,
+      "id": 101,
+      "type": 101,
+      "jump": "1"
+     },
+     {
+      "msg": "Please upgrade the APP",
+      "cmdid": 20,
+      "repeat": 50000,
+      "name": "Timing power-off",
+      "hasValue": true,
+      "id": 102,
+      "type": 102,
+      "jump": "1"
+     },
+     {
+      "itemName": {
+       "3": "Min volume",
+       "8": "Medium volume",
+       "16": "Max volume"
+      },
+      "cmdid": 29,
+      "name": "Beep volume",
+      "hasValue": true,
+      "id": 103,
+      "type": 103,
+      "jump": "1"
+     },
+     {
+      "type": 4,
+      "items": [
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 9,
+        "sub_items": [
+         {
+          "cmd": "FF03090101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03090102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Gaming mode",
+        "type": 203,
+        "jump": "0"
+       },
+       {
+        "msg": "Do you reset factory?",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "FF020100",
+        "title": "Reset to default",
+        "type": 3,
+        "jump": "1"
+       },
+       {
+        "msg": "Are you sure to delete pairing records?",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "FF020200",
+        "title": "Delete pairing records",
+        "type": 3,
+        "jump": "1"
+       },
+       {
+        "msg": "Do you reset factory?",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "FF020300",
+        "title": "Reset to factory",
+        "type": 100,
+        "jump": "1"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "time": "2026-10-13 02:10:29"
+ }
+}
