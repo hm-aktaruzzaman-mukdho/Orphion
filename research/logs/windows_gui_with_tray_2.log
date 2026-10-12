@@ -1,0 +1,6 @@
+2026-10-12T15:53:56.613771Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:53:56.614902Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:53:56.615535Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:53:57.120865Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T15:53:57.945152Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T15:54:08.018397Z DEBUG qcy_client::backend::winrt::gatt: GATT link released

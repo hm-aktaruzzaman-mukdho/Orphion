@@ -1,0 +1,207 @@
+﻿
+===== qcyctl balance 45  (exit 0, 5.9s) =====
+2026-10-12T15:21:41.419796Z DEBUG advertisement watcher started
+2026-10-12T15:21:42.958845Z DEBUG advertisement watcher stopped
+2026-10-12T15:21:42.960163Z  INFO found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:42.960252Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:42.973347Z DEBUG discovering services attempt=1
+2026-10-12T15:21:44.787626Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:44.927302Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:44.955053Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:21:45.038893Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:45.065160Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:45.092602Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:45.092794Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:45.120173Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:45.145866Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:45.190120Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:45.193458Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:45.215639Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:45.241189Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:45.699158Z DEBUG sending command=SetBalance(45)
+2026-10-12T15:21:45.699352Z TRACE write c=Command data=ff 03 16 01 2d
+2026-10-12T15:21:46.757216Z TRACE write c=Command data=ff 03 fe 01 16
+2026-10-12T15:21:46.832443Z TRACE notification c=Settings data=ff 03 16 01 2d
+Balance: Some(45)
+2026-10-12T15:21:47.156122Z DEBUG GATT link released
+===== qcyctl balance 50  (exit 0, 3.3s) =====
+2026-10-12T15:21:47.352936Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:47.353170Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:47.370218Z DEBUG discovering services attempt=1
+2026-10-12T15:21:47.807502Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:48.103615Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:48.188691Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:21:48.277561Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 2d 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:48.363889Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:48.453040Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:48.453324Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:48.503792Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:48.539885Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:48.551114Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:48.586049Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:48.599207Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:48.626173Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:49.057614Z DEBUG sending command=SetBalance(50)
+2026-10-12T15:21:49.058000Z TRACE write c=Command data=ff 03 16 01 32
+2026-10-12T15:21:50.070026Z TRACE notification c=Battery data=47 5d 00
+2026-10-12T15:21:50.109605Z TRACE write c=Command data=ff 03 fe 01 16
+2026-10-12T15:21:50.201945Z TRACE notification c=Settings data=ff 03 16 01 32
+Balance: Some(50)
+2026-10-12T15:21:50.514971Z DEBUG GATT link released
+===== qcyctl prompt-volume 6  (exit 0, 3.3s) =====
+2026-10-12T15:21:50.687870Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:50.688119Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:50.708216Z DEBUG discovering services attempt=1
+2026-10-12T15:21:51.224165Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:51.473225Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:51.558563Z TRACE read c=Battery data=47 5d 00
+2026-10-12T15:21:51.647317Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:51.732999Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:51.822189Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:51.822495Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:51.870858Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:51.908598Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:51.918345Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:51.966891Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:51.999048Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:52.038869Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:52.417217Z DEBUG sending command=SetPromptVolume(6)
+2026-10-12T15:21:52.417848Z TRACE write c=Command data=ff 03 1d 01 06
+2026-10-12T15:21:53.479549Z TRACE write c=Command data=ff 03 fe 01 1d
+2026-10-12T15:21:53.570742Z TRACE notification c=Settings data=ff 04 1d 02 08 0f
+Prompt volume: Some(PromptVolume { level: 8, max: 15 })
+2026-10-12T15:21:53.870219Z DEBUG GATT link released
+===== qcyctl prompt-volume 8  (exit 0, 3.4s) =====
+2026-10-12T15:21:54.047924Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:54.048196Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:54.069652Z DEBUG discovering services attempt=1
+2026-10-12T15:21:54.591845Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:54.841379Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:54.926536Z TRACE read c=Battery data=47 5d 00
+2026-10-12T15:21:55.060264Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:55.145682Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:55.234063Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:55.234320Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:55.278858Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:55.321258Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:55.326300Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:55.367315Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:55.374427Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:55.407872Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:55.836303Z DEBUG sending command=SetPromptVolume(8)
+2026-10-12T15:21:55.836664Z TRACE write c=Command data=ff 03 1d 01 08
+2026-10-12T15:21:56.893909Z TRACE write c=Command data=ff 03 fe 01 1d
+2026-10-12T15:21:57.070487Z TRACE notification c=Settings data=ff 04 1d 02 08 0f
+Prompt volume: Some(PromptVolume { level: 8, max: 15 })
+2026-10-12T15:21:57.295451Z DEBUG GATT link released
+===== qcyctl auto-off 10  (exit 0, 3.4s) =====
+2026-10-12T15:21:57.476363Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:57.476565Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:57.495560Z DEBUG discovering services attempt=1
+2026-10-12T15:21:57.917191Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:58.209831Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:58.296983Z TRACE read c=Battery data=47 5d 00
+2026-10-12T15:21:58.428264Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:58.514652Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:58.602874Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:58.603157Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:58.654779Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:58.689999Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:58.702092Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:58.750379Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:58.779701Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:58.779925Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:59.201025Z DEBUG sending command=SetAutoPowerOff(After { minutes: 10 })
+2026-10-12T15:21:59.201704Z TRACE write c=Command data=ff 04 1f 02 0a 00
+2026-10-12T15:22:00.089820Z TRACE notification c=Battery data=43 5d 00
+2026-10-12T15:22:00.266127Z TRACE write c=Command data=ff 03 fe 01 1f
+2026-10-12T15:22:00.351451Z TRACE notification c=Settings data=ff 04 1f 02 0a 00
+Auto power off: 10 min
+2026-10-12T15:22:00.670403Z DEBUG GATT link released
+===== qcyctl auto-off 5  (exit 0, 3.5s) =====
+2026-10-12T15:22:00.853171Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:22:00.853430Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:22:00.873213Z DEBUG discovering services attempt=1
+2026-10-12T15:22:01.374705Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:22:01.666733Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:22:01.752765Z TRACE read c=Battery data=43 5d 00
+2026-10-12T15:22:01.841847Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 0a 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:22:01.971693Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:22:02.058761Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:22:02.059163Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:22:02.114664Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:22:02.163777Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:22:02.190375Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:22:02.194450Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:22:02.211663Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:22:02.233915Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:22:02.675270Z DEBUG sending command=SetAutoPowerOff(After { minutes: 5 })
+2026-10-12T15:22:02.675755Z TRACE write c=Command data=ff 04 1f 02 05 00
+2026-10-12T15:22:03.738631Z TRACE write c=Command data=ff 03 fe 01 1f
+2026-10-12T15:22:03.808302Z TRACE notification c=Settings data=ff 04 1f 02 05 00
+Auto power off: 5 min
+2026-10-12T15:22:04.139098Z DEBUG GATT link released
+===== qcyctl sleep-timer 30  (exit 0, 3.3s) =====
+2026-10-12T15:22:04.320044Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:22:04.320310Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:22:04.340730Z DEBUG discovering services attempt=1
+2026-10-12T15:22:04.784929Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:22:05.077995Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:22:05.163836Z TRACE read c=Battery data=43 5d 00
+2026-10-12T15:22:05.253008Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:22:05.339330Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:22:05.426470Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:22:05.426679Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:22:05.470157Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:22:05.514637Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:22:05.517910Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:22:05.561238Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:22:05.565946Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:22:05.601452Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:22:06.026073Z DEBUG sending command=SetPowerOffTimer(30)
+2026-10-12T15:22:06.026390Z TRACE write c=Command data=ff 06 14 04 1e 00 00 00
+2026-10-12T15:22:07.088931Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:22:07.176336Z TRACE notification c=Settings data=ff 06 14 04 1e 00 1e 00
+Sleep timer: Some(PowerOffTimer { minutes: 30, progress: 30 })
+2026-10-12T15:22:07.489525Z DEBUG GATT link released
+===== qcyctl sleep-timer 0  (exit 0, 3.4s) =====
+2026-10-12T15:22:07.654942Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:22:07.655144Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:22:07.674572Z DEBUG discovering services attempt=1
+2026-10-12T15:22:08.153267Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:22:08.403296Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:22:08.489539Z TRACE read c=Battery data=43 5d 00
+2026-10-12T15:22:08.622088Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:22:08.708215Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:22:08.795896Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:22:08.796110Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:22:08.848782Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:22:08.883296Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:22:08.895911Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:22:08.943233Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:22:08.973555Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:22:09.013814Z TRACE notification c=Settings data=ff 06 14 04 1e 00 1e 00
+2026-10-12T15:22:09.402841Z DEBUG sending command=SetPowerOffTimer(0)
+2026-10-12T15:22:09.403093Z TRACE write c=Command data=ff 06 14 04 00 00 00 00
+2026-10-12T15:22:10.464122Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:22:10.545198Z TRACE notification c=Settings data=ff 06 14 04 00 00 00 00
+Sleep timer: Some(PowerOffTimer { minutes: 0, progress: 0 })
+2026-10-12T15:22:10.864138Z DEBUG GATT link released
+===== qcyctl wear-detection on  (exit 1, 0.9s) =====
+2026-10-12T15:22:11.113071Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:22:11.113335Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:22:11.133061Z DEBUG discovering services attempt=1
+2026-10-12T15:22:11.740350Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:22:11.821775Z DEBUG GATT link released
+Error: Bluetooth error: The operation was canceled by the user. (0x800704c7)
+===== qcyctl wear-detection off  (exit 1, 38.6s) =====
+2026-10-12T15:22:12.006998Z DEBUG advertisement watcher started
+2026-10-12T15:22:24.045480Z DEBUG advertisement watcher stopped
+2026-10-12T15:22:24.047114Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:22:24.065099Z DEBUG discovering services attempt=1
+2026-10-12T15:22:31.861019Z  WARN service discovery failed attempt=1 status=GattCommunicationStatus(1)
+2026-10-12T15:22:32.367589Z DEBUG discovering services attempt=2
+2026-10-12T15:22:40.128855Z  WARN service discovery failed attempt=2 status=GattCommunicationStatus(1)
+2026-10-12T15:22:41.143266Z DEBUG discovering services attempt=3
+2026-10-12T15:22:48.894910Z  WARN service discovery failed attempt=3 status=GattCommunicationStatus(1)
+Error: the connection attempt was aborted; the earbuds need to be found again

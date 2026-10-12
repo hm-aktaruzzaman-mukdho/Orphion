@@ -1,0 +1,88 @@
+2026-10-12T17:10:58.823662Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T17:10:59.448562Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T17:10:59.449907Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T17:10:59.450403Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:10:59.450852Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T17:11:01.702613Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T17:11:02.126656Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:11:11.997205Z DEBUG qcy_client::backend::winrt::gatt: Windows reports the link as disconnected
+2026-10-12T17:11:11.998401Z  INFO qcy_client::client: BLE link lost
+2026-10-12T17:11:12.000624Z DEBUG qcy_client::backend::winrt::gatt: GATT link released
+2026-10-12T17:11:12.008415Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=1
+2026-10-12T17:11:13.016923Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=2
+2026-10-12T17:11:14.025977Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=3
+2026-10-12T17:11:15.042711Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=4
+2026-10-12T17:11:39.125233Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T17:11:47.140349Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T17:11:47.141413Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T17:11:47.141641Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:11:47.141767Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T17:11:48.839914Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T17:11:49.329595Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:12:21.227907Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:12:21.646808Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:12:21.997308Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:12:22.347150Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:12:22.916546Z DEBUG qcy_client::backend::winrt::gatt: Windows reports the link as disconnected
+2026-10-12T17:12:22.918321Z  INFO qcy_client::client: BLE link lost
+2026-10-12T17:12:22.919735Z DEBUG qcy_client::backend::winrt::gatt: GATT link released
+2026-10-12T17:12:22.962621Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T17:12:23.575598Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T17:12:23.577405Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T17:12:23.577571Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:12:23.577696Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T17:12:25.335726Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T17:12:25.775625Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:12:57.219483Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:13:11.571238Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:15:20.852615Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T17:15:20.852926Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:15:20.853064Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T17:15:21.316297Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T17:15:22.188154Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:15:25.689895Z DEBUG qcy_client::client: sending command=SetToggle(DualDevice, false)
+2026-10-12T17:15:26.903266Z DEBUG qcy_client::backend::winrt::gatt: Windows reports the link as disconnected
+2026-10-12T17:15:26.903268Z DEBUG qcy_client::backend::winrt::gatt: Windows reports the link as disconnected
+2026-10-12T17:15:26.904987Z  INFO qcy_client::client: BLE link lost
+2026-10-12T17:15:26.905143Z  INFO qcy_client::client: BLE link lost
+2026-10-12T17:15:26.906295Z DEBUG qcy_client::backend::winrt::gatt: GATT link released
+2026-10-12T17:15:26.906509Z DEBUG qcy_client::backend::winrt::gatt: GATT link released
+2026-10-12T17:15:26.954819Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T17:15:26.955007Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T17:15:31.927465Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T17:15:31.927564Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T17:15:31.928937Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T17:15:31.929047Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T17:15:31.929239Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:15:31.929410Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:15:31.929532Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T17:15:31.929646Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T17:15:35.035941Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T17:15:35.145091Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T17:15:35.815426Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:15:35.815453Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:15:41.801132Z DEBUG qcy_client::client: sending command=SetToggle(DualDevice, true)
+2026-10-12T17:15:42.699182Z DEBUG qcy_client::backend::winrt::gatt: Windows reports the link as disconnected
+2026-10-12T17:15:42.699217Z DEBUG qcy_client::backend::winrt::gatt: Windows reports the link as disconnected
+2026-10-12T17:15:42.699741Z  INFO qcy_client::client: BLE link lost
+2026-10-12T17:15:42.699933Z  INFO qcy_client::client: BLE link lost
+2026-10-12T17:15:42.701945Z DEBUG qcy_client::backend::winrt::gatt: GATT link released
+2026-10-12T17:15:42.747999Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T17:15:42.856154Z DEBUG qcy_client::client: confirmation failed: the earbuds are not connected
+2026-10-12T17:15:42.858013Z DEBUG qcy_client::backend::winrt::gatt: GATT link released
+2026-10-12T17:15:42.903952Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T17:15:46.629966Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T17:15:46.632788Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T17:15:46.633041Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:15:46.633260Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T17:15:46.779324Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T17:15:46.780750Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T17:15:46.781172Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:15:46.781368Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T17:15:49.144645Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T17:15:49.267901Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T17:15:49.982068Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:15:49.982019Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:17:01.868689Z DEBUG qcy_client::backend::winrt::gatt: GATT link released
+2026-10-12T17:17:05.058328Z  INFO qcy_tray::win: quitting
+2026-10-12T17:17:05.069147Z DEBUG qcy_client::backend::winrt::gatt: GATT link released

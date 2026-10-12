@@ -1,0 +1,7 @@
+﻿
+run 1 status took 3.1s exit=0
+  21:20:00 +6s found=True
+run 2 status took 3.4s exit=0
+  21:20:09 +6s found=True
+run 3 status took 3.7s exit=0
+  21:20:19 +6s found=True

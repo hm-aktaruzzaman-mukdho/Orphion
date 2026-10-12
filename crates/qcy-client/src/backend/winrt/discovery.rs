@@ -24,7 +24,7 @@ use windows::Devices::Bluetooth::{
 use windows::Devices::Enumeration::DeviceInformation;
 use windows::Devices::Radios::RadioState;
 use windows::Foundation::TypedEventHandler;
-use windows::core::Ref;
+use windows::core::{HRESULT, Ref};
 
 use super::gatt::WinGattLink;
 use super::{buffer_bytes, mac_from_u64};
@@ -32,6 +32,9 @@ use crate::Error;
 use crate::transport::{Backend, Endpoint, Selector};
 
 const POLL_INTERVAL: Duration = Duration::from_millis(300);
+/// `HRESULT_FROM_WIN32(ERROR_DEVICE_NOT_READY)`: what the watcher reports
+/// while the radio is off.
+const ERROR_DEVICE_NOT_READY: HRESULT = HRESULT(0x8007_10DF_u32 as i32);
 
 /// The last advertisement seen from one BLE address.
 #[derive(Debug, Clone)]
@@ -62,24 +65,20 @@ impl Backend for WinRt {
     type Link = WinGattLink;
 
     async fn init() -> Result<Self, Error> {
-        let adapter = BluetoothAdapter::GetDefaultAsync()?
-            .await
-            .map_err(|_| Error::NoAdapter)?;
+        let adapter = default_adapter().await?;
         if !adapter.IsLowEnergySupported()? {
             return Err(Error::Backend(
                 "this Bluetooth adapter does not support Bluetooth Low Energy".into(),
             ));
         }
-        let radio = adapter.GetRadioAsync()?.await?;
-        if radio.State()? != RadioState::On {
-            return Err(Error::AdapterOff);
-        }
+        ensure_radio_on(&adapter).await?;
         let backend = Self::default();
         backend.load_cache();
         Ok(backend)
     }
 
     async fn scan(&self, duration: Duration) -> Result<Vec<Endpoint>, Error> {
+        ensure_radio_on(&default_adapter().await?).await?;
         let started = std::time::Instant::now();
         let scanner = Scanner::start(Arc::clone(&self.seen))?;
         sleep(duration).await;
@@ -95,6 +94,10 @@ impl Backend for WinRt {
     }
 
     async fn find(&self, selector: &Selector, timeout: Duration) -> Result<Endpoint, Error> {
+        // The backend outlives radio changes (it is reused across reconnects);
+        // without this, a scan with the radio off would fall back to a cached
+        // endpoint and fail later with a misleading error.
+        ensure_radio_on(&default_adapter().await?).await?;
         let classic = classic_devices().await;
 
         // Earbuds connected by another program do not advertise; check the
@@ -125,9 +128,11 @@ impl Backend for WinRt {
             if Instant::now() >= deadline {
                 drop(scanner);
                 self.save_cache();
-                return last_seen
-                    .or_else(|| Endpoint::pick(endpoints, selector, false))
-                    .ok_or_else(Error::not_found);
+                // Unlike BlueZ, no fallback to remembered endpoints: Windows
+                // can only connect to an unpaired device while it advertises,
+                // and connected ones were handled above. A silent one is in
+                // its case, out of range or held by the phone app.
+                return last_seen.ok_or_else(Error::not_found);
             }
             sleep(POLL_INTERVAL).await;
         }
@@ -267,7 +272,15 @@ impl Scanner {
             },
         );
         let token = watcher.Received(&handler)?;
-        watcher.Start()?;
+        if let Err(e) = watcher.Start() {
+            watcher.RemoveReceived(token).ok();
+            // The radio was switched off between the check and the scan.
+            return Err(if e.code() == ERROR_DEVICE_NOT_READY {
+                Error::AdapterOff
+            } else {
+                e.into()
+            });
+        }
         debug!("advertisement watcher started");
         Ok(Self { watcher, token })
     }
@@ -302,6 +315,22 @@ fn parse_report(args: &BluetoothLEAdvertisementReceivedEventArgs) -> Option<(u64
         at: Some(std::time::Instant::now()),
     };
     Some((args.BluetoothAddress().ok()?, seen))
+}
+
+async fn default_adapter() -> Result<BluetoothAdapter, Error> {
+    BluetoothAdapter::GetDefaultAsync()?
+        .await
+        .map_err(|_| Error::NoAdapter)
+}
+
+/// Fails with [`Error::AdapterOff`] while the Bluetooth radio is off.
+async fn ensure_radio_on(adapter: &BluetoothAdapter) -> Result<(), Error> {
+    let radio = adapter.GetRadioAsync()?.await?;
+    if radio.State()? == RadioState::On {
+        Ok(())
+    } else {
+        Err(Error::AdapterOff)
+    }
 }
 
 /// Whether Windows currently has a link to the given BLE address.

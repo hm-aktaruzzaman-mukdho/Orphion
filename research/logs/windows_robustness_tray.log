@@ -1,0 +1,81 @@
+2026-10-12T16:16:47.788132Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T16:16:48.412670Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T16:16:48.416422Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T16:16:48.417160Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T16:16:48.417718Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T16:16:50.177028Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T16:16:50.612572Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T16:18:26.464815Z DEBUG qcy_client::backend::winrt::gatt: Windows reports the link as disconnected
+2026-10-12T16:18:26.465203Z  INFO qcy_client::client: BLE link lost
+2026-10-12T16:18:26.467801Z DEBUG qcy_client::backend::winrt::gatt: GATT link released
+2026-10-12T16:18:26.499416Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T16:18:36.657579Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T16:18:36.661318Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T16:18:36.661514Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T16:18:36.662132Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: the connection attempt was aborted; the earbuds need to be found again; retrying attempt=1
+2026-10-12T16:18:37.172275Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T16:18:37.173175Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: the connection attempt was aborted; the earbuds need to be found again; retrying attempt=2
+2026-10-12T16:18:38.178994Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=3
+2026-10-12T16:18:38.181766Z  WARN qcy_client::manager: connection attempt failed: the connection attempt was aborted; the earbuds need to be found again attempt=1
+2026-10-12T16:18:39.205013Z  WARN qcy_client::manager: connection attempt failed: Bluetooth error: The device is not ready for use. (0x800710df) attempt=2
+2026-10-12T16:18:40.216543Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=3
+2026-10-12T16:18:41.226999Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=4
+2026-10-12T16:19:05.238602Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=5
+2026-10-12T16:19:35.250397Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=6
+2026-10-12T16:20:05.261833Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=7
+2026-10-12T16:20:35.273355Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=8
+2026-10-12T16:21:05.284217Z  WARN qcy_client::manager: connection attempt failed: Bluetooth is turned off attempt=9
+2026-10-12T16:21:35.343757Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T16:21:36.259511Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T16:21:36.260991Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T16:21:36.261180Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T16:21:36.261335Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T16:21:38.330948Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T16:21:38.802517Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:01:57.881266Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T17:01:57.881684Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:01:57.881855Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T17:01:58.358808Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T17:01:59.201434Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:02:25.789919Z DEBUG qcy_client::backend::winrt::gatt: GATT link released
+2026-10-12T17:02:39.759796Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T17:02:39.760221Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:02:39.760384Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T17:02:40.317907Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T17:02:41.155838Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T17:02:57.725376Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Adaptive, level: 0 })
+2026-10-12T17:03:01.843383Z DEBUG qcy_client::client: sending command=SetAnc(Transparency { level: 4 })
+2026-10-12T17:03:02.787371Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Adaptive, level: 0 })
+2026-10-12T17:03:04.311524Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Indoor, level: 0 })
+2026-10-12T17:03:04.675998Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:04.676033Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:06.316059Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Commuting, level: 0 })
+2026-10-12T17:03:07.678187Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Noisy, level: 0 })
+2026-10-12T17:03:07.826735Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:07.826740Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:08.706277Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: AntiWind, level: 0 })
+2026-10-12T17:03:10.461651Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: AntiWind, level: 0 })
+2026-10-12T17:03:10.976567Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:10.976577Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:12.044232Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Noisy, level: 0 })
+2026-10-12T17:03:13.688909Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:13.688928Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:16.358926Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:16.358936Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:17.369918Z DEBUG qcy_client::client: sending command=SetAnc(Transparency { level: 4 })
+2026-10-12T17:03:19.431496Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Adaptive, level: 0 })
+2026-10-12T17:03:20.690858Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:20.690862Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:22.694953Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Noisy, level: 0 })
+2026-10-12T17:03:26.280459Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Noisy, level: 0 })
+2026-10-12T17:03:27.209753Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:27.209778Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:30.359944Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:30.359951Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:30.540749Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Noisy, level: 2 })
+2026-10-12T17:03:32.547788Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:32.547796Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:46.531764Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Adaptive, level: 0 })
+2026-10-12T17:03:53.330593Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:53.330610Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T17:03:53.661271Z DEBUG qcy_client::backend::winrt::gatt: GATT link released

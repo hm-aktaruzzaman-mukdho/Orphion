@@ -1,0 +1,129 @@
+﻿
+===== qcyctl anc transparency --level 3  (exit 0, 6.1s) =====
+2026-10-12T15:20:42.368253Z DEBUG advertisement watcher started
+2026-10-12T15:20:44.205917Z DEBUG advertisement watcher stopped
+2026-10-12T15:20:44.207450Z  INFO found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T15:20:44.207561Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:20:44.223319Z DEBUG discovering services attempt=1
+2026-10-12T15:20:45.939215Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:20:46.077325Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:20:46.104599Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:20:46.200772Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 02 00 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:20:46.229233Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:20:46.255857Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:20:46.256278Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:20:46.283701Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:20:46.299802Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:20:46.327411Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:20:46.347224Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:20:46.378640Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:20:46.395847Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:20:46.860541Z DEBUG sending command=SetAnc(Transparency { level: 3 })
+2026-10-12T15:20:46.861082Z TRACE write c=Command data=ff 05 17 03 03 01 03
+2026-10-12T15:20:47.299935Z TRACE notification c=Settings data=ff 05 17 03 03 01 03
+2026-10-12T15:20:47.920864Z TRACE write c=Command data=ff 03 fe 01 17
+2026-10-12T15:20:47.986309Z TRACE notification c=Settings data=ff 05 17 03 03 01 03
+Noise control: Transparency · level 3
+2026-10-12T15:20:48.325261Z DEBUG GATT link released
+===== qcyctl anc voice  (exit 0, 3.4s) =====
+2026-10-12T15:20:48.553466Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:20:48.553726Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:20:48.573397Z DEBUG discovering services attempt=1
+2026-10-12T15:20:49.053108Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:20:49.345825Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:20:49.431667Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:20:49.520937Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 03 01 03 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:20:49.607710Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:20:49.693896Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:20:49.694117Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:20:49.752307Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:20:49.782566Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:20:49.799690Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:20:49.848562Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:20:49.913771Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:20:49.913981Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:20:49.956239Z TRACE notification c=Settings data=ff 03 28 01 01
+2026-10-12T15:20:49.956596Z DEBUG undecoded setting id=AncResult payload=01
+2026-10-12T15:20:50.299022Z DEBUG sending command=SetAnc(VoiceTransparency)
+2026-10-12T15:20:50.299650Z TRACE write c=Command data=ff 05 17 03 03 02 00
+2026-10-12T15:20:50.743288Z TRACE notification c=Settings data=ff 05 17 03 03 02 00
+2026-10-12T15:20:51.363652Z TRACE write c=Command data=ff 03 fe 01 17
+2026-10-12T15:20:51.443886Z TRACE notification c=Settings data=ff 05 17 03 03 02 00
+Noise control: Transparency · voice
+2026-10-12T15:20:51.753532Z DEBUG GATT link released
+===== qcyctl anc on --scene adaptive  (exit 0, 3.4s) =====
+2026-10-12T15:20:51.927996Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:20:51.928272Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:20:51.947510Z DEBUG discovering services attempt=1
+2026-10-12T15:20:52.465826Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:20:52.714246Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:20:52.756696Z TRACE notification c=Settings data=ff 03 28 01 01
+2026-10-12T15:20:52.757162Z DEBUG undecoded setting id=AncResult payload=01
+2026-10-12T15:20:52.801008Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:20:52.889499Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 03 02 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:20:52.975618Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:20:53.063969Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:20:53.064407Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:20:53.115750Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:20:53.163855Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:20:53.194240Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:20:53.198386Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:20:53.211057Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:20:53.236527Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:20:53.661571Z DEBUG sending command=SetAnc(NoiseCancelling { scene: Adaptive, level: 0 })
+2026-10-12T15:20:53.662168Z TRACE write c=Command data=ff 05 17 03 01 05 00
+2026-10-12T15:20:54.156723Z TRACE notification c=Settings data=ff 05 17 03 01 05 00
+2026-10-12T15:20:54.727063Z TRACE write c=Command data=ff 03 fe 01 17
+2026-10-12T15:20:54.812363Z TRACE notification c=Settings data=ff 05 17 03 01 05 00
+Noise control: Noise cancelling · Adaptive
+2026-10-12T15:20:55.116484Z DEBUG GATT link released
+===== qcyctl toggle game-mode on  (exit 0, 3.5s) =====
+2026-10-12T15:20:55.289867Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:20:55.290174Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:20:55.309917Z DEBUG discovering services attempt=1
+2026-10-12T15:20:55.790194Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:20:56.040068Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:20:56.170174Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:20:56.343658Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:20:56.431134Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:20:56.520127Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:20:56.520545Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:20:56.572154Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:20:56.620314Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:20:56.650102Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:20:56.668657Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:20:56.912685Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:20:56.956433Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:20:57.118404Z DEBUG sending command=SetToggle(GameMode, true)
+2026-10-12T15:20:57.118824Z TRACE write c=Command data=ff 03 09 01 01
+2026-10-12T15:20:57.174753Z TRACE notification c=Settings data=ff 03 09 01 01
+2026-10-12T15:20:58.180229Z TRACE write c=Command data=ff 03 fe 01 09
+2026-10-12T15:20:58.268865Z TRACE notification c=Settings data=ff 03 09 01 01
+Gaming mode: on
+2026-10-12T15:20:58.586853Z DEBUG GATT link released
+===== qcyctl toggle game-mode off  (exit 0, 3.4s) =====
+2026-10-12T15:20:58.761598Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:20:58.762049Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:20:58.782348Z DEBUG discovering services attempt=1
+2026-10-12T15:20:59.290340Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:20:59.539484Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:20:59.626132Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:20:59.799624Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 01 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:20:59.887987Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:20:59.975942Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:20:59.976230Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:00.031045Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:00.079390Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:00.125974Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:00.150517Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:00.195099Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:00.237767Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:00.577012Z DEBUG sending command=SetToggle(GameMode, false)
+2026-10-12T15:21:00.577691Z TRACE write c=Command data=ff 03 09 01 02
+2026-10-12T15:21:00.630901Z TRACE notification c=Settings data=ff 03 09 01 02
+2026-10-12T15:21:01.629631Z TRACE write c=Command data=ff 03 fe 01 09
+2026-10-12T15:21:01.724852Z TRACE notification c=Settings data=ff 03 09 01 02
+2026-10-12T15:21:01.987141Z TRACE notification c=Settings data=ff 03 28 01 01
+2026-10-12T15:21:01.987410Z DEBUG undecoded setting id=AncResult payload=01
+Gaming mode: off
+2026-10-12T15:21:02.031173Z DEBUG GATT link released

@@ -34,7 +34,10 @@ pub enum Command {
     SetDeviceName(String),
     SetWearDetection(WearDetection),
     SetAutoPowerOff(AutoPowerOff),
-    /// Sleep timer in minutes, 0 cancels it.
+    /// Sleep timer in minutes; 0 (or `u16::MAX`) turns it off.
+    ///
+    /// On the wire "off" is `0xFFFF`. A literal 0 is the app's "Shut down"
+    /// button and powers the earbuds off at once, so it is never sent.
     SetPowerOffTimer(u16),
     /// Media volume for the left and right bud.
     SetVolume {
@@ -83,7 +86,10 @@ impl Command {
                 }
                 cmd(CommandId::Balance, &[*v])
             }
-            Command::SetPromptVolume(v) => cmd(CommandId::PromptVolume, &[*v]),
+            // `[level, 0]`, as the app sends it to every model except vendor
+            // 0x4161 (which gets just `[level]`). The MeloBuds Pro ignores
+            // the one-byte form.
+            Command::SetPromptVolume(v) => cmd(CommandId::PromptVolume, &[*v, 0]),
             Command::SetPromptLanguage(code) => {
                 if code.is_empty() || !code.is_ascii() {
                     return Err(ProtocolError::InvalidValue(format!(
@@ -104,6 +110,7 @@ impl Command {
             Command::SetWearDetection(w) => cmd(CommandId::WearDetection, &w.encode()),
             Command::SetAutoPowerOff(a) => cmd(CommandId::AutoPowerOff, &a.encode()),
             Command::SetPowerOffTimer(minutes) => {
+                let minutes = if *minutes == 0 { u16::MAX } else { *minutes };
                 let [lo, hi] = minutes.to_le_bytes();
                 cmd(CommandId::PowerOffTimer, &[lo, hi, 0, 0])
             }
@@ -239,6 +246,21 @@ mod tests {
             bytes(Command::SetPowerOffTimer(30)),
             [0xFF, 6, 0x14, 4, 30, 0, 0, 0]
         );
+    }
+
+    #[test]
+    fn sleep_timer_off_is_never_shut_down() {
+        // The app's "Not activated" entry sends 65535; minutes = 0 is its
+        // "Shut down" button, which powers the earbuds off.
+        let off = [0xFF, 6, 0x14, 4, 0xFF, 0xFF, 0, 0];
+        assert_eq!(bytes(Command::SetPowerOffTimer(0)), off);
+        assert_eq!(bytes(Command::SetPowerOffTimer(u16::MAX)), off);
+    }
+
+    #[test]
+    fn prompt_volume_is_two_bytes() {
+        // ToneVolumeManagerActivity: setBytesValue(mac, 29, {level, 0}).
+        assert_eq!(bytes(Command::SetPromptVolume(6)), [0xFF, 4, 0x1D, 2, 6, 0]);
     }
 
     #[test]

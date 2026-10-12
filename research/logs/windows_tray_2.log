@@ -1,0 +1,24 @@
+2026-10-12T15:53:51.756611Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T15:53:52.998249Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T15:53:53.004681Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T15:53:53.005238Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:53:53.005697Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:53:54.769313Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T15:53:55.220701Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T15:54:27.916184Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:54:27.916725Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:54:27.916961Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:54:28.447305Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T15:54:29.231839Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T15:54:30.283546Z DEBUG qcy_client::backend::winrt::gatt: GATT link released
+2026-10-12T15:55:15.549764Z DEBUG qcy_client::client: sending command=SetAnc(NoiseCancelling { scene: Adaptive, level: 0 })
+2026-10-12T15:55:22.503543Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T15:55:50.656245Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:55:50.658386Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:55:50.658624Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:55:51.178752Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T15:55:52.021036Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T15:55:54.671656Z DEBUG qcy_client::client: sending command=SetAnc(Off)
+2026-10-12T15:55:57.199274Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T15:55:57.199288Z DEBUG qcy_client::client: undecoded setting id=AncResult payload=01
+2026-10-12T15:56:14.218891Z DEBUG qcy_client::backend::winrt::gatt: GATT link released

@@ -1,0 +1,75 @@
+﻿
+===== qcyctl status  (exit 0, 2.4s) =====
+2026-10-12T17:11:58.197402Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T17:11:58.197649Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:11:58.197709Z DEBUG opening GATT link attempt=1
+2026-10-12T17:11:58.644148Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T17:11:58.896103Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T17:11:58.982663Z TRACE read c=Battery data=31 51 00
+2026-10-12T17:11:59.114526Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 5d 5d 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T17:11:59.245927Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T17:11:59.376794Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T17:11:59.376993Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T17:11:59.421097Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T17:11:59.468826Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T17:11:59.507615Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T17:11:59.517100Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T17:11:59.769365Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T17:11:59.770106Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+QCY MeloBuds Pro (QCY MeloBuds Pro)
+  Bluetooth name   QCY MeloBuds Pro
+  Firmware         L 2.0.6  R 2.0.6
+  Battery          L 49%  R 81%  case –
+  Noise control    Noise cancelling · Adaptive
+  Equalizer        Default
+       30 Hz   +0.0 dB  Q 0.70  type 4
+      220 Hz   -8.0 dB  Q 1.00  type 0
+      900 Hz   -2.0 dB  Q 1.50  type 0
+     2800 Hz   +4.0 dB  Q 1.00  type 0
+    12000 Hz   +3.0 dB  Q 0.80  type 0
+     5300 Hz   -3.0 dB  Q 2.00  type 0
+  Gaming mode      off
+  Sleep mode       off
+  LDAC             off
+  Dual device connection on
+  Balance          50 (50 = centre)
+  Media volume     L 93  R 93  (max 15)
+  Prompt volume    8 / 15
+  Prompt language  English
+  Wear detection   off; music: Pause and resume; ANC follows wear: yes
+  Auto power off   5 min after disconnect
+  Sleep timer      off
+  Touch controls
+    Left · Single tap        No action
+    Right · Single tap       No action
+    Left · Double tap        Play / pause
+    Right · Double tap       Play / pause
+    Left · Triple tap        Voice assistant
+    Right · Triple tap       Next track
+    Left · Quadruple tap     No action
+    Right · Quadruple tap    No action
+2026-10-12T17:11:59.984795Z DEBUG GATT link released
+===== qcyctl anc on --scene adaptive  (exit 0, 3.4s) =====
+2026-10-12T17:12:00.161458Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T17:12:00.161667Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:12:00.161714Z DEBUG opening GATT link attempt=1
+2026-10-12T17:12:00.702239Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T17:12:00.953629Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T17:12:01.039508Z TRACE read c=Battery data=31 51 00
+2026-10-12T17:12:01.171227Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 5d 5d 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T17:12:01.257366Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T17:12:01.388782Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T17:12:01.388980Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T17:12:01.440558Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T17:12:01.488174Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T17:12:01.519244Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T17:12:01.534905Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T17:12:01.782687Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T17:12:01.826194Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T17:12:01.996975Z DEBUG sending command=SetAnc(NoiseCancelling { scene: Adaptive, level: 0 })
+2026-10-12T17:12:01.997296Z TRACE write c=Command data=ff 05 17 03 01 05 00
+2026-10-12T17:12:02.439006Z TRACE notification c=Settings data=ff 05 17 03 01 05 00
+2026-10-12T17:12:03.061821Z TRACE write c=Command data=ff 03 fe 01 17
+2026-10-12T17:12:03.138750Z TRACE notification c=Settings data=ff 05 17 03 01 05 00
+Noise control: Noise cancelling · Adaptive
+2026-10-12T17:12:03.464357Z DEBUG GATT link released

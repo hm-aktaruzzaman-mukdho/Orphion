@@ -1,0 +1,78 @@
+2026-10-12T15:49:50.463031Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:49:50.463278Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:49:50.463341Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:49:50.655576Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=1
+2026-10-12T15:49:51.163691Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T15:49:51.354946Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=2
+2026-10-12T15:49:52.359309Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=3
+2026-10-12T15:49:52.537075Z  WARN qcy_client::manager: connection attempt failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3) attempt=1
+2026-10-12T15:49:53.610344Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:49:53.610545Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:49:53.610573Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:49:53.804654Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=1
+2026-10-12T15:49:54.306135Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T15:49:54.504923Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=2
+2026-10-12T15:49:55.506710Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=3
+2026-10-12T15:49:55.688020Z  WARN qcy_client::manager: connection attempt failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3) attempt=2
+2026-10-12T15:49:56.763118Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:49:56.763220Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:49:56.763240Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:49:56.956253Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=1
+2026-10-12T15:49:57.462004Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T15:49:57.656738Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=2
+2026-10-12T15:49:58.663050Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=3
+2026-10-12T15:49:58.837931Z  WARN qcy_client::manager: connection attempt failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3) attempt=3
+2026-10-12T15:49:59.900846Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:49:59.900927Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:49:59.900957Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:50:00.148131Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=1
+2026-10-12T15:50:00.650775Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T15:50:00.850593Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=2
+2026-10-12T15:50:01.855163Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=3
+2026-10-12T15:50:02.075129Z  WARN qcy_client::manager: connection attempt failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3) attempt=4
+2026-10-12T15:50:26.162978Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:50:26.163098Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:50:26.163116Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:50:26.399691Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=1
+2026-10-12T15:50:26.906185Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T15:50:27.100436Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=2
+2026-10-12T15:50:28.107823Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=3
+2026-10-12T15:50:28.281432Z  WARN qcy_client::manager: connection attempt failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3) attempt=5
+2026-10-12T15:50:58.356463Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:50:58.356547Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:50:58.356594Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:50:58.559096Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=1
+2026-10-12T15:50:59.062764Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T15:50:59.260122Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=2
+2026-10-12T15:51:00.262318Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=3
+2026-10-12T15:51:00.440448Z  WARN qcy_client::manager: connection attempt failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3) attempt=6
+2026-10-12T15:51:30.515351Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:51:30.515473Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:51:30.515505Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:51:30.713724Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=1
+2026-10-12T15:51:31.223692Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T15:51:31.459116Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=2
+2026-10-12T15:51:32.464013Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=3
+2026-10-12T15:51:32.639852Z  WARN qcy_client::manager: connection attempt failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3) attempt=7
+2026-10-12T15:52:02.721863Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:52:02.722039Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:52:02.722072Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:52:02.915693Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=1
+2026-10-12T15:52:03.424826Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T15:52:03.703910Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=2
+2026-10-12T15:52:04.705059Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=3
+2026-10-12T15:52:04.884950Z  WARN qcy_client::manager: connection attempt failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3) attempt=8
+2026-10-12T15:52:34.981485Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:52:34.981560Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:52:34.981577Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:52:35.162413Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=1
+2026-10-12T15:52:35.670472Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T15:52:35.861458Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=2
+2026-10-12T15:52:36.864071Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=3
+2026-10-12T15:52:37.043279Z  WARN qcy_client::manager: connection attempt failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3) attempt=9
+2026-10-12T15:53:07.129895Z  INFO qcy_client::backend::winrt::discovery: endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:53:07.129995Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:53:07.130015Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:53:07.317207Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=1
+2026-10-12T15:53:07.819132Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=2
+2026-10-12T15:53:08.017540Z  WARN qcy_client::backend::winrt::gatt: GATT setup failed: Bluetooth error: listing characteristics failed: GattCommunicationStatus(3); retrying attempt=2

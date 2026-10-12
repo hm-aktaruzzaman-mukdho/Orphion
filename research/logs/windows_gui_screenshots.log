@@ -1,0 +1,8 @@
+2026-10-12T15:47:52.176510Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher started
+2026-10-12T15:47:52.484901Z DEBUG qcy_client::backend::winrt::discovery: advertisement watcher stopped
+2026-10-12T15:47:52.486785Z  INFO qcy_client::backend::winrt::discovery: found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T15:47:52.486877Z  INFO qcy_client::client: connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:47:52.486905Z DEBUG qcy_client::backend::winrt::gatt: opening GATT link attempt=1
+2026-10-12T15:47:54.602573Z DEBUG qcy_client::backend::winrt::gatt: GATT session ready mtu=220 characteristics=6
+2026-10-12T15:47:55.027935Z  INFO qcy_client::manager: connected name=QCY MeloBuds Pro
+2026-10-12T15:48:05.026135Z DEBUG qcy_client::backend::winrt::gatt: GATT link released

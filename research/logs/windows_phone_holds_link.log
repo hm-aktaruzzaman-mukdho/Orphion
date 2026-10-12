@@ -1,0 +1,9 @@
+2026-10-12T17:19:26.506486Z DEBUG advertisement watcher started
+2026-10-12T17:19:38.561132Z DEBUG advertisement watcher stopped
+2026-10-12T17:19:38.562608Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:19:38.562679Z DEBUG opening GATT link attempt=1
+2026-10-12T17:19:46.262603Z  WARN GATT setup failed: the connection attempt was aborted; the earbuds need to be found again; retrying attempt=1
+2026-10-12T17:19:46.771262Z DEBUG opening GATT link attempt=2
+2026-10-12T17:19:54.473198Z  WARN GATT setup failed: the connection attempt was aborted; the earbuds need to be found again; retrying attempt=2
+2026-10-12T17:19:55.482241Z DEBUG opening GATT link attempt=3
+Error: the connection attempt was aborted; the earbuds need to be found again

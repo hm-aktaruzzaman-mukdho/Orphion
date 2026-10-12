@@ -1,0 +1,3 @@
+2026-10-12T17:20:33.925899Z DEBUG advertisement watcher started
+2026-10-12T17:20:46.041240Z DEBUG advertisement watcher stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.

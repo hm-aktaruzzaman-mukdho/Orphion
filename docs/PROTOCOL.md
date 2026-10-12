@@ -115,12 +115,12 @@ On/off settings are written as `1` = on, `2` = off and read back as `1` = on
 | 0x08 | `VOICE` (media volume)       | `[left, right, 0]` → `[left, right, max]`               |
 | 0x09 | `DIYANSHI` (gaming mode)     | bool                                                    |
 | 0x10 | `SLEEPMODE`                  | bool (touch disabled until back in case)                |
-| 0x14 | `POWERMANAGER` (sleep timer) | `[min_lo, min_hi, 0, 0]` → `[min_lo, min_hi, x_lo, x_hi]`, `FFFF` = off |
+| 0x14 | `POWERMANAGER` (sleep timer) | `[min_lo, min_hi, 0, 0]` → `[min_lo, min_hi, left_lo, left_hi]`, `FFFF` = off. **Minutes `0` powers the earbuds off at once** (the app's "Shut down" button); never send it to cancel |
 | 0x16 | `BALANCE`                    | `0..=100`, 50 = centre                                  |
 | 0x17 | `ANCSETTING`                 | `[mode, scene, level]`, see §6                          |
 | 0x18 | `PAIRNAME`                   | UTF-8 name ≤ 32 bytes; read is NUL padded               |
 | 0x19 | `VOICENAME` (prompt language)| ASCII code: `WQ00` English, `WQ01` Chinese              |
-| 0x1D | `TONEVOLUME`                 | write `[level]` → `[level, max]` (app: 4/6/8/10 of 15)  |
+| 0x1D | `TONEVOLUME`                 | write `[level, 0]` → `[level, max]` (app: 4/6/8/10 of 15); vendor `0x4161` only takes `[level]` |
 | 0x1F | `STANDBY` (auto power off)   | u16 LE minutes after disconnect, `FFFF` = never         |
 | 0x20 | `MULTIEQ`                    | parametric EQ, 6-byte bands (older models)              |
 | 0x22 | `MULTIEQ2`                   | parametric EQ, 7-byte bands, see §7                     |

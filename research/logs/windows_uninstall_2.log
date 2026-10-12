@@ -1,0 +1,14 @@
+﻿powershell : Remove-Item : Cannot remove item C:\Users\MUKDHO\AppData\Local\Programs\QCY Earbuds\qcy-gui.exe: Access 
+to the path 
+At line:1 char:1027
++ ... rocessName; powershell -NoProfile -ExecutionPolicy Bypass -File "$d\u ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Remove-Item : C...ss to the path :String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+'qcy-gui.exe' is denied.
+At D:\Code\QCY_APP\dist\windows-native\qcy-earbuds-0.1.0-windows-x64\uninstall.ps1:20 char:28
++     if (Test-Path $item) { Remove-Item $item -Recurse -Force }
++                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : PermissionDenied: (qcy-gui.exe:FileInfo) [Remove-Item], UnauthorizedAccessException
+    + FullyQualifiedErrorId : RemoveFileSystemItemUnAuthorizedAccess,Microsoft.PowerShell.Commands.RemoveItemCommand

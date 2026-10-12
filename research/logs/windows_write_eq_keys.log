@@ -1,0 +1,239 @@
+﻿
+===== qcyctl eq preset Pop  (exit 0, 5.2s) =====
+2026-10-12T15:21:09.305015Z DEBUG advertisement watcher started
+2026-10-12T15:21:09.917383Z DEBUG advertisement watcher stopped
+2026-10-12T15:21:09.918973Z  INFO found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:09.919055Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:09.931976Z DEBUG discovering services attempt=1
+2026-10-12T15:21:11.913535Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:12.106005Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:12.133223Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:21:12.174554Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:12.201870Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:12.229013Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:12.229383Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:12.257329Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:12.272938Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:12.300961Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:12.320861Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:12.338597Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:12.369058Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:12.829379Z DEBUG sending command=SetParametricEq(ParametricEq { index: 2, master_gain_db: 0.0, bands: [EqBand { freq_hz: 30, gain_db: 0.0, q: 0.4, filter: 4 }, EqBand { freq_hz: 220, gain_db: -8.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 2800, gain_db: 3.5, q: 1.0, filter: 0 }, EqBand { freq_hz: 12000, gain_db: 3.0, q: 0.8, filter: 0 }, EqBand { freq_hz: 5300, gain_db: -3.0, q: 2.0, filter: 0 }, EqBand { freq_hz: 60, gain_db: -3.0, q: 0.5, filter: 0 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }] })
+2026-10-12T15:21:12.829799Z TRACE write c=Command data=ff 91 22 8f 02 00 00 1e 00 00 00 28 00 04 dc 00 e0 fc 64 00 00 f0 0a 5e 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 3c 00 d4 fe 32 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:13.881518Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:14.019748Z TRACE notification c=Settings data=ff 91 22 8f 02 00 00 1e 00 00 00 28 00 04 dc 00 e0 fc 64 00 00 f0 0a 5e 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 3c 00 d4 fe 32 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+  Equalizer        Pop
+       30 Hz   +0.0 dB  Q 0.40  type 4
+      220 Hz   -8.0 dB  Q 1.00  type 0
+     2800 Hz   +3.5 dB  Q 1.00  type 0
+    12000 Hz   +3.0 dB  Q 0.80  type 0
+     5300 Hz   -3.0 dB  Q 2.00  type 0
+       60 Hz   -3.0 dB  Q 0.50  type 0
+2026-10-12T15:21:14.296811Z DEBUG GATT link released
+===== qcyctl eq preset Default  (exit 0, 3.3s) =====
+2026-10-12T15:21:14.517204Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:14.517472Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:14.537836Z DEBUG discovering services attempt=1
+2026-10-12T15:21:14.996965Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:15.291109Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:15.376775Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:21:15.465578Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:15.550830Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:15.640185Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:15.640602Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:15.685602Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:15.727317Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:15.733996Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:15.773188Z TRACE notification c=Settings data=ff 91 22 8f 02 00 00 1e 00 00 00 28 00 04 dc 00 e0 fc 64 00 00 f0 0a 5e 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 3c 00 d4 fe 32 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:15.782678Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:15.812824Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:16.236540Z DEBUG sending command=SetParametricEq(ParametricEq { index: 1, master_gain_db: 0.0, bands: [EqBand { freq_hz: 30, gain_db: 0.0, q: 0.7, filter: 4 }, EqBand { freq_hz: 220, gain_db: -8.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 900, gain_db: -2.0, q: 1.5, filter: 0 }, EqBand { freq_hz: 2800, gain_db: 4.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 12000, gain_db: 3.0, q: 0.8, filter: 0 }, EqBand { freq_hz: 5300, gain_db: -3.0, q: 2.0, filter: 0 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }] })
+2026-10-12T15:21:16.237135Z TRACE write c=Command data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:17.301760Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:17.477426Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+  Equalizer        Default
+       30 Hz   +0.0 dB  Q 0.70  type 4
+      220 Hz   -8.0 dB  Q 1.00  type 0
+      900 Hz   -2.0 dB  Q 1.50  type 0
+     2800 Hz   +4.0 dB  Q 1.00  type 0
+    12000 Hz   +3.0 dB  Q 0.80  type 0
+     5300 Hz   -3.0 dB  Q 2.00  type 0
+2026-10-12T15:21:17.693042Z DEBUG GATT link released
+===== qcyctl eq custom 2 1 0 0 0 0 0 0 1 2  (exit 0, 3.4s) =====
+2026-10-12T15:21:17.871046Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:17.871313Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:17.890348Z DEBUG discovering services attempt=1
+2026-10-12T15:21:18.410608Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:18.658803Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:18.745177Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:21:18.834057Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:18.920732Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:19.008269Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:19.008802Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:19.064812Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:19.113531Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:19.139035Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:19.142689Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:19.161904Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:19.182624Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:19.617736Z DEBUG sending command=SetParametricEq(ParametricEq { index: 255, master_gain_db: 0.0, bands: [EqBand { freq_hz: 31, gain_db: 2.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 62, gain_db: 1.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 125, gain_db: 0.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 250, gain_db: 0.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 500, gain_db: 0.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 1000, gain_db: 0.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 2000, gain_db: 0.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 4000, gain_db: 0.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 8000, gain_db: 1.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 16000, gain_db: 2.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }] })
+2026-10-12T15:21:19.618038Z TRACE write c=Command data=ff 91 22 8f ff 00 00 1f 00 c8 00 64 00 00 3e 00 64 00 64 00 00 7d 00 00 00 64 00 00 fa 00 00 00 64 00 00 f4 01 00 00 64 00 00 e8 03 00 00 64 00 00 d0 07 00 00 64 00 00 a0 0f 00 00 64 00 00 40 1f 64 00 64 00 00 80 3e c8 00 64 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:20.681005Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:20.844720Z TRACE notification c=Settings data=ff 91 22 8f ff 00 00 1f 00 c8 00 64 00 00 3e 00 64 00 64 00 00 7d 00 00 00 64 00 00 fa 00 00 00 64 00 00 f4 01 00 00 64 00 00 e8 03 00 00 64 00 00 d0 07 00 00 64 00 00 a0 0f 00 00 64 00 00 40 1f 64 00 64 00 00 80 3e c8 00 64 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+  Equalizer        Custom
+       31 Hz   +2.0 dB  Q 1.00  type 0
+       62 Hz   +1.0 dB  Q 1.00  type 0
+      125 Hz   +0.0 dB  Q 1.00  type 0
+      250 Hz   +0.0 dB  Q 1.00  type 0
+      500 Hz   +0.0 dB  Q 1.00  type 0
+     1000 Hz   +0.0 dB  Q 1.00  type 0
+     2000 Hz   +0.0 dB  Q 1.00  type 0
+     4000 Hz   +0.0 dB  Q 1.00  type 0
+     8000 Hz   +1.0 dB  Q 1.00  type 0
+    16000 Hz   +2.0 dB  Q 1.00  type 0
+2026-10-12T15:21:21.083307Z DEBUG GATT link released
+===== qcyctl eq show  (exit 0, 1.9s) =====
+2026-10-12T15:21:21.262178Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:21.262444Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:21.284257Z DEBUG discovering services attempt=1
+2026-10-12T15:21:21.733859Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:21.983265Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:22.112708Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:21:22.201721Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:22.287963Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:22.375056Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:22.375269Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:22.432627Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:22.463370Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:22.480068Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:22.509503Z TRACE notification c=Settings data=ff 91 22 8f ff 00 00 1f 00 c8 00 64 00 00 3e 00 64 00 64 00 00 7d 00 00 00 64 00 00 fa 00 00 00 64 00 00 f4 01 00 00 64 00 00 e8 03 00 00 64 00 00 d0 07 00 00 64 00 00 a0 0f 00 00 64 00 00 40 1f 64 00 64 00 00 80 3e c8 00 64 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:22.527539Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:22.550128Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+  Equalizer        Custom
+       31 Hz   +2.0 dB  Q 1.00  type 0
+       62 Hz   +1.0 dB  Q 1.00  type 0
+      125 Hz   +0.0 dB  Q 1.00  type 0
+      250 Hz   +0.0 dB  Q 1.00  type 0
+      500 Hz   +0.0 dB  Q 1.00  type 0
+     1000 Hz   +0.0 dB  Q 1.00  type 0
+     2000 Hz   +0.0 dB  Q 1.00  type 0
+     4000 Hz   +0.0 dB  Q 1.00  type 0
+     8000 Hz   +1.0 dB  Q 1.00  type 0
+    16000 Hz   +2.0 dB  Q 1.00  type 0
+2026-10-12T15:21:22.990011Z DEBUG GATT link released
+===== qcyctl eq preset Default  (exit 0, 3.4s) =====
+2026-10-12T15:21:23.150649Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:23.150904Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:23.169690Z DEBUG discovering services attempt=1
+2026-10-12T15:21:23.658458Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:23.908126Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:23.994026Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:21:24.126764Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:24.212551Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:24.300628Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:24.300851Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:24.350587Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:24.388705Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:24.398279Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:24.434764Z TRACE notification c=Settings data=ff 91 22 8f ff 00 00 1f 00 c8 00 64 00 00 3e 00 64 00 64 00 00 7d 00 00 00 64 00 00 fa 00 00 00 64 00 00 f4 01 00 00 64 00 00 e8 03 00 00 64 00 00 d0 07 00 00 64 00 00 a0 0f 00 00 64 00 00 40 1f 64 00 64 00 00 80 3e c8 00 64 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:24.445475Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:24.474908Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:24.905140Z DEBUG sending command=SetParametricEq(ParametricEq { index: 1, master_gain_db: 0.0, bands: [EqBand { freq_hz: 30, gain_db: 0.0, q: 0.7, filter: 4 }, EqBand { freq_hz: 220, gain_db: -8.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 900, gain_db: -2.0, q: 1.5, filter: 0 }, EqBand { freq_hz: 2800, gain_db: 4.0, q: 1.0, filter: 0 }, EqBand { freq_hz: 12000, gain_db: 3.0, q: 0.8, filter: 0 }, EqBand { freq_hz: 5300, gain_db: -3.0, q: 2.0, filter: 0 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }, EqBand { freq_hz: 0, gain_db: 0.0, q: 0.0, filter: 255 }] })
+2026-10-12T15:21:24.905469Z TRACE write c=Command data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:25.969942Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:26.181500Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+  Equalizer        Default
+       30 Hz   +0.0 dB  Q 0.70  type 4
+      220 Hz   -8.0 dB  Q 1.00  type 0
+      900 Hz   -2.0 dB  Q 1.50  type 0
+     2800 Hz   +4.0 dB  Q 1.00  type 0
+    12000 Hz   +3.0 dB  Q 0.80  type 0
+     5300 Hz   -3.0 dB  Q 2.00  type 0
+2026-10-12T15:21:26.367413Z DEBUG GATT link released
+===== qcyctl keys set right-single play-pause  (exit 0, 3.3s) =====
+2026-10-12T15:21:26.528767Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:26.528996Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:26.548291Z DEBUG discovering services attempt=1
+2026-10-12T15:21:26.984095Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:27.278066Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:27.362646Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:21:27.452312Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:27.538138Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:27.625578Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:27.625794Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:27.682358Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:27.713562Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:27.729782Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:27.759644Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:27.777778Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:27.800768Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:28.236073Z DEBUG sending command=SetKeyFunctions([(2, PlayPause)])
+2026-10-12T15:21:28.236359Z TRACE write c=Keys data=02 01
+2026-10-12T15:21:29.375703Z TRACE read c=Keys data=01 00 02 01 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+  Touch controls
+    Left · Single tap        No action
+    Right · Single tap       Play / pause
+    Left · Double tap        Play / pause
+    Right · Double tap       Play / pause
+    Left · Triple tap        Voice assistant
+    Right · Triple tap       Next track
+    Left · Quadruple tap     No action
+    Right · Quadruple tap    No action
+2026-10-12T15:21:29.694060Z DEBUG GATT link released
+===== qcyctl keys set right-single none  (exit 0, 3.4s) =====
+2026-10-12T15:21:29.864129Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:29.864336Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:29.881735Z DEBUG discovering services attempt=1
+2026-10-12T15:21:30.350125Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:30.645778Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:30.732062Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:21:30.862949Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:30.951185Z TRACE read c=Keys data=01 00 02 01 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:31.081826Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:31.082023Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:31.132483Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:31.169768Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:31.179624Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:31.216185Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:31.226311Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:31.256658Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:21:31.683375Z DEBUG sending command=SetKeyFunctions([(2, None)])
+2026-10-12T15:21:31.683624Z TRACE write c=Keys data=02 00
+2026-10-12T15:21:32.788062Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+  Touch controls
+    Left · Single tap        No action
+    Right · Single tap       No action
+    Left · Double tap        Play / pause
+    Right · Double tap       Play / pause
+    Left · Triple tap        Voice assistant
+    Right · Triple tap       Next track
+    Left · Quadruple tap     No action
+    Right · Quadruple tap    No action
+2026-10-12T15:21:33.136659Z DEBUG GATT link released
+===== qcyctl keys  (exit 0, 1.9s) =====
+2026-10-12T15:21:33.294653Z  INFO endpoint already connected address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:33.294859Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:21:33.312153Z DEBUG discovering services attempt=1
+2026-10-12T15:21:33.763258Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:21:34.058679Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:21:34.145180Z TRACE read c=Battery data=48 5d 00
+2026-10-12T15:21:34.275663Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:21:34.364362Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:21:34.450929Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:34.451122Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:21:34.497318Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:21:34.544441Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:21:34.582938Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:21:34.591768Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:21:34.629172Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:21:34.629364Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+  Touch controls
+    Left · Single tap        No action
+    Right · Single tap       No action
+    Left · Double tap        Play / pause
+    Right · Double tap       Play / pause
+    Left · Triple tap        Voice assistant
+    Right · Triple tap       Next track
+    Left · Quadruple tap     No action
+    Right · Quadruple tap    No action
+2026-10-12T15:21:35.053127Z DEBUG GATT link released

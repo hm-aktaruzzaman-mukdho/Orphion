@@ -1,0 +1,54 @@
+﻿
+23:21:04 exit=1
+23:21:18 exit=0
+2026-10-12T17:21:04.682790Z DEBUG advertisement watcher started
+2026-10-12T17:21:15.542932Z DEBUG advertisement watcher stopped
+2026-10-12T17:21:15.544742Z  INFO found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T17:21:15.544824Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T17:21:15.544856Z DEBUG opening GATT link attempt=1
+2026-10-12T17:21:18.071736Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T17:21:18.210894Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T17:21:18.266065Z TRACE read c=Battery data=14 45 00
+2026-10-12T17:21:18.307263Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 28 28 0f 09 01 02 17 03 01 05 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T17:21:18.334873Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T17:21:18.361772Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T17:21:18.361994Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T17:21:18.390091Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T17:21:18.409350Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T17:21:18.433451Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T17:21:18.453189Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T17:21:18.471149Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T17:21:18.497990Z TRACE write c=Command data=ff 03 fe 01 44
+QCY MeloBuds Pro (QCY MeloBuds Pro)
+  Bluetooth name   QCY MeloBuds Pro
+  Firmware         L 2.0.6  R 2.0.6
+  Battery          L 20%  R 69%  case –
+  Noise control    Noise cancelling · Adaptive
+  Equalizer        Default
+       30 Hz   +0.0 dB  Q 0.70  type 4
+      220 Hz   -8.0 dB  Q 1.00  type 0
+      900 Hz   -2.0 dB  Q 1.50  type 0
+     2800 Hz   +4.0 dB  Q 1.00  type 0
+    12000 Hz   +3.0 dB  Q 0.80  type 0
+     5300 Hz   -3.0 dB  Q 2.00  type 0
+  Gaming mode      off
+  Sleep mode       off
+  LDAC             off
+  Dual device connection on
+  Balance          50 (50 = centre)
+  Media volume     L 40  R 40  (max 15)
+  Prompt volume    8 / 15
+  Prompt language  English
+  Wear detection   off; music: Pause and resume; ANC follows wear: yes
+  Auto power off   5 min after disconnect
+  Sleep timer      off
+  Touch controls
+    Left · Single tap        No action
+    Right · Single tap       No action
+    Left · Double tap        Play / pause
+    Right · Double tap       Play / pause
+    Left · Triple tap        Voice assistant
+    Right · Triple tap       Next track
+    Left · Quadruple tap     No action
+    Right · Quadruple tap    No action
+2026-10-12T17:21:18.970379Z DEBUG GATT link released

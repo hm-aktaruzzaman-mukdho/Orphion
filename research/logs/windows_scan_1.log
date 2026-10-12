@@ -1,0 +1,10 @@
+﻿Scanning for 6s…
+.\target\debug\qcyctl.exe : 2026-10-12T15:13:34.133549Z DEBUG advertisement watcher started
+At line:1 char:399
++ ... =1; Measure-Command { .\target\debug\qcyctl.exe -vv scan *>&1 | Tee-O ...
++                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (2026-10-12T15:1...watcher started:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+2026-10-12T15:13:40.139756Z DEBUG advertisement watcher stopped
+QCY MeloBuds Pro  ble=C4:AC:60:89:A4:B1  audio=84:AC:60:89:A4:B0  model=0x4d4a (QCY MeloBuds Pro)  battery L72% R93% C–  rssi=-43

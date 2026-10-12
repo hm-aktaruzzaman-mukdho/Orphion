@@ -1,0 +1,27 @@
+﻿
+===== qcyctl anc on --scene adaptive  (exit 0, 5.5s) =====
+2026-10-12T15:45:07.308547Z DEBUG advertisement watcher started
+2026-10-12T15:45:08.238050Z DEBUG advertisement watcher stopped
+2026-10-12T15:45:08.239831Z  INFO found endpoint address=C4:AC:60:89:A4:B1
+2026-10-12T15:45:08.239945Z  INFO connecting name=QCY MeloBuds Pro address=C4:AC:60:89:A4:B1
+2026-10-12T15:45:08.239989Z DEBUG opening GATT link attempt=1
+2026-10-12T15:45:10.297389Z DEBUG GATT session ready mtu=220 characteristics=6
+2026-10-12T15:45:10.434324Z TRACE read c=Version data=02 00 06 02 00 06
+2026-10-12T15:45:10.461214Z TRACE read c=Battery data=43 5b 00
+2026-10-12T15:45:10.489786Z TRACE read c=Settings data=ff 30 2c 04 00 01 01 01 08 03 67 67 0f 09 01 02 17 03 02 00 00 10 01 00 16 01 32 04 01 02 23 01 00 24 01 01 1f 02 05 00 1d 02 08 0f 19 04 57 51 30 30
+2026-10-12T15:45:10.516891Z TRACE read c=Keys data=01 00 02 00 03 01 04 01 05 04 06 03 07 00 08 00 00 00 00 00
+2026-10-12T15:45:10.543493Z TRACE read c=Eq data=01 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:45:10.543770Z TRACE write c=Command data=ff 03 fe 01 18
+2026-10-12T15:45:10.571596Z TRACE notification c=Settings data=ff 22 18 20 51 43 59 20 4d 65 6c 6f 42 75 64 73 20 50 72 6f 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+2026-10-12T15:45:10.593157Z TRACE write c=Command data=ff 03 fe 01 22
+2026-10-12T15:45:10.637630Z TRACE write c=Command data=ff 03 fe 01 14
+2026-10-12T15:45:10.654234Z TRACE notification c=Settings data=ff 91 22 8f 01 00 00 1e 00 00 00 46 00 04 dc 00 e0 fc 64 00 00 84 03 38 ff 96 00 00 f0 0a 90 01 64 00 00 e0 2e 2c 01 50 00 00 b4 14 d4 fe c8 00 00 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff 00 00 00 00 00 00 ff
+2026-10-12T15:45:10.681870Z TRACE write c=Command data=ff 03 fe 01 44
+2026-10-12T15:45:10.707105Z TRACE notification c=Settings data=ff 06 14 04 ff ff 00 00
+2026-10-12T15:45:11.137325Z DEBUG sending command=SetAnc(NoiseCancelling { scene: Adaptive, level: 0 })
+2026-10-12T15:45:11.138332Z TRACE write c=Command data=ff 05 17 03 01 05 00
+2026-10-12T15:45:11.573801Z TRACE notification c=Settings data=ff 05 17 03 01 05 00
+2026-10-12T15:45:12.193276Z TRACE write c=Command data=ff 03 fe 01 17
+2026-10-12T15:45:12.256248Z TRACE notification c=Settings data=ff 05 17 03 01 05 00
+Noise control: Noise cancelling · Adaptive
+2026-10-12T15:45:12.596429Z DEBUG GATT link released
