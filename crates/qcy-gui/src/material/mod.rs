@@ -3,14 +3,13 @@
 //! * [`scheme`]: colour roles for dark and light mode
 //! * [`components`]: cards, switches, buttons, chips, segmented buttons,
 //!   list rows, navigation rail items, snackbars, dialogs
-//! * this module: fonts (Roboto + Material Symbols) and the type scale
+//! * this module: fonts (Roboto, or Segoe UI on Windows, + Material Symbols)
+//!   and the type scale
 //!
 //! Nothing here knows about earbuds, so it can be reused or extracted.
 
 pub mod components;
 pub mod scheme;
-
-use std::process::Command;
 
 use eframe::egui::{self, FontData, FontDefinitions, FontFamily, FontId, RichText, Theme};
 pub use egui_material_icons::{MaterialIcon, icons};
@@ -48,29 +47,29 @@ pub fn install(ctx: &egui::Context) {
     });
 }
 
-/// Loads Roboto from the system (via fontconfig) when available; otherwise
-/// egui's bundled font is used for both weights.
+/// Loads the platform's UI font (see [`system_fonts`]); egui's bundled font
+/// remains as a fallback for missing glyphs or when nothing is found.
 fn install_fonts(ctx: &egui::Context) {
     let mut fonts = FontDefinitions::default();
-    let fallbacks = fonts.families[&FontFamily::Proportional].clone();
-    let mut medium_family = fallbacks.clone();
+    let mut medium_family = fonts.families[&FontFamily::Proportional].clone();
+    let (regular, medium) = system_fonts();
 
-    if let Some(data) = system_font("Roboto", "Regular") {
+    if let Some(data) = regular {
         fonts
             .font_data
-            .insert("roboto".into(), FontData::from_owned(data).into());
+            .insert("ui".into(), FontData::from_owned(data).into());
         fonts
             .families
             .entry(FontFamily::Proportional)
             .or_default()
-            .insert(0, "roboto".into());
-        medium_family.insert(0, "roboto".into());
+            .insert(0, "ui".into());
+        medium_family.insert(0, "ui".into());
     }
-    if let Some(data) = system_font("Roboto", "Medium") {
+    if let Some(data) = medium {
         fonts
             .font_data
-            .insert("roboto-medium".into(), FontData::from_owned(data).into());
-        medium_family.insert(0, "roboto-medium".into());
+            .insert("ui-medium".into(), FontData::from_owned(data).into());
+        medium_family.insert(0, "ui-medium".into());
     }
     fonts
         .families
@@ -78,9 +77,39 @@ fn install_fonts(ctx: &egui::Context) {
     ctx.set_fonts(fonts);
 }
 
+/// Regular and medium weight of the UI font: Roboto (Material's typeface)
+/// found through fontconfig.
+#[cfg(not(windows))]
+fn system_fonts() -> (Option<Vec<u8>>, Option<Vec<u8>>) {
+    (
+        fontconfig_font("Roboto", "Regular"),
+        fontconfig_font("Roboto", "Medium"),
+    )
+}
+
+/// Regular and medium weight of the UI font: Roboto if the user installed
+/// it, otherwise Segoe UI (regular + semibold), which every Windows has.
+#[cfg(windows)]
+fn system_fonts() -> (Option<Vec<u8>>, Option<Vec<u8>>) {
+    use std::path::PathBuf;
+    let dirs: Vec<PathBuf> = [
+        std::env::var_os("LOCALAPPDATA").map(|d| PathBuf::from(d).join(r"Microsoft\Windows\Fonts")),
+        std::env::var_os("WINDIR").map(|d| PathBuf::from(d).join("Fonts")),
+    ]
+    .into_iter()
+    .flatten()
+    .collect();
+    let find = |file: &str| dirs.iter().find_map(|d| std::fs::read(d.join(file)).ok());
+    match (find("Roboto-Regular.ttf"), find("Roboto-Medium.ttf")) {
+        (Some(r), m) => (Some(r), m),
+        _ => (find("segoeui.ttf"), find("seguisb.ttf")),
+    }
+}
+
 /// Asks fontconfig for `family`/`style`; returns `None` if it is not installed.
-fn system_font(family: &str, style: &str) -> Option<Vec<u8>> {
-    let out = Command::new("fc-match")
+#[cfg(not(windows))]
+fn fontconfig_font(family: &str, style: &str) -> Option<Vec<u8>> {
+    let out = std::process::Command::new("fc-match")
         .arg(format!("{family}:style={style}"))
         .arg("--format=%{family}|%{style}|%{file}")
         .output()

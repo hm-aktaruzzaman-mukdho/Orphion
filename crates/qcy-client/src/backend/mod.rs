@@ -6,13 +6,19 @@
 
 #[cfg(target_os = "linux")]
 pub mod bluez;
+#[cfg(windows)]
+pub mod winrt;
 
 /// The Bluetooth backend for the target platform.
 #[cfg(target_os = "linux")]
 pub type Platform = bluez::Bluez;
 
-#[cfg(not(target_os = "linux"))]
+/// The Bluetooth backend for the target platform.
+#[cfg(windows)]
+pub type Platform = winrt::WinRt;
+
+#[cfg(not(any(target_os = "linux", windows)))]
 compile_error!(
     "no Bluetooth backend for this platform yet: implement `Backend` and `Link` \
-     in crates/qcy-client/src/backend/ (see the bluez module)"
+     in crates/qcy-client/src/backend/ (see the bluez and winrt modules)"
 );

@@ -26,6 +26,9 @@ install_desktop() { # <source> <destination dir> <binary>
     echo "    $2/$1"
 }
 
+echo "==> Installing icon"
+install -Dm644 assets/qcy-earbuds.png "${XDG_DATA_HOME:-$HOME/.local/share}/icons/hicolor/256x256/apps/qcy-earbuds.png"
+
 echo "==> Installing desktop entries"
 install_desktop io.github.qcy_linux.Control.desktop "$APPS" qcy-gui
 install_desktop io.github.qcy_linux.Tray.desktop "$APPS" qcy-tray

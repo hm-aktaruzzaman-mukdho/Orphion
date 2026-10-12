@@ -5,8 +5,8 @@
 //!
 //! * [`transport`]: the [`Backend`](transport::Backend) / [`Link`](transport::Link)
 //!   traits every platform implements.
-//! * [`backend`]: the implementations (BlueZ over D-Bus on Linux).
-//!   [`Platform`] is the one for the build target.
+//! * [`backend`]: the implementations: BlueZ over D-Bus on Linux, the WinRT
+//!   Bluetooth LE API on Windows. [`Platform`] is the one for the build target.
 //! * [`Earbuds`]: stateful client; keeps a live
 //!   [`DeviceState`](qcy_protocol::state::DeviceState) and executes
 //!   [`Command`](qcy_protocol::Command)s.

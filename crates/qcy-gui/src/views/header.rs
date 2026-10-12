@@ -15,6 +15,8 @@ pub fn show(ui: &mut Ui, view: &mut ViewCtx<'_>) {
         .state
         .device_name
         .clone()
+        // In the charging case the earbuds may report an empty name.
+        .filter(|n| !n.trim().is_empty())
         .or_else(|| snap.device.as_ref().map(|d| d.name.clone()))
         .unwrap_or_else(|| "QCY Earbuds".into());
 

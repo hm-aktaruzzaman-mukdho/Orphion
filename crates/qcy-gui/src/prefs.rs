@@ -1,4 +1,4 @@
-//! Tiny persisted UI preferences (`~/.config/qcy-earbuds/gui.conf`).
+//! Tiny persisted UI preferences (`gui.conf` in the platform's config folder).
 //!
 //! A plain `key=value` file keeps this dependency-free; unknown keys and
 //! malformed lines are ignored.
@@ -50,10 +50,16 @@ pub struct Prefs {
 }
 
 impl Prefs {
+    /// `%APPDATA%\qcy-earbuds\gui.conf` on Windows,
+    /// `$XDG_CONFIG_HOME/qcy-earbuds/gui.conf` (or `~/.config/…`) elsewhere.
     fn path() -> Option<PathBuf> {
-        let base = std::env::var_os("XDG_CONFIG_HOME")
-            .map(PathBuf::from)
-            .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".config")))?;
+        let base = if cfg!(windows) {
+            std::env::var_os("APPDATA").map(PathBuf::from)
+        } else {
+            std::env::var_os("XDG_CONFIG_HOME")
+                .map(PathBuf::from)
+                .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".config")))
+        }?;
         Some(base.join("qcy-earbuds").join("gui.conf"))
     }
 

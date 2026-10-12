@@ -1,0 +1,4 @@
+[2m2026-10-12T14:32:07.509138Z[0m [33m WARN[0m [2mqcy_client::manager[0m[2m:[0m connection attempt failed: Bluetooth error: Not implemented. (0x80004001) [3mattempt[0m[2m=[0m1
+[2m2026-10-12T14:32:08.510625Z[0m [33m WARN[0m [2mqcy_client::manager[0m[2m:[0m connection attempt failed: Bluetooth error: Not implemented. (0x80004001) [3mattempt[0m[2m=[0m2
+[2m2026-10-12T14:32:09.512202Z[0m [33m WARN[0m [2mqcy_client::manager[0m[2m:[0m connection attempt failed: Bluetooth error: Not implemented. (0x80004001) [3mattempt[0m[2m=[0m3
+[2m2026-10-12T14:32:10.513679Z[0m [33m WARN[0m [2mqcy_client::manager[0m[2m:[0m connection attempt failed: Bluetooth error: Not implemented. (0x80004001) [3mattempt[0m[2m=[0m4

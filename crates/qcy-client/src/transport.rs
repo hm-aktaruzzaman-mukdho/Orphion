@@ -31,7 +31,8 @@ pub enum Selector {
 /// A QCY BLE control endpoint found by a backend.
 #[derive(Debug, Clone)]
 pub struct Endpoint {
-    /// Backend-specific handle, e.g. a D-Bus object path for BlueZ.
+    /// Backend-specific handle: a D-Bus object path on Linux, the 48-bit
+    /// address on Windows.
     pub id: String,
     pub ble_address: MacAddress,
     pub advertisement: Advertisement,

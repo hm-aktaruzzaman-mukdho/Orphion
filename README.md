@@ -1,11 +1,12 @@
-# QCY Earbuds for Linux
+# QCY Earbuds for Linux and Windows
 
-Control QCY wireless earbuds from Linux: noise cancelling, transparency, EQ,
+Control QCY wireless earbuds from your computer: noise cancelling, transparency, EQ,
 touch controls, dual-device connection, LDAC, wear detection and more, without
 the phone app.
 
-Written in Rust. It talks to BlueZ over D-Bus in pure Rust, so it needs no
-`libdbus`, no root and no QCY account. The protocol was reverse-engineered from
+Written in Rust. On Linux it talks to BlueZ over D-Bus (pure Rust: no
+`libdbus`, no root); on Windows it uses the built-in Bluetooth LE API. No QCY
+account is needed on either. The protocol was reverse-engineered from
 the official Android app and verified on real hardware
 ([docs/PROTOCOL.md](docs/PROTOCOL.md)).
 
@@ -19,7 +20,7 @@ the official Android app and verified on real hardware
 | Program    | What it is                                                                 |
 |------------|----------------------------------------------------------------------------|
 | `qcy-gui`  | The control panel window, in Material 3 style with light and dark themes (follows the system, or pick one under Settings → Appearance). |
-| `qcy-tray` | A tray icon (KDE Plasma / any StatusNotifier host). The tooltip shows battery levels; the menu offers noise control, gaming mode and EQ presets; scrolling over the icon cycles noise control; clicking it opens the control panel. |
+| `qcy-tray` | A tray icon (KDE Plasma or any StatusNotifier host on Linux; the notification area on Windows). The tooltip shows battery levels; the menu offers noise control, gaming mode and EQ presets; clicking the icon opens the control panel. On Linux, scrolling over it cycles noise control. |
 | `qcyctl`   | Command line tool for scripts and keyboard shortcuts.                      |
 
 ### Supported features (QCY MeloBuds Pro)
@@ -54,14 +55,21 @@ yet.
 
 ## Requirements
 
-- Linux with BlueZ 5 (`bluetoothd` running, adapter powered; tested with 5.87)
-- Rust ≥ 1.85 to build (`cargo`)
+**Linux**
+
+- BlueZ 5 (`bluetoothd` running, adapter powered; tested with 5.87)
 - For the GUI: a Wayland or X11 session with OpenGL. The libraries ship with
   any desktop (`libxkbcommon`, `libwayland-client`, `libGL`/`libEGL`).
+- To build: Rust ≥ 1.85. No `-dev` packages are needed.
 
-No `-dev` packages are needed.
+**Windows**
 
-## Build and install
+- Windows 10 version 2004 or newer, or Windows 11
+- A Bluetooth adapter with Bluetooth Low Energy, using the standard Microsoft
+  Bluetooth driver (nearly every laptop)
+- Nothing to install: the programs use only DLLs that ship with Windows.
+
+## Build and install on Linux
 
 ```bash
 packaging/install.sh
@@ -84,6 +92,34 @@ cargo build --release
 To try the interface without earbuds, run `qcy-gui --demo`. It simulates a
 MeloBuds Pro using data captured from real hardware.
 
+## Build for Windows (from Linux)
+
+The Windows version is cross-compiled; no Windows machine is needed to build.
+
+```bash
+rustup target add x86_64-pc-windows-gnu   # once
+sudo apt install mingw-w64                # once, if x86_64-w64-mingw32-gcc is missing
+packaging/build-windows.sh
+```
+
+This produces `dist/qcy-earbuds-<version>-windows-x64.zip` with `qcy-gui.exe`,
+`qcy-tray.exe`, `qcyctl.exe` and an installer script. On the Windows PC, unzip
+it and run:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File install.ps1 -Autostart
+```
+
+`install.ps1` copies the programs to `%LOCALAPPDATA%\Programs\QCY Earbuds`,
+adds Start menu shortcuts and, with `-Autostart`, starts the tray at sign-in
+(`-AddToPath` makes `qcyctl` available in terminals). No administrator rights
+are needed. `uninstall.ps1` removes it all again. The `.exe` files also run
+directly from the unzipped folder.
+
+Building on Windows itself works too: install Rust (rustup) and the Visual
+Studio Build Tools ("Desktop development with C++"), then `cargo build
+--release`.
+
 ## Usage
 
 Pair the earbuds with your computer as usual (for audio). Then take them out
@@ -91,8 +127,8 @@ of the case and start `qcy-gui` or `qcy-tray`. The earbuds are found
 automatically.
 
 The earbuds accept only **one control connection**. If the QCY app on your
-phone is connected, close it first. The Linux programs share one connection
-with each other, so the tray and the window can run together.
+phone is connected, close it first. The programs on your computer share one
+connection with each other, so the tray and the window can run together.
 
 ### Command line
 
@@ -128,10 +164,11 @@ Example KDE shortcut (System Settings → Shortcuts → Add command):
 
 | Symptom | Fix |
 |---|---|
-| "No QCY earbuds found" | Take the buds out of the case; close the QCY phone app; check `bluetoothctl show` reports `Powered: yes`. |
+| "No QCY earbuds found" | Take the buds out of the case; close the QCY phone app; make sure Bluetooth is on (Linux: `bluetoothctl show` reports `Powered: yes`). |
 | Connecting takes long | BLE connects can take 5–40 s while audio is streaming; the programs retry on their own. |
 | Buds disconnect after toggling LDAC / dual device | Expected: the firmware reboots. The GUI and tray reconnect on their own. |
 | Rename has no visible effect | Reconnect audio; phones cache names. Keep both buds out of the case while renaming. |
+| "Bluetooth error" on Windows | Check Bluetooth is on in Settings and the adapter supports Bluetooth LE. Older adapters with vendor Bluetooth software (e.g. WIDCOMM) are not supported by Windows' BLE API. |
 | Need details | Run with `RUST_LOG=debug` (GUI/tray) or `qcyctl -vv`. |
 
 ## Project layout
@@ -139,14 +176,16 @@ Example KDE shortcut (System Settings → Shortcuts → Add command):
 ```
 crates/
   qcy-protocol/   pure protocol: framing, commands, decoding, EQ math, model profiles
-  qcy-bluez/      BlueZ transport, stateful client, connection manager
+  qcy-client/     stateful client, connection manager and the Bluetooth backends
+                  (BlueZ on Linux, WinRT on Windows)
   qcyctl/         CLI
   qcy-gui/        egui control panel
   qcy-tray/       tray applet
 docs/
   PROTOCOL.md     full protocol reference
   ARCHITECTURE.md design and how to extend it
-packaging/        desktop entries, install / uninstall scripts
+assets/           application icon
+packaging/        Linux install scripts, Windows build script and installer
 research/         decompiled app, captured data and logs (see research/README.md)
 ```
 

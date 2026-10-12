@@ -1,0 +1,1 @@
+[2m2026-10-12T14:32:56.976080Z[0m [33m WARN[0m [2mzbus::connection[0m[2m:[0m Failed to parse `NameLost` signal: I/O error: failed to read from socket

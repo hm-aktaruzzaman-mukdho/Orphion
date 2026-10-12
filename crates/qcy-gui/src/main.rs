@@ -1,7 +1,10 @@
+// A GUI program: no console window on Windows.
+#![cfg_attr(windows, windows_subsystem = "windows")]
+
 //! `qcy-gui` – desktop control panel for QCY earbuds.
 //!
 //! Threading model: egui owns the main thread; a tokio runtime runs in the
-//! background and hosts the [`Manager`], which talks to BlueZ. The UI only
+//! background and hosts the [`Manager`], which talks to the Bluetooth stack. The UI only
 //! reads [`Snapshot`](qcy_client::manager::Snapshot)s and queues commands, so
 //! it never blocks on Bluetooth.
 //!
@@ -56,7 +59,12 @@ fn main() -> Result<()> {
             .with_title("QCY Earbuds")
             .with_app_id(APP_ID)
             .with_inner_size([640.0, 860.0])
-            .with_min_inner_size([500.0, 560.0]),
+            .with_min_inner_size([500.0, 560.0])
+            .with_icon(eframe::egui::IconData {
+                rgba: include_bytes!("../../../assets/icon-64.rgba").to_vec(),
+                width: 64,
+                height: 64,
+            }),
         ..Default::default()
     };
 

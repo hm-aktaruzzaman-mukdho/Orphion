@@ -1,6 +1,6 @@
 [package]
 name = "qcy-client"
-description = "Client for QCY earbuds: discovery, connection and live state, with pluggable Bluetooth backends (BlueZ on Linux)"
+description = "Cross-platform client for QCY earbuds: discovery, connection and live state (BlueZ on Linux, WinRT on Windows)"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -16,3 +16,14 @@ tracing.workspace = true
 [target.'cfg(target_os = "linux")'.dependencies]
 zbus.workspace = true
 
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62", features = [
+    "Devices_Bluetooth",
+    "Devices_Bluetooth_Advertisement",
+    "Devices_Bluetooth_GenericAttributeProfile",
+    "Devices_Enumeration",
+    "Devices_Radios",
+    "Foundation",
+    "Foundation_Collections",
+    "Storage_Streams",
+] }

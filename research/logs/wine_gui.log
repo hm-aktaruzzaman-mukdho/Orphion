@@ -1,0 +1,4 @@
+wine: created the configuration directory '/tmp/claude-1000/-media-mukdho-new-volume-Code-QCY-APP/aee9ca90-79cf-42a2-934b-ab367150368f/scratchpad/wineprefix'
+wine: failed to open L"C:\\windows\\syswow64\\rundll32.exe": c0000135
+[2m2026-10-12T14:26:42.117399Z[0m [33m WARN[0m [2mepaint::text::fonts[0m[2m:[0m Failed to find replacement characters '◻' or '?'. Will use empty glyph.
+[2m2026-10-12T14:26:42.123731Z[0m [33m WARN[0m [2mepaint::text::fonts[0m[2m:[0m Failed to find replacement characters '◻' or '?'. Will use empty glyph.

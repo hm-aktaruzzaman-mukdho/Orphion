@@ -5,7 +5,11 @@ use qcy_protocol::advert::MacAddress;
 use qcy_protocol::types::{AncScene, Gesture, KeyAction, Side, Tap, Toggle, WearMusicBehavior};
 
 #[derive(Debug, Parser)]
-#[command(name = "qcyctl", version, about = "Control QCY earbuds from Linux")]
+#[command(
+    name = "qcyctl",
+    version,
+    about = "Control QCY earbuds from Linux or Windows"
+)]
 pub struct Cli {
     /// Earbuds to use, by classic (audio) or BLE address. Default: auto-detect.
     #[arg(short, long, global = true, value_name = "MAC")]

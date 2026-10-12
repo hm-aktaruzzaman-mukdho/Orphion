@@ -14,3 +14,6 @@ clap.workspace = true
 tokio = { workspace = true, features = ["signal"] }
 tracing.workspace = true
 tracing-subscriber.workspace = true
+
+[build-dependencies]
+embed-resource = "3"

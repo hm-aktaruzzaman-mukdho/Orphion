@@ -19,3 +19,6 @@ egui_material_icons = { version = "0.8", default-features = false, features = ["
 tokio.workspace = true
 tracing.workspace = true
 tracing-subscriber.workspace = true
+
+[build-dependencies]
+embed-resource = "3"

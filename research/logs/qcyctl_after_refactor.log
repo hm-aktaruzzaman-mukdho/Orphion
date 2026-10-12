@@ -1,0 +1,4 @@
+[2m2026-10-12T14:33:16.187134Z[0m [34mDEBUG[0m using adapter [3madapter[0m[2m=[0m/org/bluez/hci0
+[2m2026-10-12T14:33:16.195987Z[0m [34mDEBUG[0m discovery started
+[2m2026-10-12T14:33:28.411495Z[0m [34mDEBUG[0m discovery stopped
+Error: no QCY earbuds found. Take them out of the case and make sure they are not connected to the QCY app on your phone.
