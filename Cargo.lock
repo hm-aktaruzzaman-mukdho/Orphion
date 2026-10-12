@@ -2066,7 +2066,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d55d956fa96f5ec02be2e13af0e20391a5aa83d6a074e3ad368959d0fab299ea"
 
 [[package]]
-name = "qcy-bluez"
+name = "qcy-client"
 version = "0.1.0"
 dependencies = [
  "futures-util",
@@ -2084,7 +2084,7 @@ dependencies = [
  "anyhow",
  "eframe",
  "egui_material_icons",
- "qcy-bluez",
+ "qcy-client",
  "qcy-protocol",
  "tokio",
  "tracing",
@@ -2104,7 +2104,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "ksni",
- "qcy-bluez",
+ "qcy-client",
  "qcy-protocol",
  "tokio",
  "tracing",
@@ -2117,7 +2117,7 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
- "qcy-bluez",
+ "qcy-client",
  "qcy-protocol",
  "tokio",
  "tracing",

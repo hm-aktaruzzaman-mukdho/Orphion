@@ -14,8 +14,8 @@ use std::process::{Child, Command as Process};
 
 use anyhow::{Context, Result};
 use ksni::TrayMethods;
-use qcy_bluez::discovery::Selector;
-use qcy_bluez::manager::Manager;
+use qcy_client::Selector;
+use qcy_client::manager::Manager;
 use tokio::sync::mpsc;
 use tracing::{info, warn};
 use tracing_subscriber::EnvFilter;
@@ -27,7 +27,7 @@ async fn main() -> Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter(
             EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| EnvFilter::new("warn,qcy_bluez=info")),
+                .unwrap_or_else(|_| EnvFilter::new("warn,qcy_client=info")),
         )
         .init();
 

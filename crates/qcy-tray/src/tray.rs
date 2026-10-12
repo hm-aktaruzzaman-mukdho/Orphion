@@ -3,8 +3,8 @@
 
 use ksni::menu::{CheckmarkItem, MenuItem, RadioGroup, RadioItem, StandardItem, SubMenu};
 use ksni::{Category, Status, ToolTip};
-use qcy_bluez::discovery::Selector;
-use qcy_bluez::manager::{LinkStatus, Manager, Snapshot};
+use qcy_client::Selector;
+use qcy_client::manager::{LinkStatus, Manager, Snapshot};
 use qcy_protocol::Command;
 use qcy_protocol::types::{AncMode, AncScene, BatteryLevel, Toggle};
 use tokio::sync::mpsc;

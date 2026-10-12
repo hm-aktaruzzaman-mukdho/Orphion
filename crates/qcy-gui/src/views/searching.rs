@@ -1,7 +1,7 @@
 //! Empty state shown until earbuds have been found.
 
 use eframe::egui::Ui;
-use qcy_bluez::manager::LinkStatus;
+use qcy_client::manager::LinkStatus;
 
 use crate::app::{Action, ViewCtx};
 use crate::material::components::{self as m3, ButtonKind};

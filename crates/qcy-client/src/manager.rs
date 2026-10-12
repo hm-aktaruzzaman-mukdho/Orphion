@@ -21,8 +21,8 @@ use tokio::sync::{broadcast, mpsc, watch};
 use tokio::time::sleep;
 use tracing::{info, warn};
 
-use crate::discovery::Selector;
-use crate::{Bluez, ConnectionEvent, Earbuds, Endpoint, Error};
+use crate::transport::{Backend, Endpoint, Selector};
+use crate::{ConnectionEvent, Earbuds, Error, Platform};
 
 const SEARCH_TIMEOUT: Duration = Duration::from_secs(10);
 const BACKOFF_START: Duration = Duration::from_secs(3);
@@ -110,15 +110,24 @@ pub enum Notice {
     Error(String),
 }
 
-enum Event {
+/// What front-ends ask for.
+enum Request {
     Connect(Selector),
     Disconnect,
     Refresh,
     Send(Command),
+}
+
+/// Outcome of one connection attempt. The backend handle travels along so a
+/// working Bluetooth stack connection can be reused for the next attempt.
+type AttemptResult<B> = Result<(B, Earbuds<<B as Backend>::Link>), (Option<B>, Error)>;
+
+/// What the worker's own background tasks report back.
+enum Internal<B: Backend> {
     /// Result of a background connection attempt.
     Attempt {
         generation: u64,
-        result: Result<Earbuds, Error>,
+        result: AttemptResult<B>,
     },
     LinkLost {
         generation: u64,
@@ -131,33 +140,40 @@ enum Event {
 /// Handle to the background connection manager. Cheap to clone.
 #[derive(Clone)]
 pub struct Manager {
-    events: mpsc::UnboundedSender<Event>,
+    requests: mpsc::UnboundedSender<Request>,
     snapshot: watch::Receiver<Snapshot>,
     notices: broadcast::Sender<Notice>,
 }
 
 impl Manager {
-    /// Starts the manager on the current tokio runtime.
+    /// Starts the manager for the current platform's Bluetooth stack on the
+    /// current tokio runtime.
     pub fn spawn() -> Self {
-        let (events_tx, events_rx) = mpsc::unbounded_channel();
+        Self::spawn_with::<Platform>()
+    }
+
+    /// Starts the manager with a specific [`Backend`].
+    pub fn spawn_with<B: Backend>() -> Self {
+        let (requests_tx, requests_rx) = mpsc::unbounded_channel();
+        let (internal_tx, internal_rx) = mpsc::unbounded_channel();
         let (snapshot_tx, snapshot_rx) = watch::channel(Snapshot::default());
         let (notices, _) = broadcast::channel(32);
 
-        let worker = Worker {
-            events_tx: events_tx.clone(),
+        let worker = Worker::<B> {
+            internal_tx,
             snapshot: snapshot_tx,
             notices: notices.clone(),
-            bluez: None,
+            backend: None,
             buds: None,
             selector: Selector::Auto,
             want_connected: false,
             generation: 0,
             attempt: 0,
         };
-        tokio::spawn(worker.run(events_rx));
+        tokio::spawn(worker.run(requests_rx, internal_rx));
 
         Self {
-            events: events_tx,
+            requests: requests_tx,
             snapshot: snapshot_rx,
             notices,
         }
@@ -165,12 +181,12 @@ impl Manager {
 
     /// Starts connecting (and keeps reconnecting until [`Manager::disconnect`]).
     pub fn connect(&self, selector: Selector) {
-        self.events.send(Event::Connect(selector)).ok();
+        self.requests.send(Request::Connect(selector)).ok();
     }
 
     /// Closes the BLE link and stops reconnecting.
     pub fn disconnect(&self) {
-        self.events.send(Event::Disconnect).ok();
+        self.requests.send(Request::Disconnect).ok();
     }
 
     /// Disconnects and waits (at most `timeout`) until the link is closed.
@@ -183,12 +199,12 @@ impl Manager {
 
     /// Re-reads all settings from the earbuds.
     pub fn refresh(&self) {
-        self.events.send(Event::Refresh).ok();
+        self.requests.send(Request::Refresh).ok();
     }
 
     /// Queues a command. Failures are reported as [`Notice::Error`].
     pub fn send(&self, command: Command) {
-        self.events.send(Event::Send(command)).ok();
+        self.requests.send(Request::Send(command)).ok();
     }
 
     /// Latest snapshot.
@@ -212,7 +228,7 @@ impl Manager {
     /// commands are validated by encoding them and then applied to the state.
     /// Meant for UI development, screenshots and demos.
     pub fn spawn_demo() -> Self {
-        let (events_tx, mut events_rx) = mpsc::unbounded_channel();
+        let (requests_tx, mut requests_rx) = mpsc::unbounded_channel();
         let (snapshot, snapshot_rx) = watch::channel(Snapshot::default());
         let (notices, _) = broadcast::channel(32);
 
@@ -228,17 +244,17 @@ impl Manager {
         };
         let demo_notices = notices.clone();
         tokio::spawn(async move {
-            while let Some(event) = events_rx.recv().await {
-                match event {
-                    Event::Connect(_) => snapshot.send_modify(|s| {
+            while let Some(request) = requests_rx.recv().await {
+                match request {
+                    Request::Connect(_) => snapshot.send_modify(|s| {
                         s.link = LinkStatus::Connected;
                         s.device = Some(device.clone());
                         if s.state == DeviceState::default() {
                             s.state = qcy_protocol::samples::state();
                         }
                     }),
-                    Event::Disconnect => snapshot.send_modify(|s| s.link = LinkStatus::Idle),
-                    Event::Send(command) => {
+                    Request::Disconnect => snapshot.send_modify(|s| s.link = LinkStatus::Idle),
+                    Request::Send(command) => {
                         if let Err(e) = command.encode() {
                             demo_notices
                                 .send(Notice::Error(format!("Command failed: {e}")))
@@ -268,28 +284,26 @@ impl Manager {
                             snapshot.send_modify(|s| s.state.apply(update));
                         }
                     }
-                    Event::Refresh
-                    | Event::Attempt { .. }
-                    | Event::LinkLost { .. }
-                    | Event::Retry { .. } => {}
+                    Request::Refresh => {}
                 }
             }
         });
 
         Self {
-            events: events_tx,
+            requests: requests_tx,
             snapshot: snapshot_rx,
             notices,
         }
     }
 }
 
-struct Worker {
-    events_tx: mpsc::UnboundedSender<Event>,
+struct Worker<B: Backend> {
+    internal_tx: mpsc::UnboundedSender<Internal<B>>,
     snapshot: watch::Sender<Snapshot>,
     notices: broadcast::Sender<Notice>,
-    bluez: Option<Bluez>,
-    buds: Option<Earbuds>,
+    /// The Bluetooth stack handle, kept between attempts once it works.
+    backend: Option<B>,
+    buds: Option<Earbuds<B::Link>>,
     selector: Selector,
     want_connected: bool,
     /// Bumped whenever a connection attempt or link becomes obsolete, so
@@ -298,62 +312,80 @@ struct Worker {
     attempt: u32,
 }
 
-impl Worker {
-    async fn run(mut self, mut events: mpsc::UnboundedReceiver<Event>) {
-        while let Some(event) = events.recv().await {
-            match event {
-                Event::Connect(selector) => {
-                    self.selector = selector;
-                    self.want_connected = true;
-                    self.attempt = 0;
-                    if self.buds.is_none() {
-                        self.start_attempt();
-                    }
-                }
-                Event::Disconnect => {
-                    self.want_connected = false;
-                    self.generation += 1;
-                    if let Some(buds) = self.buds.take() {
-                        buds.disconnect().await.ok();
-                    }
-                    self.set_link(LinkStatus::Idle);
-                }
-                Event::Refresh => {
-                    if let Some(buds) = self.buds.clone() {
-                        let notices = self.notices.clone();
-                        tokio::spawn(async move {
-                            if let Err(e) = buds.refresh().await {
-                                notices
-                                    .send(Notice::Error(format!("Refresh failed: {e}")))
-                                    .ok();
-                            }
-                        });
-                    }
-                }
-                Event::Send(command) => self.send(command),
-                Event::Attempt { generation, result } if generation == self.generation => {
-                    self.finish_attempt(result);
-                }
-                Event::LinkLost { generation } if generation == self.generation => {
-                    self.buds = None;
-                    if self.want_connected {
-                        self.notice(Notice::Info("Connection lost, reconnecting…".into()));
-                        self.attempt = 0;
-                        self.start_attempt();
-                    } else {
-                        self.set_link(LinkStatus::Idle);
-                    }
-                }
-                Event::Retry { generation }
-                    if generation == self.generation
-                        && self.want_connected
-                        && self.buds.is_none() =>
-                {
+impl<B: Backend> Worker<B> {
+    async fn run(
+        mut self,
+        mut requests: mpsc::UnboundedReceiver<Request>,
+        mut internal: mpsc::UnboundedReceiver<Internal<B>>,
+    ) {
+        loop {
+            tokio::select! {
+                request = requests.recv() => match request {
+                    Some(r) => self.handle_request(r).await,
+                    // Every Manager handle is gone.
+                    None => break,
+                },
+                Some(event) = internal.recv() => self.handle_internal(event),
+            }
+        }
+    }
+
+    async fn handle_request(&mut self, request: Request) {
+        match request {
+            Request::Connect(selector) => {
+                self.selector = selector;
+                self.want_connected = true;
+                self.attempt = 0;
+                if self.buds.is_none() {
                     self.start_attempt();
                 }
-                // Stale results of superseded attempts.
-                Event::Attempt { .. } | Event::LinkLost { .. } | Event::Retry { .. } => {}
             }
+            Request::Disconnect => {
+                self.want_connected = false;
+                self.generation += 1;
+                if let Some(buds) = self.buds.take() {
+                    buds.disconnect().await.ok();
+                }
+                self.set_link(LinkStatus::Idle);
+            }
+            Request::Refresh => {
+                if let Some(buds) = self.buds.clone() {
+                    let notices = self.notices.clone();
+                    tokio::spawn(async move {
+                        if let Err(e) = buds.refresh().await {
+                            notices
+                                .send(Notice::Error(format!("Refresh failed: {e}")))
+                                .ok();
+                        }
+                    });
+                }
+            }
+            Request::Send(command) => self.send(command),
+        }
+    }
+
+    fn handle_internal(&mut self, event: Internal<B>) {
+        match event {
+            Internal::Attempt { generation, result } if generation == self.generation => {
+                self.finish_attempt(result);
+            }
+            Internal::LinkLost { generation } if generation == self.generation => {
+                self.buds = None;
+                if self.want_connected {
+                    self.notice(Notice::Info("Connection lost, reconnecting…".into()));
+                    self.attempt = 0;
+                    self.start_attempt();
+                } else {
+                    self.set_link(LinkStatus::Idle);
+                }
+            }
+            Internal::Retry { generation }
+                if generation == self.generation && self.want_connected && self.buds.is_none() =>
+            {
+                self.start_attempt();
+            }
+            // Stale results of superseded attempts.
+            Internal::Attempt { .. } | Internal::LinkLost { .. } | Internal::Retry { .. } => {}
         }
     }
 
@@ -377,33 +409,45 @@ impl Worker {
         self.attempt += 1;
         let generation = self.generation;
         let selector = self.selector.clone();
-        let bluez = self.bluez.clone();
-        let tx = self.events_tx.clone();
+        let backend = self.backend.clone();
+        let tx = self.internal_tx.clone();
         let snapshot = self.snapshot.clone();
         self.set_link(LinkStatus::Searching);
 
         tokio::spawn(async move {
+            let backend = match backend {
+                Some(b) => b,
+                None => match B::init().await {
+                    Ok(b) => b,
+                    Err(e) => {
+                        let result = Err((None, e));
+                        tx.send(Internal::Attempt { generation, result }).ok();
+                        return;
+                    }
+                },
+            };
             let result = async {
-                let bluez = match bluez {
-                    Some(b) => b,
-                    None => Bluez::connect().await?,
-                };
-                let endpoint = bluez.find(&selector, SEARCH_TIMEOUT).await?;
+                let endpoint = backend.find(&selector, SEARCH_TIMEOUT).await?;
                 snapshot.send_modify(|s| {
                     s.link = LinkStatus::Connecting;
                     s.device = Some(DeviceInfo::from(&endpoint));
                 });
-                Earbuds::connect(&bluez, &endpoint).await
+                Earbuds::connect(&backend, &endpoint).await
             }
             .await;
-            tx.send(Event::Attempt { generation, result }).ok();
+            let result = match result {
+                Ok(buds) => Ok((backend, buds)),
+                Err(e) => Err((Some(backend), e)),
+            };
+            tx.send(Internal::Attempt { generation, result }).ok();
         });
     }
 
-    fn finish_attempt(&mut self, result: Result<Earbuds, Error>) {
+    fn finish_attempt(&mut self, result: AttemptResult<B>) {
         match result {
-            Ok(buds) => {
+            Ok((backend, buds)) => {
                 info!(name = %buds.endpoint().display_name(), "connected");
+                self.backend = Some(backend);
                 self.attempt = 0;
                 self.watch_link(&buds);
                 self.snapshot.send_modify(|s| {
@@ -413,11 +457,12 @@ impl Worker {
                 });
                 self.buds = Some(buds);
             }
-            Err(e) if self.want_connected => {
-                // Keep the Bluez handle unless BlueZ itself is the problem.
-                if matches!(e, Error::NoAdapter | Error::AdapterOff | Error::DBus(_)) {
-                    self.bluez = None;
-                }
+            Err((backend, e)) if self.want_connected => {
+                // Keep the stack handle unless the stack itself is the problem.
+                self.backend = match e {
+                    Error::NoAdapter | Error::AdapterOff | Error::Backend(_) => None,
+                    _ => backend,
+                };
                 warn!(attempt = self.attempt, "connection attempt failed: {e}");
                 // Transient link failures are retried silently; only tell the
                 // user once something persistent is going on.
@@ -437,11 +482,11 @@ impl Worker {
                     attempt: self.attempt,
                     retry_in,
                 });
-                let tx = self.events_tx.clone();
+                let tx = self.internal_tx.clone();
                 let generation = self.generation;
                 tokio::spawn(async move {
                     sleep(retry_in).await;
-                    tx.send(Event::Retry { generation }).ok();
+                    tx.send(Internal::Retry { generation }).ok();
                 });
             }
             Err(_) => self.set_link(LinkStatus::Idle),
@@ -449,12 +494,12 @@ impl Worker {
     }
 
     /// Mirrors the device state into the snapshot and reports link loss.
-    fn watch_link(&self, buds: &Earbuds) {
+    fn watch_link(&self, buds: &Earbuds<B::Link>) {
         let generation = self.generation;
         let mut state = buds.watch();
         let mut link = buds.watch_connection();
         let snapshot = self.snapshot.clone();
-        let tx = self.events_tx.clone();
+        let tx = self.internal_tx.clone();
         tokio::spawn(async move {
             loop {
                 tokio::select! {
@@ -470,7 +515,7 @@ impl Worker {
                     }
                 }
             }
-            tx.send(Event::LinkLost { generation }).ok();
+            tx.send(Internal::LinkLost { generation }).ok();
         });
     }
 

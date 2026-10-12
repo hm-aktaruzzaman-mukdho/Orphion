@@ -2,7 +2,7 @@
 resolver = "3"
 members = [
     "crates/qcy-protocol",
-    "crates/qcy-bluez",
+    "crates/qcy-client",
     "crates/qcyctl",
     "crates/qcy-gui",
     "crates/qcy-tray",
@@ -16,7 +16,7 @@ rust-version = "1.85"
 
 [workspace.dependencies]
 qcy-protocol = { path = "crates/qcy-protocol" }
-qcy-bluez = { path = "crates/qcy-bluez" }
+qcy-client = { path = "crates/qcy-client" }
 
 anyhow = "1.0"
 clap = { version = "4.6", features = ["derive"] }

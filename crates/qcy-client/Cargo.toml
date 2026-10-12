@@ -1,6 +1,6 @@
 [package]
-name = "qcy-bluez"
-description = "BlueZ (D-Bus) transport and high level client for QCY earbuds"
+name = "qcy-client"
+description = "Client for QCY earbuds: discovery, connection and live state, with pluggable Bluetooth backends (BlueZ on Linux)"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -12,4 +12,7 @@ futures-util.workspace = true
 thiserror.workspace = true
 tokio.workspace = true
 tracing.workspace = true
+
+[target.'cfg(target_os = "linux")'.dependencies]
 zbus.workspace = true
+

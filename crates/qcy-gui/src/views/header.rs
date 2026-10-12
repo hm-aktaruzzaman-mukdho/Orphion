@@ -1,7 +1,7 @@
 //! Device name, connection status and battery gauges.
 
 use eframe::egui::{Align, Layout, Ui};
-use qcy_bluez::manager::LinkStatus;
+use qcy_client::manager::LinkStatus;
 
 use crate::app::{Action, ViewCtx};
 use crate::material::components::{self as m3, ButtonKind};

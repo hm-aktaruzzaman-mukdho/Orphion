@@ -7,8 +7,8 @@
 use std::time::{Duration, Instant};
 
 use eframe::egui::{self, Id};
-use qcy_bluez::discovery::Selector;
-use qcy_bluez::manager::{Manager, Notice, Snapshot};
+use qcy_client::Selector;
+use qcy_client::manager::{Manager, Notice, Snapshot};
 use qcy_protocol::Command;
 use qcy_protocol::profile::{self, DeviceProfile};
 use tokio::sync::broadcast;

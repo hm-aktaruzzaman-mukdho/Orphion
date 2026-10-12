@@ -12,8 +12,8 @@ use tokio::task::JoinHandle;
 use tokio::time::sleep;
 use tracing::{debug, info, warn};
 
-use crate::gatt::{GattSession, Notification, hex};
-use crate::{Bluez, Endpoint, Error};
+use crate::transport::{Backend, Endpoint, Link, Notification, hex};
+use crate::{Error, PlatformLink};
 
 /// Pause between consecutive writes. Writes are unacknowledged, and the
 /// official app also sends them strictly one after another.
@@ -39,13 +39,22 @@ pub enum ConnectionEvent {
 }
 
 /// A connected pair of QCY earbuds. Cheap to clone.
-#[derive(Clone)]
-pub struct Earbuds {
-    inner: Arc<Inner>,
+///
+/// Generic over the transport; the default is the current platform's.
+pub struct Earbuds<L: Link = PlatformLink> {
+    inner: Arc<Inner<L>>,
 }
 
-struct Inner {
-    session: GattSession,
+impl<L: Link> Clone for Earbuds<L> {
+    fn clone(&self) -> Self {
+        Self {
+            inner: Arc::clone(&self.inner),
+        }
+    }
+}
+
+struct Inner<L: Link> {
+    session: L,
     endpoint: Endpoint,
     state: watch::Sender<DeviceState>,
     link: watch::Sender<ConnectionEvent>,
@@ -53,7 +62,7 @@ struct Inner {
     tasks: Vec<JoinHandle<()>>,
 }
 
-impl Drop for Inner {
+impl<L: Link> Drop for Inner<L> {
     fn drop(&mut self) {
         for t in &self.tasks {
             t.abort();
@@ -61,11 +70,14 @@ impl Drop for Inner {
     }
 }
 
-impl Earbuds {
+impl<L: Link> Earbuds<L> {
     /// Opens the BLE control link and loads the current settings.
-    pub async fn connect(bluez: &Bluez, endpoint: &Endpoint) -> Result<Self, Error> {
+    pub async fn connect<B: Backend<Link = L>>(
+        backend: &B,
+        endpoint: &Endpoint,
+    ) -> Result<Self, Error> {
         info!(name = %endpoint.display_name(), address = %endpoint.ble_address, "connecting");
-        let session = GattSession::open(bluez.connection(), &endpoint.path.as_ref()).await?;
+        let session = backend.open(endpoint).await?;
 
         let (state, _) = watch::channel(DeviceState::default());
         let (link, _) = watch::channel(ConnectionEvent::Connected);

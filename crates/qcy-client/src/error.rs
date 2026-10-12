@@ -1,22 +1,20 @@
 use qcy_protocol::ProtocolError;
 use thiserror::Error;
 
-/// Errors raised by the BlueZ transport.
+/// Errors raised while finding, connecting to or talking to earbuds.
 #[derive(Debug, Error)]
 pub enum Error {
-    #[error("D-Bus error: {0}")]
-    DBus(#[from] zbus::Error),
-
-    #[error("BlueZ error: {0}")]
-    Bluez(#[from] zbus::fdo::Error),
+    /// The operating system's Bluetooth stack reported an error.
+    #[error("Bluetooth error: {0}")]
+    Backend(String),
 
     #[error("protocol error: {0}")]
     Protocol(#[from] ProtocolError),
 
-    #[error("no Bluetooth adapter found (is bluetoothd running?)")]
+    #[error("no Bluetooth adapter found")]
     NoAdapter,
 
-    #[error("the Bluetooth adapter is powered off")]
+    #[error("Bluetooth is turned off")]
     AdapterOff,
 
     #[error("{0}")]
@@ -40,11 +38,16 @@ impl Error {
     pub fn is_transient(&self) -> bool {
         matches!(
             self,
-            Error::DBus(_)
-                | Error::Bluez(_)
-                | Error::Timeout(_)
-                | Error::NotConnected
-                | Error::DeviceGone
+            Error::Backend(_) | Error::Timeout(_) | Error::NotConnected | Error::DeviceGone
+        )
+    }
+
+    /// The message used when no earbuds could be found.
+    pub(crate) fn not_found() -> Self {
+        Error::NotFound(
+            "no QCY earbuds found. Take them out of the case and make sure \
+             they are not connected to the QCY app on your phone."
+                .into(),
         )
     }
 }

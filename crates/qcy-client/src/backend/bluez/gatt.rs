@@ -13,24 +13,18 @@ use zbus::fdo::PropertiesProxy;
 use zbus::names::InterfaceName;
 use zbus::zvariant::{ObjectPath, OwnedObjectPath, Value};
 
-use crate::Error;
-use crate::discovery::{managed_objects, prop};
-use crate::proxies::{
+use super::discovery::{managed_objects, prop};
+use super::proxies::{
     Device1Proxy, GATT_CHAR_IFACE, GATT_SERVICE_IFACE, GattCharacteristic1Proxy, SERVICE,
 };
+use crate::Error;
+use crate::transport::{Link, Notification, hex};
 
 const CONNECT_ATTEMPTS: u32 = 2;
 const CONNECT_TIMEOUT: Duration = Duration::from_secs(45);
 const RESOLVE_TIMEOUT: Duration = Duration::from_secs(20);
 /// Default ATT MTU if BlueZ does not report one.
 const DEFAULT_MTU: u16 = 23;
-
-/// Data received from a characteristic notification.
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct Notification {
-    pub characteristic: Characteristic,
-    pub data: Vec<u8>,
-}
 
 /// An open GATT connection to the earbuds' control service.
 #[derive(Debug, Clone)]
@@ -75,29 +69,35 @@ impl GattSession {
         })
     }
 
-    /// Largest value that fits into a single ATT write.
-    pub fn max_write_len(&self) -> usize {
-        usize::from(self.mtu.saturating_sub(3)).max(20)
-    }
-
-    pub fn has(&self, c: Characteristic) -> bool {
-        self.chars.contains_key(&c)
-    }
-
     fn char(&self, c: Characteristic) -> Result<&GattCharacteristic1Proxy<'static>, Error> {
         self.chars
             .get(&c)
             .ok_or_else(|| Error::NotFound(format!("characteristic {c:?} not available")))
     }
 
-    pub async fn read(&self, c: Characteristic) -> Result<Vec<u8>, Error> {
+    pub async fn is_connected(&self) -> bool {
+        self.device.connected().await.unwrap_or(false)
+    }
+}
+
+impl Link for GattSession {
+    /// Largest value that fits into a single ATT write.
+    fn max_write_len(&self) -> usize {
+        usize::from(self.mtu.saturating_sub(3)).max(20)
+    }
+
+    fn has(&self, c: Characteristic) -> bool {
+        self.chars.contains_key(&c)
+    }
+
+    async fn read(&self, c: Characteristic) -> Result<Vec<u8>, Error> {
         let value = self.char(c)?.read_value(HashMap::new()).await?;
         trace!(?c, data = %hex(&value), "read");
         Ok(value)
     }
 
     /// Writes without response, like the official app.
-    pub async fn write(&self, w: &Write) -> Result<(), Error> {
+    async fn write(&self, w: &Write) -> Result<(), Error> {
         if w.data.len() > self.max_write_len() {
             return Err(Error::TooLarge {
                 len: w.data.len(),
@@ -113,7 +113,7 @@ impl GattSession {
     }
 
     /// Enables notifications and returns a stream of everything received.
-    pub async fn notifications(&self) -> Result<BoxStream<'static, Notification>, Error> {
+    async fn notifications(&self) -> Result<BoxStream<'static, Notification>, Error> {
         let mut streams = Vec::new();
         for (&c, proxy) in self.chars.iter().filter(|(c, _)| c.notifies()) {
             let props = PropertiesProxy::builder(&self.conn)
@@ -151,7 +151,7 @@ impl GattSession {
     }
 
     /// Stream that yields once the BLE link goes down.
-    pub async fn disconnected(&self) -> Result<BoxStream<'static, ()>, Error> {
+    async fn disconnected(&self) -> Result<BoxStream<'static, ()>, Error> {
         let stream = self.device.receive_connected_changed().await;
         Ok(stream
             .filter_map(|change| async move {
@@ -163,12 +163,8 @@ impl GattSession {
             .boxed())
     }
 
-    pub async fn is_connected(&self) -> bool {
-        self.device.connected().await.unwrap_or(false)
-    }
-
     /// Drops the BLE control link (audio over classic Bluetooth is unaffected).
-    pub async fn disconnect(&self) -> Result<(), Error> {
+    async fn disconnect(&self) -> Result<(), Error> {
         self.device.disconnect().await?;
         Ok(())
     }
@@ -293,11 +289,4 @@ async fn resolve_characteristics(
         chars.insert(c, proxy);
     }
     Ok(chars)
-}
-
-pub(crate) fn hex(data: &[u8]) -> String {
-    data.iter()
-        .map(|b| format!("{b:02x}"))
-        .collect::<Vec<_>>()
-        .join(" ")
 }

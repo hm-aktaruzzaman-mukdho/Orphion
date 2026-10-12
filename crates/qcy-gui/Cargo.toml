@@ -12,7 +12,7 @@ path = "src/main.rs"
 
 [dependencies]
 qcy-protocol.workspace = true
-qcy-bluez.workspace = true
+qcy-client.workspace = true
 anyhow.workspace = true
 eframe.workspace = true
 egui_material_icons = { version = "0.8", default-features = false, features = ["filled", "outline"] }

@@ -2,7 +2,7 @@
 //!
 //! Threading model: egui owns the main thread; a tokio runtime runs in the
 //! background and hosts the [`Manager`], which talks to BlueZ. The UI only
-//! reads [`Snapshot`](qcy_bluez::manager::Snapshot)s and queues commands, so
+//! reads [`Snapshot`](qcy_client::manager::Snapshot)s and queues commands, so
 //! it never blocks on Bluetooth.
 //!
 //! Options:
@@ -20,8 +20,8 @@ mod views;
 mod widgets;
 
 use anyhow::Result;
-use qcy_bluez::discovery::Selector;
-use qcy_bluez::manager::Manager;
+use qcy_client::Selector;
+use qcy_client::manager::Manager;
 use tracing_subscriber::EnvFilter;
 
 const APP_ID: &str = "io.github.qcy_linux.Control";

@@ -1,6 +1,6 @@
 //! Human readable rendering of the device state.
 
-use qcy_bluez::Endpoint;
+use qcy_client::Endpoint;
 use qcy_protocol::profile::DeviceProfile;
 use qcy_protocol::state::DeviceState;
 use qcy_protocol::types::{BatteryLevel, Gesture, Toggle};

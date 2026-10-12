@@ -10,8 +10,8 @@ use std::time::Duration;
 
 use anyhow::{Context, Result, bail};
 use clap::Parser;
-use qcy_bluez::discovery::Selector;
-use qcy_bluez::{Bluez, Earbuds};
+use qcy_client::transport::Backend;
+use qcy_client::{Earbuds, Platform, Selector};
 use qcy_protocol::eq::ParametricEq;
 use qcy_protocol::types::{AncMode, AutoPowerOff, Gesture, WearDetection, WearMusicBehavior};
 use qcy_protocol::{Characteristic, Command, Write};
@@ -24,12 +24,14 @@ async fn main() -> Result<()> {
     let cli = Cli::parse();
     init_logging(cli.verbose);
 
-    let bluez = Bluez::connect().await.context("cannot reach BlueZ")?;
+    let platform = Platform::init()
+        .await
+        .context("cannot reach the Bluetooth stack")?;
     let timeout = Duration::from_secs(cli.timeout);
 
     if matches!(cli.command, Some(Cmd::Scan)) {
         println!("Scanning for {}s…", cli.timeout.min(6));
-        let found = bluez.scan(timeout.min(Duration::from_secs(6))).await?;
+        let found = platform.scan(timeout.min(Duration::from_secs(6))).await?;
         if found.is_empty() {
             println!("No QCY earbuds found. Are they out of the case?");
         }
@@ -38,8 +40,8 @@ async fn main() -> Result<()> {
     }
 
     let selector = cli.device.map_or(Selector::Auto, Selector::Address);
-    let endpoint = bluez.find(&selector, timeout).await?;
-    let buds = Earbuds::connect(&bluez, &endpoint).await?;
+    let endpoint = platform.find(&selector, timeout).await?;
+    let buds = Earbuds::connect(&platform, &endpoint).await?;
     // Give replies to the initial requests a moment to arrive.
     tokio::time::sleep(Duration::from_millis(400)).await;
 
@@ -246,7 +248,7 @@ async fn run(buds: &Earbuds, cmd: Cmd) -> Result<()> {
 /// Sends a command and waits for the earbuds' confirmation to arrive.
 async fn send_and_report(buds: &Earbuds, command: Command) -> Result<()> {
     buds.send(command).await?;
-    tokio::time::sleep(qcy_bluez::CONFIRM_DELAY + Duration::from_millis(400)).await;
+    tokio::time::sleep(qcy_client::CONFIRM_DELAY + Duration::from_millis(400)).await;
     Ok(())
 }
 
@@ -276,8 +278,8 @@ fn parse_hex(s: &str) -> Result<Vec<u8>> {
 fn init_logging(verbose: u8) {
     let default = match verbose {
         0 => "warn",
-        1 => "info,qcy_bluez=debug",
-        _ => "debug,qcy_bluez=trace,zbus=info",
+        1 => "info,qcy_client=debug",
+        _ => "debug,qcy_client=trace,zbus=info",
     };
     let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new(default));
     tracing_subscriber::fmt()
