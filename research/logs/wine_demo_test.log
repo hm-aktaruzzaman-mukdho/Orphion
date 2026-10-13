@@ -1,0 +1,3 @@
+== wine: orphion.exe --demo 19786 --screenshots
+   exit 0; screenshots: controls.ppm dialog.ppm noise.ppm settings-end.ppm settings.ppm sound-custom.ppm sound.ppm 
+   orphion processes left in wine: 0

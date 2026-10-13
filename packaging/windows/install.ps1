@@ -3,10 +3,11 @@
     Installs Orphion for the current user (no administrator rights needed).
 
 .DESCRIPTION
-    Copies the programs to %LOCALAPPDATA%\Programs\Orphion and adds Start
-    menu shortcuts.
+    Copies the programs to %LOCALAPPDATA%\Programs\Orphion and adds an
+    "Orphion" Start menu shortcut. Starting Orphion also starts its tray icon
+    (unless turned off in its settings).
 
-    -Autostart  also start the tray icon when you sign in
+    -Autostart  also start the tray icon when you sign in (and right away)
     -AddToPath  make `orphionctl` available in new terminals
 
 .EXAMPLE
@@ -25,8 +26,9 @@ $startup = [Environment]::GetFolderPath('Startup')
 
 # Running copies would keep the files locked. Stop-Process returns before
 # they are gone: wait for them, then drop our own handles to them (an open
-# process handle keeps its .exe locked).
-# (qcy-gui and qcy-tray are the names from before the rename to Orphion.)
+# process handle keeps its .exe locked). orphion is the window and the tray;
+# orphion-tray is the separate tray of earlier versions, qcy-gui and qcy-tray
+# the names from before the rename to Orphion.
 $running = @(Get-Process orphion, orphion-tray, qcy-gui, qcy-tray -ErrorAction SilentlyContinue)
 $running | Stop-Process -Force
 $running | Wait-Process -Timeout 10 -ErrorAction SilentlyContinue
@@ -57,8 +59,25 @@ foreach ($item in $legacyStartup, $legacyStartMenu, $legacyTarget,
     }
 }
 
+# Earlier Orphion versions had a separate orphion-tray.exe with its own
+# shortcuts. The tray is now `orphion.exe --tray`; an old Startup shortcut
+# becomes the new autostart.
+$oldTrayStartup = Join-Path $startup 'Orphion tray.lnk'
+if (Test-Path $oldTrayStartup) { $Autostart = $true }
+foreach ($item in $oldTrayStartup, (Join-Path $startMenu 'Orphion tray.lnk'),
+        (Join-Path $target 'orphion-tray.exe')) {
+    for ($i = 1; Test-Path $item; $i++) {
+        try {
+            Remove-Item $item -Force
+        } catch {
+            if ($i -ge 20) { throw }
+            Start-Sleep -Milliseconds 250
+        }
+    }
+}
+
 New-Item -ItemType Directory -Force -Path $target, $startMenu | Out-Null
-foreach ($file in 'orphion.exe', 'orphion-tray.exe', 'orphionctl.exe', 'README.txt') {
+foreach ($file in 'orphion.exe', 'orphionctl.exe', 'README.txt') {
     # Windows releases the files of a just-ended program with a short delay.
     for ($i = 1; ; $i++) {
         try {
@@ -83,19 +102,20 @@ public static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint msg, UIntPtr wP
 }
 
 $shell = New-Object -ComObject WScript.Shell
-function New-Shortcut($path, $exe, $description) {
+function New-Shortcut($path, $arguments, $description) {
     $link = $shell.CreateShortcut($path)
-    $link.TargetPath = Join-Path $target $exe
+    $link.TargetPath = Join-Path $target 'orphion.exe'
+    $link.Arguments = $arguments
     $link.WorkingDirectory = $target
     $link.Description = $description
     $link.Save()
 }
-New-Shortcut (Join-Path $startMenu 'Orphion.lnk') 'orphion.exe' 'Control your QCY earbuds'
-New-Shortcut (Join-Path $startMenu 'Orphion tray.lnk') 'orphion-tray.exe' 'Tray icon for your QCY earbuds'
+New-Shortcut (Join-Path $startMenu 'Orphion.lnk') '' 'Control your QCY earbuds'
 
 if ($Autostart) {
-    New-Shortcut (Join-Path $startup 'Orphion tray.lnk') 'orphion-tray.exe' 'Tray icon for your QCY earbuds'
-    Start-Process (Join-Path $target 'orphion-tray.exe')
+    New-Shortcut (Join-Path $startup 'Orphion.lnk') '--tray' 'Tray icon for your QCY earbuds'
+    # If a tray is already running, this one exits on its own.
+    Start-Process (Join-Path $target 'orphion.exe') -ArgumentList '--tray'
 }
 
 if ($AddToPath) {

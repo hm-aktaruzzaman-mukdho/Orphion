@@ -8,10 +8,14 @@ $ErrorActionPreference = 'Stop'
 
 $target = Join-Path $env:LOCALAPPDATA 'Programs\Orphion'
 $startMenu = Join-Path ([Environment]::GetFolderPath('Programs')) 'Orphion'
-$startupLink = Join-Path ([Environment]::GetFolderPath('Startup')) 'Orphion tray.lnk'
+$startup = [Environment]::GetFolderPath('Startup')
+# Orphion.lnk starts the tray; Orphion tray.lnk is from earlier versions.
+$startupLinks = (Join-Path $startup 'Orphion.lnk'), (Join-Path $startup 'Orphion tray.lnk')
 
-# Stop-Process returns before the processes are gone; wait for them, then
-# drop our own handles to them (an open process handle keeps its .exe locked).
+# Stop the window and the tray (both orphion), and the separate tray of
+# earlier versions. Stop-Process returns before the processes are gone; wait
+# for them, then drop our own handles to them (an open process handle keeps
+# its .exe locked).
 $running = @(Get-Process orphion, orphion-tray -ErrorAction SilentlyContinue)
 $running | Stop-Process -Force
 $running | Wait-Process -Timeout 10 -ErrorAction SilentlyContinue
@@ -30,8 +34,8 @@ function Remove-Retrying($item) {
 }
 
 # Program, shortcuts, then settings and the endpoint cache.
-$items = $startupLink, $startMenu, $target,
-    (Join-Path $env:APPDATA 'orphion'), (Join-Path $env:LOCALAPPDATA 'orphion')
+$items = $startupLinks + @($startMenu, $target,
+    (Join-Path $env:APPDATA 'orphion'), (Join-Path $env:LOCALAPPDATA 'orphion'))
 foreach ($item in $items) { Remove-Retrying $item }
 
 # Only touch the user's Path if install.ps1 -AddToPath put us there, and edit

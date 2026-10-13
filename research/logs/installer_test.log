@@ -1,0 +1,59 @@
+== A. upgrade: old orphion-tray with autostart, plus legacy QCY Earbuds files
+   ==> Removing the previous version (QCY Earbuds)
+   ==> Removing the separate orphion-tray program
+   ==> Installing binaries to prefix/bin
+   ==> Installing icon
+   ==> Installing the menu entry
+       data/applications/io.github.orphion.Orphion.desktop
+   ==> Enabling tray autostart
+       config/autostart/io.github.orphion.Orphion.Tray.desktop
+   ==> Starting the tray
+   Done. Launch "Orphion" from the application menu, or run: prefix/bin/orphion
+   file: config/autostart/io.github.orphion.Orphion.Tray.desktop
+   file: data/applications/io.github.orphion.Orphion.desktop
+   file: data/icons/hicolor/256x256/apps/orphion.png
+   file: prefix/bin/orphion
+   file: prefix/bin/orphionctl
+   [stub] pkill -x qcy-tray
+   [stub] pkill -x orphion-tray
+   [stub] orphion --tray
+   autostart entry:
+     [Desktop Entry]
+     Type=Application
+     Name=Orphion Tray
+     Comment=Tray icon with battery levels and quick noise control for QCY earbuds
+     Exec=prefix/bin/orphion --tray
+     Icon=orphion
+     Terminal=false
+     NoDisplay=true
+     X-KDE-autostart-after=panel
+     X-GNOME-Autostart-enabled=true
+== B. fresh install without --autostart
+   ==> Installing binaries to prefix/bin
+   ==> Installing icon
+   ==> Installing the menu entry
+       data/applications/io.github.orphion.Orphion.desktop
+   Done. Launch "Orphion" from the application menu, or run: prefix/bin/orphion
+   file: data/applications/io.github.orphion.Orphion.desktop
+   file: data/icons/hicolor/256x256/apps/orphion.png
+   file: prefix/bin/orphion
+   file: prefix/bin/orphionctl
+== C. fresh install with --autostart
+   ==> Installing binaries to prefix/bin
+   ==> Installing icon
+   ==> Installing the menu entry
+       data/applications/io.github.orphion.Orphion.desktop
+   ==> Enabling tray autostart
+       config/autostart/io.github.orphion.Orphion.Tray.desktop
+   ==> Starting the tray
+   Done. Launch "Orphion" from the application menu, or run: prefix/bin/orphion
+   file: config/autostart/io.github.orphion.Orphion.Tray.desktop
+   file: data/applications/io.github.orphion.Orphion.desktop
+   file: data/icons/hicolor/256x256/apps/orphion.png
+   file: prefix/bin/orphion
+   file: prefix/bin/orphionctl
+   [stub] orphion --tray
+== D. uninstall
+   [stub] pkill -x orphion
+   [stub] pkill -x orphion-tray
+   (nothing listed = all removed)

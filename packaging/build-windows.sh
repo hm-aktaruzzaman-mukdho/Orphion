@@ -18,7 +18,7 @@ cargo build --release --workspace --target "$TARGET"
 
 rm -rf "$OUT" "$OUT.zip"
 mkdir -p "$OUT"
-cp "target/$TARGET/release/"{orphion,orphion-tray,orphionctl}.exe "$OUT/"
+cp "target/$TARGET/release/"{orphion,orphionctl}.exe "$OUT/"
 cp packaging/windows/{install.ps1,uninstall.ps1,README.txt} "$OUT/"
 # Windows tools expect CRLF line endings in text files.
 for f in "$OUT"/*.ps1 "$OUT/README.txt"; do

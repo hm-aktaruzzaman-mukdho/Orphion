@@ -29,7 +29,7 @@ cargo zigbuild --release --workspace --target "$TARGET.$GLIBC"
 
 rm -rf "$OUT" "$OUT.tar.gz"
 mkdir -p "$OUT/bin" "$OUT/assets" "$OUT/packaging/linux"
-cp "target/$TARGET/release/"{orphion,orphion-tray,orphionctl} "$OUT/bin/"
+cp "target/$TARGET/release/"{orphion,orphionctl} "$OUT/bin/"
 cp assets/orphion.png "$OUT/assets/"
 # Same layout as the source tree, so install.sh works unchanged in both.
 cp packaging/linux/{install.sh,uninstall.sh,io.github.orphion.Orphion.desktop,io.github.orphion.Orphion.Tray.desktop} "$OUT/packaging/linux/"
