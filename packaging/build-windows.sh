@@ -2,9 +2,12 @@
 # Cross-compiles the Windows version on Linux and packs it into a zip.
 #
 # Needs once:  rustup target add x86_64-pc-windows-gnu
-#              sudo apt install mingw-w64   (the linker; often already present)
+#              sudo apt install mingw-w64 nsis   (the linker and the setup
+#                                                 compiler; often present)
 #
 # Output: dist/orphion-<version>-windows-x64.zip
+#         dist/orphion-<version>-windows-x64-setup.exe  (installer: per user,
+#                                                        or for everyone with UAC)
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
@@ -27,4 +30,13 @@ done
 
 (cd dist && zip -qr "$NAME.zip" "$NAME")
 echo "==> dist/$NAME.zip"
-ls -lh "dist/$NAME.zip"
+
+echo "==> Building the installer"
+if ! command -v makensis >/dev/null; then
+    echo "makensis not found: install NSIS (e.g. sudo apt install nsis)" >&2
+    exit 1
+fi
+makensis -V2 -INPUTCHARSET UTF8 -DVERSION="$VERSION" -DROOT="$PWD" -DSRC="$PWD/$OUT" \
+    -DOUTFILE="$PWD/dist/$NAME-setup.exe" packaging/windows/orphion.nsi
+echo "==> dist/$NAME-setup.exe"
+ls -lh "dist/$NAME.zip" "dist/$NAME-setup.exe"

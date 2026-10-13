@@ -1,0 +1,41 @@
+== 1. silent install, just for me
+   exit 0
+   LICENSE.txt
+   orphionctl.exe
+   orphion.exe
+   README.txt
+   uninstall.exe
+   startmenu/Orphion
+   startmenu/Orphion/Orphion.lnk
+   startmenu/StartUp/Orphion.lnk
+   HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Uninstall\Orphion
+       DisplayIcon    REG_SZ    C:\users\mukdho\AppData\Local\Programs\Orphion\orphion.exe
+       DisplayName    REG_SZ    Orphion
+       DisplayVersion    REG_SZ    0.3.0
+       EstimatedSize    REG_DWORD    0x40b3
+       InstallLocation    REG_SZ    C:\users\mukdho\AppData\Local\Programs\Orphion
+       NoModify    REG_DWORD    0x1
+       NoRepair    REG_DWORD    0x1
+       Publisher    REG_SZ    Orphion contributors
+       QuietUninstallString    REG_SZ    "C:\users\mukdho\AppData\Local\Programs\Orphion\uninstall.exe" /S
+       UninstallString    REG_SZ    "C:\users\mukdho\AppData\Local\Programs\Orphion\uninstall.exe"
+       URLInfoAbout    REG_SZ    https://github.com/hm-aktaruzzaman-mukdho/Orphion
+   HKLM entry: no
+== 2. silent uninstall
+   install dir left: 0 files (removed)
+   start menu left: 0
+   HKCU entry: removed
+== 3. silent install for everyone (/S /allusers)
+   exit 0
+   LICENSE.txt
+   orphionctl.exe
+   orphion.exe
+   README.txt
+   uninstall.exe
+   shared startmenu/Orphion
+   shared startmenu/Orphion/Orphion.lnk
+   shared startmenu/StartUp/Orphion.lnk
+   HKLM    InstallLocation    REG_SZ    C:\Program Files\Orphion
+   HKCU entry: no
+== 4. silent uninstall of the everyone install
+   Program Files\Orphion: removed; shared start menu left: 0; HKLM entry: removed

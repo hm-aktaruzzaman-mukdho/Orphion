@@ -105,7 +105,7 @@ output) is very welcome.
 - To run: nothing to install. The programs use only DLLs that ship with
   Windows.
 - To build: Rust ≥ 1.85 plus either the Visual Studio Build Tools (MSVC) or
-  MinGW-w64 (GNU), see [Build on Windows](#option-b-build-on-windows).
+  MinGW-w64 (GNU), see [Build on Windows](#option-c-build-on-windows).
 
 ## Install on Linux
 
@@ -250,16 +250,40 @@ graphical is loaded at run time.
 
 ## Install on Windows
 
-Everything is installed for the current user; no administrator rights are
-needed.
+### Option A: setup program (recommended)
 
-### Option A: from a release zip
+Download `orphion-<version>-windows-x64-setup.exe` from the
+[releases page](https://github.com/hm-aktaruzzaman-mukdho/Orphion/releases) and run it. It asks who to install for:
+
+- **Just for me**: installs into `%LOCALAPPDATA%\Programs\Orphion` and your
+  own Start menu. No administrator rights are needed.
+- **For everyone on this PC**: installs into `Program Files` and the shared
+  Start menu. Windows asks for administrator permission (UAC) at this point.
+
+You can also choose to start the tray icon when signing in (on by default),
+a desktop shortcut and adding `orphionctl` to the `Path`. Orphion then shows
+up in Settings → Apps, where it is uninstalled like any other program; the
+uninstaller asks whether to remove your settings too. Running a newer setup
+over an existing installation updates it.
+
+The setup is not code-signed, so Windows SmartScreen may say "Windows
+protected your PC": click **More info** → **Run anyway**.
+
+For scripted installs: `orphion-…-setup.exe /S` installs silently just for
+you; `/S /allusers` installs for everyone (run it from an elevated prompt);
+`/D=C:\path` (last on the line) picks the folder. `uninstall.exe /S` in the
+install folder removes it silently.
+
+### Option B: from a release zip
+
+The zip holds the plain programs and two PowerShell scripts. Everything is
+installed for the current user; no administrator rights are needed.
 
 Download `orphion-<version>-windows-x64.zip` from the
 [releases page](https://github.com/hm-aktaruzzaman-mukdho/Orphion/releases). A zip can also be made by
 `packaging/build-windows.sh` on Linux (see
 [Cross-compile from Linux](#cross-compile-from-linux)) or by the steps in
-[option B](#option-b-build-on-windows). It contains `orphion.exe`,
+[option C](#option-c-build-on-windows). It contains `orphion.exe`,
 `orphionctl.exe`, `install.ps1`, `uninstall.ps1` and a short `README.txt`.
 
 1. If the zip was downloaded, right-click it → **Properties** → tick
@@ -277,7 +301,7 @@ The programs are not code-signed. If SmartScreen shows "Windows protected
 your PC", choose **More info → Run anyway**. You can also skip installing and
 run the `.exe` files straight from the extracted folder.
 
-### Option B: build on Windows
+### Option C: build on Windows
 
 1. **Install Rust.** Download and run `rustup-init.exe` from
    [rustup.rs](https://rustup.rs), or use `winget install Rustlang.Rustup`.
@@ -358,7 +382,9 @@ the Start menu.
 
 ### Uninstall
 
-From the extracted or `dist` folder:
+Installed with the setup program: Settings → Apps → Orphion → Uninstall.
+
+Installed with `install.ps1`, from the extracted or `dist` folder:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File uninstall.ps1
@@ -375,13 +401,16 @@ No Windows machine is needed to build the Windows version:
 
 ```bash
 rustup target add x86_64-pc-windows-gnu    # once
-sudo apt install mingw-w64                 # once (Fedora: mingw64-gcc, Arch: mingw-w64-gcc)
+sudo apt install mingw-w64 nsis            # once (Fedora: mingw64-gcc mingw32-nsis, Arch: mingw-w64-gcc nsis)
 packaging/build-windows.sh
 ```
 
 This produces `dist/orphion-<version>-windows-x64/` and the matching
-`.zip` with both programs, the install scripts and `README.txt`. Install
-it on the Windows PC with [option A](#option-a-from-a-release-zip).
+`.zip` with both programs, the install scripts and `README.txt`, plus the
+setup program `dist/orphion-<version>-windows-x64-setup.exe`, compiled with
+NSIS from `packaging/windows/orphion.nsi`. Install it on the Windows PC with
+[option A](#option-a-setup-program-recommended) or
+[option B](#option-b-from-a-release-zip).
 
 ## Usage
 
@@ -445,7 +474,7 @@ model, without Bluetooth.
 | The phone app cannot connect | Quit the tray (its menu → Quit) and close the window on the computer (or run `orphionctl` without `--keep-connected`). Windows drops an idle link a few seconds after the last program releases it. |
 | Rename has no visible effect | Reconnect audio; phones cache names. Keep both buds out of the case while renaming. |
 | "Bluetooth error" on Windows | Check Bluetooth is on in Settings and the adapter supports Bluetooth LE. Older adapters with vendor Bluetooth software (e.g. WIDCOMM) are not supported by Windows' BLE API. |
-| Windows build fails with `error calling dlltool` | You are on the GNU toolchain without MinGW-w64 in `PATH`; install it or use MSVC (see [Build on Windows](#option-b-build-on-windows)). |
+| Windows build fails with `error calling dlltool` | You are on the GNU toolchain without MinGW-w64 in `PATH`; install it or use MSVC (see [Build on Windows](#option-c-build-on-windows)). |
 | `install.ps1` "cannot be loaded because running scripts is disabled" | Start it with `powershell -ExecutionPolicy Bypass -File install.ps1` as shown, which allows it for that one run only. |
 | Need details | `orphionctl -vv status` prints a full protocol trace. Tray (quit the running one first): Linux `RUST_LOG=qcy_client=debug orphion --tray`; Windows (no console window) `$env:RUST_LOG="qcy_client=debug"; Start-Process orphion.exe -ArgumentList --tray -RedirectStandardOutput tray.log`. The window: the same without `--tray`, plus `--no-tray`. |
 
@@ -469,10 +498,11 @@ docs/
 assets/           application icon
 packaging/
   build-linux.sh    portable Linux build → dist/…-linux-x64.tar.gz
-  build-windows.sh  Windows cross-build → dist/…-windows-x64.zip
+  build-windows.sh  Windows cross-build → dist/…-windows-x64.zip and …-setup.exe
   make-icons.py     regenerates assets/
   linux/            install.sh, uninstall.sh, desktop entries, tarball README
-  windows/          install.ps1, uninstall.ps1, zip README
+  windows/          orphion.nsi (setup program), path.ps1 (its Path helper),
+                    install.ps1, uninstall.ps1, zip README
 research/         decompiled app, captured data and logs (see research/README.md)
 ```
 
