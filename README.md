@@ -107,9 +107,9 @@ installing the build tools.
 
 ### From a release tarball (no compiler needed)
 
-`packaging/build-linux.sh` produces
-`dist/orphion-<version>-linux-x64.tar.gz` with portable binaries (see
-below). On any supported distribution:
+Download `orphion-<version>-linux-x64.tar.gz` from the
+[releases page](https://github.com/hm-aktaruzzaman-mukdho/Orphion/releases), or build it yourself with
+`packaging/build-linux.sh` (see below). On any supported distribution:
 
 ```bash
 tar xzf orphion-<version>-linux-x64.tar.gz
@@ -148,7 +148,7 @@ bluetoothctl show        # should report "Powered: yes"; if not: bluetoothctl po
 ### 2. Get the source
 
 ```bash
-git clone <repository URL> orphion
+git clone https://github.com/hm-aktaruzzaman-mukdho/Orphion.git orphion
 cd orphion
 ```
 
@@ -243,7 +243,9 @@ needed.
 
 ### Option A: from a release zip
 
-A zip is made by `packaging/build-windows.sh` on Linux (see
+Download `orphion-<version>-windows-x64.zip` from the
+[releases page](https://github.com/hm-aktaruzzaman-mukdho/Orphion/releases). A zip can also be made by
+`packaging/build-windows.sh` on Linux (see
 [Cross-compile from Linux](#cross-compile-from-linux)) or by the steps in
 [option B](#option-b-build-on-windows). It contains `orphion.exe`,
 `orphion-tray.exe`, `orphionctl.exe`, `install.ps1`, `uninstall.ps1` and a short
@@ -299,7 +301,7 @@ run the `.exe` files straight from the extracted folder.
    folder:
 
    ```powershell
-   git clone <repository URL> orphion
+   git clone https://github.com/hm-aktaruzzaman-mukdho/Orphion.git orphion
    cd orphion
    cargo build --release
    ```
