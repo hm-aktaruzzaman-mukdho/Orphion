@@ -12,7 +12,10 @@ pub struct GuiWindow {
 }
 
 impl GuiWindow {
-    /// Starts the control panel unless it is already running.
+    /// Starts the control panel unless it is already running. The window is
+    /// told not to start a tray, since this one is running; if a window was
+    /// opened another way, the new process notices and exits (bringing that
+    /// window to the front on Windows).
     pub fn open(&mut self) {
         if let Some(child) = &mut self.child {
             if matches!(child.try_wait(), Ok(None)) {
@@ -21,7 +24,7 @@ impl GuiWindow {
                 return;
             }
         }
-        match Command::new(this_program()).spawn() {
+        match Command::new(this_program()).arg("--no-tray").spawn() {
             Ok(child) => self.child = Some(child),
             Err(e) => warn!("cannot start the control panel: {e}"),
         }

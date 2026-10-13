@@ -605,6 +605,19 @@ fn appearance(ui: &mut Ui, view: &mut ViewCtx<'_>) {
             ui,
             "The whole colour scheme is generated from the accent, for light and dark mode.",
         );
+
+        m3::divider(ui);
+        if let Some(on) = m3::switch_row(
+            ui,
+            icons::ICON_TOOLBAR,
+            "Keep Orphion in the tray",
+            Some(
+                "Starts the tray icon with the window, so battery levels and quick controls stay at hand after you close it",
+            ),
+            view.keep_in_tray,
+        ) {
+            view.act(Action::SetKeepInTray(on));
+        }
     });
 }
 

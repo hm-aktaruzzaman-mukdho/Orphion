@@ -16,6 +16,7 @@ use qcy_protocol::panel::Panel;
 use tokio::sync::broadcast;
 
 use crate::capture::{Capture, Shot};
+use crate::instance::{self, Instance, Kind};
 use crate::material::components::{self as m3, DialogResult};
 use crate::material::{self, MaterialIcon, Scheme, icons};
 use crate::prefs::{Appearance, Prefs};
@@ -35,6 +36,8 @@ pub enum Action {
     Refresh,
     SetAppearance(Appearance),
     SetAccent(egui::Color32),
+    /// "Keep Orphion in the tray" changed.
+    SetKeepInTray(bool),
 }
 
 /// A pending "are you sure?" dialog.
@@ -111,6 +114,7 @@ pub struct ViewCtx<'a> {
     pub drafts: &'a mut Drafts,
     pub appearance: Appearance,
     pub accent: egui::Color32,
+    pub keep_in_tray: bool,
     actions: &'a mut Vec<Action>,
 }
 
@@ -153,6 +157,8 @@ pub struct App {
     scroll_to: Option<f32>,
     /// Largest scroll offset of the content in the last frame.
     scroll_max: f32,
+    /// Whether this run may start a tray (not in demo or screenshot runs).
+    tray_allowed: bool,
 }
 
 impl App {
@@ -160,6 +166,7 @@ impl App {
         cc: &eframe::CreationContext<'_>,
         manager: Manager,
         rt: tokio::runtime::Handle,
+        tray_allowed: bool,
     ) -> Self {
         material::install(&cc.egui_ctx);
         let prefs = Prefs::load();
@@ -191,6 +198,7 @@ impl App {
             capture: Capture::from_args(),
             scroll_to: None,
             scroll_max: 0.0,
+            tray_allowed,
         }
     }
 
@@ -210,6 +218,15 @@ impl App {
                 self.prefs.accent = seed;
                 self.prefs.save();
                 material::set_accent(ctx, seed);
+            }
+            Action::SetKeepInTray(on) => {
+                self.prefs.keep_in_tray = on;
+                self.prefs.save();
+                // Turning it on takes effect now; turning it off leaves a
+                // running tray alone (its menu has "Quit").
+                if on && self.tray_allowed && !Instance::is_running(Kind::Tray) {
+                    instance::spawn_tray();
+                }
             }
         }
     }
@@ -367,6 +384,7 @@ impl eframe::App for App {
             drafts: &mut self.drafts,
             appearance: self.prefs.appearance,
             accent: self.prefs.accent,
+            keep_in_tray: self.prefs.keep_in_tray,
             actions: &mut actions,
         };
         egui::CentralPanel::default()

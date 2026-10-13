@@ -1,0 +1,20 @@
+== before: trays=0 windows=0 (own installed tray: 47616)
+== 1. demo window must not start a tray
+   trays=0
+== 2. two trays: the second exits
+   tray 1 pid 58915 running: yes; lock: tray.lock
+   tray 2: 2026-10-13T14:59:31.328798Z  INFO orphion::tray: a tray is already running
+   tray 2 exit 0 after .508 s; trays=1
+== 3. normal launch with a tray running: no second tray
+   trays=1 windows=1
+== 4. second window exits while the first is open
+   window 2: 2026-10-13T14:59:35.418534Z  INFO orphion: the control panel is already open
+   window 2 exit 0; windows=1
+== cleanup: stop tray 1 (pid 58915)
+== after: trays=0 windows=0 (own installed tray: 47616)
+== 5. normal launch, no tray yet: starts a detached tray that outlives the window
+   window exit 124 (timeout)
+       PID    PGID COMMAND
+     59056   59056 /media/mukdho/new_volume/Code/QCY_APP/target/release/orphion --tray
+   stopping the spawned tray 59056
+   left: 0 orphion processes; own tray 47616

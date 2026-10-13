@@ -28,10 +28,20 @@ winit = { version = "0.30", default-features = false, features = ["wayland-csd-a
 # Tray mode: KDE / StatusNotifierItem.
 ksni.workspace = true
 
-# Tray mode: notification-area icon and its message loop.
+# Single-instance locks (flock).
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"
+
+# Tray mode: notification-area icon and its message loop; single-instance
+# mutexes and bringing an open window to the front.
 [target.'cfg(windows)'.dependencies]
 tray-icon = { version = "0.26", default-features = false }
-windows = { version = "0.62", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_System_Threading",
+    "Win32_UI_WindowsAndMessaging",
+] }
 
 [build-dependencies]
 embed-resource = "3"

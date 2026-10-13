@@ -1991,6 +1991,7 @@ dependencies = [
  "egui_material_icons",
  "embed-resource",
  "ksni",
+ "libc",
  "material-colors",
  "qcy-client",
  "qcy-protocol",

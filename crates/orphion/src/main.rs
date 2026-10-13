@@ -17,16 +17,23 @@
 //! Options:
 //!
 //! * `--tray`: run the tray icon instead of the window
+//! * `--no-tray`: do not start the tray along with the window (it is started
+//!   by default unless turned off under Settings → Appearance)
 //! * `--device <MAC>`: use specific earbuds (audio or BLE address)
 //! * `--demo [MODEL]`: simulated earbuds, no Bluetooth. `MODEL` is a model id
 //!   from the catalogue (`orphionctl models`); the default is the MeloBuds Pro,
 //!   simulated from data captured on real earbuds
 //! * `--appearance system|light|dark`: override the saved theme for this run
 //! * `--screenshots <DIR>`: save every tab as `DIR/<tab>.ppm` once connected, then quit
+//!
+//! `--demo` and `--screenshots` runs never start a tray and may run next to
+//! the normal window; otherwise only one window and one tray run at a time
+//! ([`instance`]).
 
 mod app;
 mod args;
 mod capture;
+mod instance;
 mod material;
 mod prefs;
 mod tray;
@@ -38,6 +45,8 @@ use qcy_client::Selector;
 use qcy_client::manager::Manager;
 use tracing_subscriber::EnvFilter;
 
+use crate::instance::{Instance, Kind};
+
 /// Model simulated by `--demo` without a model id: the MeloBuds Pro.
 const DEMO_MODEL: u16 = 19786;
 const APP_ID: &str = "io.github.orphion.Orphion";
@@ -46,17 +55,39 @@ fn main() -> Result<()> {
     let args: Vec<String> = std::env::args().skip(1).collect();
     match args::mode(&args) {
         args::Mode::Tray => tray::run(),
-        args::Mode::Window => run_window(),
+        args::Mode::Window => run_window(&args),
     }
 }
 
 /// The control panel window.
-fn run_window() -> Result<()> {
+fn run_window(args: &[String]) -> Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter(
             EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("warn,qcy=info")),
         )
         .init();
+
+    // One window at a time: a second launch shows the first one instead
+    // (where the platform allows) and exits.
+    let _window = if args::single_window(args) {
+        match Instance::acquire(Kind::Window) {
+            Some(lock) => Some(lock),
+            None => {
+                tracing::info!("the control panel is already open");
+                instance::raise_window();
+                return Ok(());
+            }
+        }
+    } else {
+        None
+    };
+
+    // Keep the tray running alongside, unless turned off.
+    if args::starts_tray(args, prefs::Prefs::load().keep_in_tray)
+        && !Instance::is_running(Kind::Tray)
+    {
+        instance::spawn_tray();
+    }
 
     let selector = arg_value("--device")
         .and_then(|a| a.parse().ok())
@@ -95,11 +126,19 @@ fn run_window() -> Result<()> {
     };
 
     let handle = runtime.handle().clone();
+    let tray_allowed = !args::is_dev_run(args);
     let app_manager = manager.clone();
     let result = eframe::run_native(
         "Orphion",
         options,
-        Box::new(move |cc| Ok(Box::new(app::App::new(cc, app_manager, handle)))),
+        Box::new(move |cc| {
+            Ok(Box::new(app::App::new(
+                cc,
+                app_manager,
+                handle,
+                tray_allowed,
+            )))
+        }),
     );
 
     // Release the BLE link so the phone app can connect again. A running

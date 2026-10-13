@@ -46,11 +46,13 @@ impl Appearance {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub struct Prefs {
     pub appearance: Appearance,
     /// Seed colour of the Material scheme.
     pub accent: Color32,
+    /// Start the tray icon together with the window (`tray=true|false`).
+    pub keep_in_tray: bool,
 }
 
 impl Default for Prefs {
@@ -58,7 +60,21 @@ impl Default for Prefs {
         Self {
             appearance: Appearance::default(),
             accent: DEFAULT_SEED,
+            keep_in_tray: true,
         }
+    }
+}
+
+/// The platform's per-user config directory: `%APPDATA%` on Windows,
+/// `$XDG_CONFIG_HOME` (or `~/.config`) elsewhere.
+pub fn config_dir() -> Option<PathBuf> {
+    if cfg!(windows) {
+        std::env::var_os("APPDATA").map(PathBuf::from)
+    } else {
+        std::env::var_os("XDG_CONFIG_HOME")
+            .filter(|d| !d.is_empty())
+            .map(PathBuf::from)
+            .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".config")))
     }
 }
 
@@ -66,22 +82,12 @@ impl Prefs {
     /// `%APPDATA%\orphion\gui.conf` on Windows,
     /// `$XDG_CONFIG_HOME/orphion/gui.conf` (or `~/.config/…`) elsewhere.
     fn path() -> Option<PathBuf> {
-        Some(Self::config_dir()?.join("orphion").join("gui.conf"))
+        Some(config_dir()?.join("orphion").join("gui.conf"))
     }
 
     /// Where versions before the rename to Orphion kept the file.
     fn legacy_path() -> Option<PathBuf> {
-        Some(Self::config_dir()?.join("qcy-earbuds").join("gui.conf"))
-    }
-
-    fn config_dir() -> Option<PathBuf> {
-        if cfg!(windows) {
-            std::env::var_os("APPDATA").map(PathBuf::from)
-        } else {
-            std::env::var_os("XDG_CONFIG_HOME")
-                .map(PathBuf::from)
-                .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".config")))
-        }
+        Some(config_dir()?.join("qcy-earbuds").join("gui.conf"))
     }
 
     /// Loads the saved preferences; `--appearance` on the command line
@@ -97,15 +103,17 @@ impl Prefs {
     }
 
     fn load_file() -> Self {
-        let mut prefs = Self::default();
         // Settings saved under the old name are picked up once and then
         // saved under the new one.
         let text = Self::path()
             .and_then(|p| std::fs::read_to_string(p).ok())
             .or_else(|| Self::legacy_path().and_then(|p| std::fs::read_to_string(p).ok()));
-        let Some(text) = text else {
-            return prefs;
-        };
+        text.map_or_else(Self::default, |t| Self::parse(&t))
+    }
+
+    /// Reads `key=value` lines; anything unknown or malformed is ignored.
+    fn parse(text: &str) -> Self {
+        let mut prefs = Self::default();
         for line in text.lines() {
             match line.split_once('=').map(|(k, v)| (k.trim(), v.trim())) {
                 Some(("appearance", value)) => {
@@ -118,10 +126,22 @@ impl Prefs {
                         prefs.accent = c;
                     }
                 }
+                Some(("tray", "true")) => prefs.keep_in_tray = true,
+                Some(("tray", "false")) => prefs.keep_in_tray = false,
                 _ => {}
             }
         }
         prefs
+    }
+
+    /// The file contents for these preferences.
+    fn to_text(self) -> String {
+        format!(
+            "appearance={}\naccent={}\ntray={}\n",
+            self.appearance.key(),
+            scheme::to_hex(self.accent),
+            self.keep_in_tray
+        )
     }
 
     pub fn save(&self) {
@@ -129,18 +149,35 @@ impl Prefs {
         let result = path
             .parent()
             .map_or(Ok(()), std::fs::create_dir_all)
-            .and_then(|()| {
-                std::fs::write(
-                    &path,
-                    format!(
-                        "appearance={}\naccent={}\n",
-                        self.appearance.key(),
-                        scheme::to_hex(self.accent)
-                    ),
-                )
-            });
+            .and_then(|()| std::fs::write(&path, self.to_text()));
         if let Err(e) = result {
             tracing::warn!("cannot save preferences to {}: {e}", path.display());
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn tray_defaults_to_on() {
+        assert!(Prefs::default().keep_in_tray);
+        assert!(Prefs::parse("appearance=dark\n").keep_in_tray);
+        assert!(Prefs::parse("tray=maybe\n").keep_in_tray);
+    }
+
+    #[test]
+    fn tray_round_trips() {
+        let p = Prefs::parse("appearance=dark\naccent=#00897B\ntray=false\n");
+        assert!(!p.keep_in_tray);
+        assert_eq!(p.appearance, Appearance::Dark);
+        assert_eq!(Prefs::parse(&p.to_text()), p);
+        assert!(p.to_text().contains("tray=false"));
+        let on = Prefs {
+            keep_in_tray: true,
+            ..p
+        };
+        assert!(Prefs::parse(&on.to_text()).keep_in_tray);
     }
 }

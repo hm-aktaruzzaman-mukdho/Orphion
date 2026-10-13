@@ -28,7 +28,10 @@ use qcy_client::Selector;
 use qcy_client::manager::Manager;
 use tracing_subscriber::EnvFilter;
 
+use crate::instance::{Instance, Kind, TRAY_START_GRACE};
+
 /// Runs the tray until the user picks "Quit" (or presses Ctrl+C on Linux).
+/// Exits quietly if another tray is already running.
 pub fn run() -> Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter(
@@ -36,6 +39,12 @@ pub fn run() -> Result<()> {
                 .unwrap_or_else(|_| EnvFilter::new("warn,qcy_client=info")),
         )
         .init();
+
+    // Held until this function returns.
+    let Some(_tray) = Instance::acquire_within(Kind::Tray, TRAY_START_GRACE) else {
+        tracing::info!("a tray is already running");
+        return Ok(());
+    };
 
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .worker_threads(2)
