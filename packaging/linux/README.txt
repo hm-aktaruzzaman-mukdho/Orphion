@@ -28,7 +28,7 @@ Programs
 --------
 bin/qcy-gui   The control panel.
 bin/qcy-tray  Tray icon with battery levels and quick controls.
-bin/qcyctl    Command line, e.g.  qcyctl anc on --scene adaptive
+bin/qcyctl    Command line, e.g.  qcyctl anc   (lists your model's noise modes)
               Run `qcyctl --help` for everything it can do.
 
 Tips

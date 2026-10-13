@@ -2,55 +2,68 @@
 
 Control QCY wireless earbuds from your computer: noise cancelling, transparency, EQ,
 touch controls, dual-device connection, LDAC, wear detection and more, without
-the phone app.
+the phone app. Every model in QCY's catalogue (193 earphones, all chip
+families) gets the same controls the official app shows for it.
 
 Written in Rust. On Linux it talks to BlueZ over D-Bus (pure Rust: no
 `libdbus`, no root); on Windows it uses the built-in Bluetooth LE API. No QCY
-account is needed on either. The protocol was reverse-engineered from
-the official Android app and verified on real hardware
-([docs/PROTOCOL.md](docs/PROTOCOL.md)).
+account or internet connection is needed on either. The protocol was
+reverse-engineered from the official Android app and verified on real
+hardware ([docs/PROTOCOL.md](docs/PROTOCOL.md)).
 
 | Noise control | Sound | Touch controls | Settings |
 |---|---|---|---|
 | ![](docs/screenshots/noise.png) | ![](docs/screenshots/sound.png) | ![](docs/screenshots/controls.png) | ![](docs/screenshots/settings.png) |
 | ![](docs/screenshots/light-noise.png) | ![](docs/screenshots/custom-eq.png) | ![](docs/screenshots/light-dialog.png) | ![](docs/screenshots/light-settings.png) |
 
+The window adapts to each model. Some other models, shown in demo mode:
+
+| MeloBuds N65 (JieLi) | MeloBuds N70 (WuQi) | HT03 (Realtek) | T7 (ZR) |
+|---|---|---|---|
+| ![](docs/screenshots/model-jieli-n65.png) | ![](docs/screenshots/model-wuqi-n70.png) | ![](docs/screenshots/model-realtek-ht03.png) | ![](docs/screenshots/model-zr-t7.png) |
+
 ## What you get
 
 | Program    | What it is                                                                 |
 |------------|----------------------------------------------------------------------------|
 | `qcy-gui`  | The control panel window, in Material 3 style with light and dark themes (follows the system, or pick one under Settings → Appearance) and a choice of accent colour; the whole colour scheme is generated from it. |
-| `qcy-tray` | A tray icon (KDE Plasma or any StatusNotifier host on Linux; the notification area on Windows). The tooltip shows battery levels; the menu offers noise control, gaming mode and EQ presets; clicking the icon opens the control panel. On Linux, scrolling over it cycles noise control. |
+| `qcy-tray` | A tray icon (KDE Plasma or any StatusNotifier host on Linux; the notification area on Windows). The tooltip shows battery levels; the menu offers the model's noise control modes, its quick switches (gaming mode, sleep mode, …) and EQ presets; clicking the icon opens the control panel. On Linux, scrolling over it cycles noise control. |
 | `qcyctl`   | Command line tool for scripts and keyboard shortcuts.                      |
 
-### Supported features (QCY MeloBuds Pro)
+### Supported models and features
 
-Tested on real earbuds (firmware 2.0.6, on Linux and Windows):
+The official app has no per-model code: it downloads a "control panel" for
+each model and builds its screens from it. This project bundles the panels
+of all 193 earphones in QCY's catalogue and does the same, so each model
+shows exactly its own controls, under the names QCY gives them:
 
-- Reading every setting, battery of both buds and the case, firmware versions
-- Noise control: off, noise cancelling (adaptive, indoor, commuting, noisy,
-  anti-wind, with strength levels), transparency levels 1–6, voice focus
-- Equalizer: factory presets and a 10-band custom EQ with a live response
-  curve (automatic anti-clipping gain, same as the official app)
-- Touch controls: single, double and triple tap on each bud
-- Gaming (low latency) mode
-- Left/right balance, voice prompt volume
-- Wear detection (pause/resume behaviour, ANC follows wear)
-- Auto power-off after disconnect, sleep timer
+- noise control with the model's modes, scenes, strength levels and voice
+  focus (or its simpler mode buttons, or a strength in percent)
+- equalizer with the model's presets and a custom curve over its bands
+  (graphic or parametric, with the app's anti-clipping gain), game EQ
+- touch gestures, headphone buttons and head gestures with the actions the
+  model offers
+- every switch of the model (gaming mode, sleep mode, LDAC, aptX, dual
+  device, anti-wind noise, spatial sound, adaptive volume, eco mode, …),
+  value lists (auto power-off, sound mode, …), voice prompt language and
+  volume, sleep timer, wear detection, ear tip fit test, game mode
+  settings, multipoint with the paired phones, AI noise cancelling,
+  balance, earbud volume, renaming and the model's reset actions
+- battery of both buds and the case, firmware version
 
-Implemented byte-for-byte from the official app, but not yet exercised on
-hardware:
+`qcyctl models` lists every model and `qcyctl panel <id>` what it offers.
 
-- Voice prompt language
-- Sleep mode, LDAC, dual device connection (the last two reboot the earbuds)
-- Rename, restore defaults, factory reset
+QCY uses chips from several vendors, which are driven differently. All of
+them are implemented:
 
-Other QCY models that use the same protocol (WuQi, Realtek and most other
-chips) work with a generic profile: battery, touch controls, plus any
-setting they report. Each extra model needs a profile to unlock its full
-feature set; see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md#support-another-qcy-model).
-Models with JieLi or ZR chips use different protocols and are not supported
-yet.
+| Chips | Models | How | Status |
+|---|---|---|---|
+| WuQi, Realtek, others | 89 | QCY's own protocol | Tested on a MeloBuds Pro (firmware 2.0.6) on Linux and Windows |
+| JieLi | 95 | JieLi RCSP on its own service, settings tunnelled in QCY's format | Implemented from the app's code, not yet tested on hardware |
+| ZR | 9 | QCY's protocol with ZR's EQ format and key order | Implemented from the app's code, not yet tested on hardware |
+
+If you own one of the untested models, a report (`qcyctl -vv status`
+output) is very welcome.
 
 **Firmware updates are deliberately not supported.**
 
@@ -363,24 +376,31 @@ connection with each other, so the tray and the window can run together.
 
 ### Command line
 
+Names come from the model's control panel, so they differ a little between
+models. Run a command without its value to see what your model accepts.
+
 ```bash
 qcyctl                                  # status: battery, firmware, every setting
 qcyctl scan                             # list QCY earbuds nearby
-qcyctl anc on --scene adaptive          # noise cancelling
-qcyctl anc on --scene commuting --level 2
+qcyctl models melobuds                  # models this program knows (offline)
+qcyctl panel 19786                      # what a model offers (offline)
+qcyctl anc                              # list noise control modes and scenes
+qcyctl anc noise-canceling adaptive     # MeloBuds Pro examples:
+qcyctl anc noise commuting --level 2    # names can be shortened
 qcyctl anc transparency --level 4
-qcyctl anc voice                        # transparency with voice focus
-qcyctl anc off
+qcyctl anc transparency voice           # voice focus
+qcyctl anc normal
 qcyctl eq list                          # presets of this model
-qcyctl eq preset "Heavy Bass"
-qcyctl eq custom 3 2 1 0 0 0 0 1 2 3    # 10 bands, 31 Hz … 16 kHz, −8…+8 dB
-qcyctl toggle dual-device on            # also: game-mode, sleep-mode, ldac
-qcyctl keys                             # show touch controls
-qcyctl keys set right-double next
+qcyctl eq preset heavy-bass
+qcyctl eq custom 3 2 1 0 0 0 0 1 2 3    # one gain (dB) per band of the model
+qcyctl set                              # list settings with values and choices
+qcyctl set gaming-mode on
+qcyctl set dual-device-connection on --yes   # restarts the earbuds
+qcyctl set timing-power-off 60          # sleep timer, minutes or "off"
+qcyctl keys                             # show gestures and their actions
+qcyctl keys set right-double next-track
 qcyctl wear-detection on --music pause-resume --anc on
 qcyctl balance 50
-qcyctl auto-off 30                      # minutes, or "never"
-qcyctl sleep-timer 60                   # 0 cancels
 qcyctl monitor                          # live view until Ctrl+C
 ```
 
@@ -389,7 +409,10 @@ address), `--keep-connected` keeps the control link open for faster repeated
 calls, and `-v`/`-vv` print debug logs or a full protocol trace.
 
 Example KDE shortcut (System Settings → Shortcuts → Add command):
-`qcyctl anc on --scene adaptive`.
+`qcyctl anc noise-canceling adaptive`.
+
+`qcy-gui --demo [MODEL]` opens the window with simulated earbuds of any
+model, without Bluetooth.
 
 ## Troubleshooting
 
@@ -399,6 +422,7 @@ Example KDE shortcut (System Settings → Shortcuts → Add command):
 | "Bluetooth is turned off" | Switch Bluetooth on. The GUI and tray reconnect by themselves within about 30 s. |
 | Connecting takes long | BLE connects can take 5–40 s while audio is streaming; the programs retry on their own. |
 | Buds disconnect after toggling LDAC / dual device | Expected: the firmware reboots. The GUI and tray reconnect on their own. |
+| A JieLi model connects but shows no values | Run `qcyctl -vv status` and open an issue with the output: these models are implemented from the app's code but not yet confirmed on hardware. |
 | The phone app cannot connect | Quit the tray and close the GUI on the computer (or run `qcyctl` without `--keep-connected`). Windows drops an idle link a few seconds after the last program releases it. |
 | Rename has no visible effect | Reconnect audio; phones cache names. Keep both buds out of the case while renaming. |
 | "Bluetooth error" on Windows | Check Bluetooth is on in Settings and the adapter supports Bluetooth LE. Older adapters with vendor Bluetooth software (e.g. WIDCOMM) are not supported by Windows' BLE API. |
@@ -410,12 +434,16 @@ Example KDE shortcut (System Settings → Shortcuts → Add command):
 
 ```
 crates/
-  qcy-protocol/   pure protocol: framing, commands, decoding, EQ math, model profiles
+  qcy-protocol/   pure protocol: commands, decoding, EQ maths, the three chip
+                  dialects (QCY, JieLi RCSP, ZR) and every model's control panel
+    data/         bundled control panels of all models (panels.json.zz)
   qcy-client/     stateful client, connection manager and the Bluetooth backends
                   (BlueZ on Linux, WinRT on Windows)
   qcyctl/         CLI
   qcy-gui/        egui control panel
   qcy-tray/       tray applet
+scripts/
+  update-panels.py  downloads QCY's control panels and rebuilds the bundle
 docs/
   PROTOCOL.md     full protocol reference
   ARCHITECTURE.md design and how to extend it

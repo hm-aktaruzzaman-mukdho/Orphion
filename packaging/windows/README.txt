@@ -26,7 +26,7 @@ qcy-gui.exe   The control panel.
 qcy-tray.exe  Tray icon: battery levels in the tooltip, quick noise control,
               gaming mode and EQ presets in the menu. Click it to open the
               control panel.
-qcyctl.exe    Command line, e.g.  qcyctl anc on --scene adaptive
+qcyctl.exe    Command line, e.g.  qcyctl anc   (lists your model's noise modes)
               Run `qcyctl --help` for everything it can do.
 
 Tips
