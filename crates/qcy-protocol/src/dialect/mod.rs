@@ -269,7 +269,12 @@ impl Codec {
                 let jl = self.jieli.as_mut().expect("JieLi codec");
                 // Keys go through RCSP whatever characteristic the panel
                 // names (long press included).
-                if let Command::SetKey { event, action, .. } = &command {
+                if let Command::SetKey {
+                    target: KeyTarget::Table | KeyTarget::Characteristic(_),
+                    event,
+                    action,
+                } = &command
+                {
                     return Ok(jl
                         .keys(&[(*event, *action)])?
                         .into_iter()

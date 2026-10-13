@@ -26,6 +26,9 @@ pub enum KeyTarget {
     Table,
     /// A per-gesture characteristic, written with the action byte.
     Characteristic(Characteristic),
+    /// A setting written as `[event id, action]` (head gestures, command
+    /// `0x51`); its value reads back as the list of such pairs.
+    Setting(crate::CommandId),
 }
 
 /// One configurable gesture of one bud (or one button).
@@ -192,6 +195,35 @@ pub(super) fn parse_buttons(layout: &Value) -> Option<KeyControl> {
         .collect();
     let control = KeyControl {
         title: string(layout, "name").unwrap_or_else(|| "Buttons".into()),
+        groups,
+        fixed: Vec::new(),
+    };
+    (!control.is_empty()).then_some(control)
+}
+
+/// Layout 114: head gestures (nod, shake) for calls, written with command
+/// `0x51` and enabled with command `0x50`.
+pub(super) fn parse_head(layout: &Value) -> Option<KeyControl> {
+    let groups: Vec<KeyGroup> = array(layout, "actions")
+        .iter()
+        .map(|a| KeyGroup {
+            name: string(a, "keyName").unwrap_or_default(),
+            rows: array(a, "events")
+                .iter()
+                .filter_map(|e| {
+                    let mut slot = slot_v2(e, None)?;
+                    slot.target = KeyTarget::Setting(crate::CommandId::SensorConfig);
+                    Some(KeyRow {
+                        name: string(e, "name").unwrap_or_default(),
+                        slots: vec![slot],
+                    })
+                })
+                .collect(),
+        })
+        .filter(|g| !g.rows.is_empty())
+        .collect();
+    let control = KeyControl {
+        title: string(layout, "name").unwrap_or_else(|| "Head gestures".into()),
         groups,
         fixed: Vec::new(),
     };

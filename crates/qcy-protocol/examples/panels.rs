@@ -53,6 +53,7 @@ fn summary(p: &Panel) -> String {
             ItemKind::AiAnc => "ai-anc",
             ItemKind::FocusMode => "focus",
             ItemKind::Volume => "volume",
+            ItemKind::HeadGestures(_) => "head",
         })
         .collect();
     parts.push(format!("items[{}]", kinds.join(",")));

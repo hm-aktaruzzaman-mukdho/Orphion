@@ -1,102 +1,173 @@
-//! Touch gesture bindings.
+//! Touch gestures and headphone buttons, with the actions each model's
+//! panel offers.
 
 use eframe::egui::Ui;
-use qcy_protocol::Command;
-use qcy_protocol::types::{Gesture, KeyAction, Side, Tap};
+use qcy_protocol::panel::{ItemKind, KeyControl, KeySlot, KeyTarget};
+use qcy_protocol::types::Side;
+use qcy_protocol::{Command, CommandId};
 
 use crate::app::ViewCtx;
 use crate::material::components as m3;
 use crate::material::{MaterialIcon, Scheme, icons, text};
 use crate::views::dropdown;
 
-fn tap_icon(tap: Tap) -> MaterialIcon {
-    match tap {
-        Tap::Single => icons::ICON_LOOKS_ONE,
-        Tap::Double => icons::ICON_LOOKS_TWO,
-        Tap::Triple => icons::ICON_LOOKS_3,
-        Tap::Quadruple => icons::ICON_LOOKS_4,
-        Tap::Long => icons::ICON_TOUCH_APP,
+/// An icon for a gesture row, from its (English) name.
+fn gesture_icon(name: &str) -> MaterialIcon {
+    let n = name.to_lowercase();
+    if n.contains("double") {
+        icons::ICON_LOOKS_TWO
+    } else if n.contains("tri") || n.contains("three") {
+        icons::ICON_LOOKS_3
+    } else if n.contains("four") || n.contains("quad") {
+        icons::ICON_LOOKS_4
+    } else if n.contains("long") || n.contains("hold") || n.contains("press") {
+        icons::ICON_TOUCH_APP
+    } else {
+        icons::ICON_LOOKS_ONE
     }
 }
 
 pub fn show(ui: &mut Ui, view: &mut ViewCtx<'_>) {
-    let s = Scheme::of(ui);
-    let profile = view.profile;
-    let bindings = view.snap.state.key_bindings.clone();
-    let action_of = |g: Gesture| {
-        bindings
-            .iter()
-            .find(|b| b.gesture_id == u16::from(g.id()))
-            .map(|b| b.action)
-    };
-
-    // Rows: every tap kind offered for this model, in a stable order.
-    let mut taps: Vec<Tap> = Vec::new();
-    for g in profile.gestures {
-        if !taps.contains(&g.tap) {
-            taps.push(g.tap);
-        }
+    let panel = view.panel;
+    let device = view.device();
+    let keys = panel.keys_for(|c| device.is_none_or(|d| d.has(c)));
+    if let Some(keys) = keys {
+        key_card(ui, view, keys, icons::ICON_TOUCH_APP);
     }
-    let mut choices: Vec<(KeyAction, String)> = profile
-        .key_actions
-        .iter()
-        .map(|a| (*a, a.label()))
-        .collect();
-    // Keep actions the device reports selectable even if unknown to us.
-    for b in &bindings {
-        if !choices.iter().any(|(a, _)| *a == b.action) {
-            choices.push((b.action, b.action.label()));
-        }
+    if let Some(buttons) = &panel.buttons {
+        key_card(ui, view, buttons, icons::ICON_HEADPHONES);
     }
-
-    m3::titled_card(ui, icons::ICON_TOUCH_APP, "Touch controls", |ui| {
-        if bindings.is_empty() {
-            m3::supporting(
-                ui,
-                "Waiting for the earbuds to report their touch settings…",
-            );
-        }
-        for (i, tap) in taps.iter().enumerate() {
-            if i > 0 {
-                m3::divider(ui);
-            }
-            ui.horizontal(|ui| {
-                ui.label(crate::material::icon(
-                    tap_icon(*tap).outlined(),
-                    22.0,
-                    s.on_surface_variant,
-                ));
-                ui.label(text::title_small(tap.label()).color(s.on_surface));
-            });
-            let width = (ui.available_width() - 12.0) / 2.0;
-            ui.columns(2, |cols| {
-                for (col, side) in cols.iter_mut().zip([Side::Left, Side::Right]) {
-                    let gesture = Gesture::new(side, *tap);
-                    col.label(
-                        text::body_small(format!("{} earbud", side.label()))
-                            .color(s.on_surface_variant),
-                    );
-                    if !profile.gestures.contains(&gesture) {
-                        col.label(text::body_medium("Not available").color(s.on_surface_variant));
-                        continue;
-                    }
-                    let id = format!("key-{}", gesture.id());
-                    if let Some(action) =
-                        dropdown(col, &id, action_of(gesture), &choices, width - 8.0)
-                    {
-                        view.send(Command::SetKeyFunctions(vec![(gesture.id(), action)]));
-                    }
-                }
-            });
-        }
-    });
-
-    if !profile.call_controls.is_empty() {
+    if let Some(keys) = keys.filter(|k| !k.fixed.is_empty()) {
         m3::titled_card(ui, icons::ICON_CALL, "Calls", |ui| {
             m3::supporting(ui, "Fixed by the firmware:");
-            for (gesture, action) in profile.call_controls {
-                m3::setting_row(ui, icons::ICON_CALL, action, Some(gesture), 0.0, |_| {});
+            let s = Scheme::of(ui);
+            for g in &keys.fixed {
+                let action = if g.left == g.right || g.right.is_empty() {
+                    g.left.clone()
+                } else {
+                    format!("L: {}  ·  R: {}", g.left, g.right)
+                };
+                m3::setting_row(
+                    ui,
+                    gesture_icon(&g.gesture),
+                    &g.gesture,
+                    None,
+                    220.0,
+                    |ui| {
+                        ui.label(text::body_medium(action).color(s.on_surface_variant));
+                    },
+                );
             }
         });
     }
+    let head = panel.items.iter().find_map(|i| match &i.kind {
+        ItemKind::HeadGestures(k) => Some((i, k)),
+        _ => None,
+    });
+    if let Some((item, head)) = head {
+        let on = view
+            .snap
+            .state
+            .setting_on(CommandId::HeadAction)
+            .unwrap_or(false);
+        m3::card(ui, |ui| {
+            if let Some(new) = m3::switch_row(
+                ui,
+                icons::ICON_ACCESSIBILITY_NEW,
+                &item.title,
+                item.description.as_deref(),
+                on,
+            ) {
+                view.send(Command::SetValue {
+                    id: CommandId::HeadAction,
+                    payload: vec![u8::from(new)],
+                });
+            }
+        });
+        if on {
+            key_card(ui, view, head, icons::ICON_ACCESSIBILITY_NEW);
+        }
+    }
+    if keys.is_none() && panel.buttons.is_none() && head.is_none() {
+        m3::titled_card(ui, icons::ICON_TOUCH_APP, "Controls", |ui| {
+            m3::supporting(ui, "This model has no configurable controls.");
+        });
+    }
+}
+
+/// The action bound to `slot`, as reported by the earbuds.
+fn current(view: &ViewCtx<'_>, slot: &KeySlot) -> Option<u8> {
+    if let KeyTarget::Setting(id) = slot.target {
+        // `[event, action]` pairs.
+        return view.snap.state.setting(id).and_then(|p| {
+            p.chunks_exact(2)
+                .find(|pair| u16::from(pair[0]) == slot.event)
+                .map(|pair| pair[1])
+        });
+    }
+    view.snap
+        .state
+        .key_bindings
+        .iter()
+        .find(|b| b.gesture_id == slot.event)
+        .map(|b| match b.action.id() {
+            // Some firmwares report "no action" as 0xFF.
+            0xFF => 0,
+            a => a,
+        })
+}
+
+fn key_card(ui: &mut Ui, view: &mut ViewCtx<'_>, keys: &KeyControl, icon: MaterialIcon) {
+    let s = Scheme::of(ui);
+    m3::titled_card(ui, icon, &keys.title, |ui| {
+        if keys.slots().all(|s| current(view, s).is_none()) {
+            m3::supporting(ui, "Waiting for the earbuds to report their settings…");
+        }
+        let mut first = true;
+        for group in &keys.groups {
+            if !group.name.is_empty() && keys.groups.len() > 1 {
+                ui.label(text::title_small(&group.name).color(s.primary));
+            }
+            for row in &group.rows {
+                if !first {
+                    m3::divider(ui);
+                }
+                first = false;
+                ui.horizontal(|ui| {
+                    ui.label(crate::material::icon(
+                        gesture_icon(&row.name).outlined(),
+                        22.0,
+                        s.on_surface_variant,
+                    ));
+                    ui.label(text::title_small(&row.name).color(s.on_surface));
+                });
+                let columns = row.slots.len().max(1);
+                let width = (ui.available_width() - 12.0 * (columns as f32 - 1.0)) / columns as f32;
+                ui.columns(columns, |cols| {
+                    for (col, slot) in cols.iter_mut().zip(&row.slots) {
+                        if let Some(side) = slot.side {
+                            let label = match side {
+                                Side::Left => "Left earbud",
+                                Side::Right => "Right earbud",
+                            };
+                            col.label(text::body_small(label).color(s.on_surface_variant));
+                        }
+                        let mut choices: Vec<(u8, String)> = slot.choices.clone();
+                        let now = current(view, slot);
+                        if let Some(a) = now.filter(|a| !choices.iter().any(|(c, _)| c == a)) {
+                            choices.push((a, format!("Other ({a})")));
+                        }
+                        let id = format!("key-{:?}-{}", slot.target, slot.event);
+                        if let Some(action) = dropdown(col, &id, now, &choices, width - 8.0) {
+                            view.send(Command::SetKey {
+                                target: slot.target,
+                                event: slot.event,
+                                action,
+                            });
+                        }
+                    }
+                });
+            }
+        }
+    });
 }

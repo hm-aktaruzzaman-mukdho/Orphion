@@ -4,13 +4,15 @@
 //! [`Snapshot`] and push [`Action`]s, which [`App`] executes after the frame.
 //! This keeps views free of side effects and easy to rearrange.
 
+use std::collections::HashMap;
+use std::sync::{Arc, LazyLock};
 use std::time::{Duration, Instant};
 
 use eframe::egui::{self, Id};
 use qcy_client::Selector;
-use qcy_client::manager::{Manager, Notice, Snapshot};
+use qcy_client::manager::{DeviceInfo, Manager, Notice, Snapshot};
 use qcy_protocol::Command;
-use qcy_protocol::profile::{self, DeviceProfile};
+use qcy_protocol::panel::Panel;
 use tokio::sync::broadcast;
 
 use crate::capture::{Capture, Shot};
@@ -42,7 +44,8 @@ pub struct Confirmation {
     pub message: String,
     pub confirm_label: String,
     pub destructive: bool,
-    pub command: Command,
+    /// Sent in order once confirmed.
+    pub commands: Vec<Command>,
 }
 
 impl Confirmation {
@@ -53,13 +56,24 @@ impl Confirmation {
         confirm: &str,
         command: Command,
     ) -> Self {
+        Self::many(icon, title, message, confirm, vec![command])
+    }
+
+    /// A confirmation that sends several commands in order.
+    pub fn many(
+        icon: MaterialIcon,
+        title: &str,
+        message: &str,
+        confirm: &str,
+        commands: Vec<Command>,
+    ) -> Self {
         Self {
             icon,
             title: title.into(),
             message: message.into(),
             confirm_label: confirm.into(),
             destructive: false,
-            command,
+            commands,
         }
     }
 
@@ -72,28 +86,45 @@ impl Confirmation {
 /// UI-only values that are being edited and not yet sent.
 #[derive(Default)]
 pub struct Drafts {
-    /// 10-band custom EQ being edited, `None` when not editing.
-    pub custom_eq: Option<[i8; 10]>,
+    /// Custom EQ gains being edited (one per panel band), `None` when not
+    /// editing.
+    pub custom_eq: Option<Vec<f32>>,
     /// Slider positions while dragging.
     pub balance: Option<u8>,
-    pub transparency: Option<u8>,
+    pub anc_level: Option<u32>,
+    pub volume: Option<u8>,
     /// Bluetooth name text field.
     pub name: Option<String>,
+    /// Last noise control value seen per mode (index into the panel's
+    /// modes), restored when the mode is picked again, like the app.
+    pub anc_last: HashMap<usize, u32>,
 }
+
+/// The panel used before any device is known.
+static EMPTY_PANEL: LazyLock<Arc<Panel>> = LazyLock::new(Arc::default);
 
 /// Everything a view needs for one frame.
 pub struct ViewCtx<'a> {
     pub snap: &'a Snapshot,
-    pub profile: &'static DeviceProfile,
+    /// What the connected model offers.
+    pub panel: &'a Panel,
     pub drafts: &'a mut Drafts,
     pub appearance: Appearance,
     pub accent: egui::Color32,
     actions: &'a mut Vec<Action>,
 }
 
-impl ViewCtx<'_> {
+impl<'a> ViewCtx<'a> {
     pub fn send(&mut self, command: Command) {
         self.actions.push(Action::Send(command));
+    }
+
+    pub fn send_all(&mut self, commands: Vec<Command>) {
+        self.actions.extend(commands.into_iter().map(Action::Send));
+    }
+
+    pub fn device(&self) -> Option<&'a DeviceInfo> {
+        self.snap.device.as_ref()
     }
 
     pub fn confirm(&mut self, confirmation: Confirmation) {
@@ -224,7 +255,9 @@ impl App {
             DialogResult::Dismissed => self.pending = None,
             DialogResult::Confirmed => {
                 if let Some(c) = self.pending.take() {
-                    self.manager.send(c.command);
+                    for command in c.commands {
+                        self.manager.send(command);
+                    }
                 }
             }
         }
@@ -241,9 +274,16 @@ impl App {
             }
             Shot::CustomEq => {
                 self.tab = Tab::Sound;
+                let pattern = [4.0, 3.0, 1.0, 0.0, -1.0, 0.0, 1.0, 2.0, 3.0, 2.0];
+                let bands = self
+                    .manager
+                    .snapshot()
+                    .device
+                    .and_then(|d| d.panel.eq.as_ref().map(|e| e.bands.len()))
+                    .unwrap_or(10);
                 self.drafts
                     .custom_eq
-                    .get_or_insert([4, 3, 1, 0, -1, 0, 1, 2, 3, 2]);
+                    .get_or_insert_with(|| pattern.iter().cycle().take(bands).copied().collect());
             }
             Shot::Dialog => {
                 self.tab = Tab::Settings;
@@ -262,8 +302,8 @@ impl App {
         }
     }
 
-    /// Left navigation rail: app mark + one destination per tab.
-    fn rail(&mut self, ui: &mut egui::Ui, show_tabs: bool) {
+    /// Left navigation rail: app mark + one destination per available tab.
+    fn rail(&mut self, ui: &mut egui::Ui, tabs: &[Tab]) {
         let s = Scheme::of(ui);
         ui.vertical_centered(|ui| {
             ui.add_space(16.0);
@@ -277,13 +317,11 @@ impl App {
                 s.on_primary_container,
             );
             ui.add_space(24.0);
-            if show_tabs {
-                for tab in Tab::ALL {
-                    if m3::nav_item(ui, tab.icon(), tab.label(), self.tab == tab).clicked() {
-                        self.tab = tab;
-                    }
-                    ui.add_space(4.0);
+            for &tab in tabs {
+                if m3::nav_item(ui, tab.icon(), tab.label(), self.tab == tab).clicked() {
+                    self.tab = tab;
                 }
+                ui.add_space(4.0);
             }
         });
     }
@@ -294,10 +332,18 @@ impl eframe::App for App {
         let ctx = ui.ctx().clone();
         self.collect_notices();
         let snap = self.manager.snapshot();
-        let profile = snap
+        let panel = snap
             .device
             .as_ref()
-            .map_or(&profile::GENERIC, |d| d.profile);
+            .map_or_else(|| Arc::clone(&EMPTY_PANEL), |d| Arc::clone(&d.panel));
+        let tabs = if snap.device.is_some() {
+            Tab::available(&panel)
+        } else {
+            Vec::new()
+        };
+        if !tabs.is_empty() && !tabs.contains(&self.tab) && self.capture.is_none() {
+            self.tab = tabs[0];
+        }
         if let Some(shot) = self
             .capture
             .as_mut()
@@ -313,11 +359,11 @@ impl eframe::App for App {
             .resizable(false)
             .show_separator_line(false)
             .frame(egui::Frame::new().fill(s.surface))
-            .show(ui, |ui| self.rail(ui, snap.device.is_some()));
+            .show(ui, |ui| self.rail(ui, &tabs));
 
         let mut view = ViewCtx {
             snap: &snap,
-            profile,
+            panel: &panel,
             drafts: &mut self.drafts,
             appearance: self.prefs.appearance,
             accent: self.prefs.accent,

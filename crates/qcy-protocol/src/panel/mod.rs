@@ -141,7 +141,7 @@ impl Panel {
         let legacy_usable = self.legacy_keys.as_ref().is_some_and(|k| {
             k.slots().any(|s| match s.target {
                 KeyTarget::Characteristic(c) => has(c),
-                KeyTarget::Table => false,
+                KeyTarget::Table | KeyTarget::Setting(_) => false,
             })
         });
         if legacy_usable {
@@ -181,6 +181,9 @@ fn item_reads(item: &Item, layout: &Value) -> Vec<u8> {
         ItemKind::AiAnc => vec![CommandId::AiAnc.into()],
         ItemKind::FocusMode => vec![CommandId::FocusMode.into()],
         ItemKind::Volume => vec![CommandId::Volume.into()],
+        ItemKind::HeadGestures(_) => {
+            vec![CommandId::HeadAction.into(), CommandId::SensorConfig.into()]
+        }
         _ => Vec::new(),
     };
     ids.extend(cmdid);

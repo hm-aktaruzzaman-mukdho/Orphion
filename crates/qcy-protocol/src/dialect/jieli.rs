@@ -179,6 +179,21 @@ impl JieLi {
                 id: 1..=6 | 9 | 10,
             } if d.len() == 1 => self.keys(&[(c.id, d[0])])?,
             Characteristic::FUNCTION => vec![self.set_adv(adv::IN_EAR, &d[..1.min(d.len())])?],
+            // The legacy reset characteristic: 1 restore settings, 2 clear
+            // pairing, 3 factory reset (`QCYConnectManager.sendBleData`).
+            Characteristic::RESET => {
+                let id = match d {
+                    [1] => CommandId::ResetDefault,
+                    [2] => CommandId::ClearPairing,
+                    [3] => CommandId::FactoryReset,
+                    _ => {
+                        return Err(ProtocolError::InvalidValue(format!(
+                            "unknown reset operation {d:02x?}"
+                        )));
+                    }
+                };
+                vec![self.translate_tlv(&Tlv::new(id, Vec::new()))?]
+            }
             Characteristic::EQ => {
                 let (&mode, gains) = d.split_first().ok_or(ProtocolError::TooShort {
                     expected: 1,

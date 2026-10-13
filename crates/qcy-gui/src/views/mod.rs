@@ -25,6 +25,26 @@ pub enum Tab {
 impl Tab {
     pub const ALL: [Tab; 4] = [Tab::Noise, Tab::Sound, Tab::Controls, Tab::Settings];
 
+    /// The tabs a model needs: noise control and touch controls only when
+    /// it has them.
+    pub fn available(panel: &qcy_protocol::panel::Panel) -> Vec<Tab> {
+        Self::ALL
+            .into_iter()
+            .filter(|t| match t {
+                Tab::Noise => panel.anc.is_some(),
+                Tab::Controls => {
+                    panel.touch_keys.is_some()
+                        || panel.legacy_keys.is_some()
+                        || panel.buttons.is_some()
+                        || panel.items.iter().any(|i| {
+                            matches!(i.kind, qcy_protocol::panel::ItemKind::HeadGestures(_))
+                        })
+                }
+                Tab::Sound | Tab::Settings => true,
+            })
+            .collect()
+    }
+
     pub fn label(self) -> &'static str {
         match self {
             Tab::Noise => "Noise",

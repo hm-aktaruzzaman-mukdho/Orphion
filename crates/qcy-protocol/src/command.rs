@@ -190,6 +190,7 @@ impl Command {
                     characteristic: *c,
                     data: vec![*action],
                 }),
+                KeyTarget::Setting(id) => cmd(*id, &[*event as u8, *action]),
             },
             Command::ResetDefaults => cmd(CommandId::ResetDefault, &[]),
             Command::ClearPairing => cmd(CommandId::ClearPairing, &[]),
@@ -239,6 +240,10 @@ impl Command {
                     })
                     .collect(),
             ),
+            Command::SetKey {
+                target: KeyTarget::Setting(_),
+                ..
+            } => return None,
             Command::SetKey { event, action, .. } => Update::KeyBindings(vec![KeyBinding {
                 gesture_id: *event,
                 action: KeyAction::from_id(*action),
@@ -252,6 +257,10 @@ impl Command {
         Some(match self {
             Command::SetAnc(_) => CommandId::Anc,
             Command::SetNoiseMode(_) => CommandId::NoiseMode,
+            Command::SetKey {
+                target: KeyTarget::Setting(id),
+                ..
+            } => *id,
             Command::SetValue { id, .. } => *id,
             Command::Panel(PanelWrite {
                 setting: Some(id), ..

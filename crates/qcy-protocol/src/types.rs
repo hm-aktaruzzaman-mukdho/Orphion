@@ -658,6 +658,50 @@ pub struct PromptVolume {
     pub max: u8,
 }
 
+/// A phone the earbuds are paired with ([`CommandId::PhoneInfo`]).
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PairedPhone {
+    pub address: crate::advert::MacAddress,
+    pub name: String,
+    /// 2 and 3 mean connected (`PairPhoneBeanList`).
+    pub status: u8,
+}
+
+impl PairedPhone {
+    pub fn is_connected(&self) -> bool {
+        matches!(self.status, 2 | 3)
+    }
+
+    /// Parses `[count, {len, status, mac[6], name…}×count]`; `len` counts
+    /// the bytes after itself.
+    pub fn parse_list(p: &[u8]) -> Vec<PairedPhone> {
+        let Some((&count, mut rest)) = p.split_first() else {
+            return Vec::new();
+        };
+        let mut out = Vec::new();
+        for _ in 0..count {
+            let Some((&len, tail)) = rest.split_first() else {
+                break;
+            };
+            let len = usize::from(len);
+            let Some(entry) = tail.get(..len).filter(|e| e.len() >= 7) else {
+                break;
+            };
+            let mut mac = [0u8; 6];
+            mac.copy_from_slice(&entry[1..7]);
+            let name = &entry[7..];
+            let end = name.iter().position(|&b| b == 0).unwrap_or(name.len());
+            out.push(PairedPhone {
+                address: crate::advert::MacAddress(mac),
+                name: String::from_utf8_lossy(&name[..end]).into_owned(),
+                status: entry[0],
+            });
+            rest = &tail[len..];
+        }
+        out
+    }
+}
+
 pub(crate) fn read_u16_le(p: &[u8]) -> Result<u16, ProtocolError> {
     match p {
         [lo, hi, ..] => Ok(u16::from_le_bytes([*lo, *hi])),
@@ -737,6 +781,17 @@ mod tests {
         assert_eq!(table.len(), 8);
         assert_eq!(table[4].action, KeyAction::VoiceAssistant);
         assert_eq!(table[5].action, KeyAction::NextTrack);
+    }
+
+    #[test]
+    fn paired_phones() {
+        let mut p = vec![2, 10, 2, 1, 2, 3, 4, 5, 6, b'P', b'h', b'o'];
+        p.extend([8, 1, 6, 5, 4, 3, 2, 1, 0]);
+        let phones = PairedPhone::parse_list(&p);
+        assert_eq!(phones.len(), 2);
+        assert_eq!(phones[0].name, "Pho");
+        assert!(phones[0].is_connected() && !phones[1].is_connected());
+        assert_eq!(phones[1].address.to_string(), "06:05:04:03:02:01");
     }
 
     #[test]

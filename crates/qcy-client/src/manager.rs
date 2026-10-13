@@ -11,6 +11,7 @@
 //! exponential backoff: earbuds reboot after some setting changes (LDAC,
 //! dual device) and disappear while in the case.
 
+use std::collections::BTreeSet;
 use std::sync::Arc;
 use std::time::Duration;
 
@@ -20,7 +21,7 @@ use qcy_protocol::panel::{AncControl, ModeKind, Panel};
 use qcy_protocol::profile::DeviceProfile;
 use qcy_protocol::state::DeviceState;
 use qcy_protocol::types::{AncMode, AncSetting, KeyAction, KeyBinding};
-use qcy_protocol::{Command, Update, catalog};
+use qcy_protocol::{Characteristic, Command, Update, catalog};
 use tokio::sync::{broadcast, mpsc, watch};
 use tokio::time::sleep;
 use tracing::{info, warn};
@@ -83,6 +84,35 @@ pub struct DeviceInfo {
     /// Everything the model offers.
     pub panel: Arc<Panel>,
     pub profile: &'static DeviceProfile,
+    /// Characteristics the device exposes (known once connected).
+    pub characteristics: BTreeSet<Characteristic>,
+}
+
+/// Characteristics whose presence changes what front-ends offer.
+const PROBED: [Characteristic; 15] = [
+    Characteristic::COMMAND,
+    Characteristic::SETTINGS,
+    Characteristic::KEYS,
+    Characteristic::EQ,
+    Characteristic::FUNCTION,
+    Characteristic::LANGUAGE,
+    Characteristic::RESET,
+    Characteristic::ZR_SETTING,
+    Characteristic::RCSP_WRITE,
+    Characteristic::legacy_key(1),
+    Characteristic::legacy_key(2),
+    Characteristic::legacy_key(3),
+    Characteristic::legacy_key(4),
+    Characteristic::legacy_key(5),
+    Characteristic::legacy_key(6),
+];
+
+impl DeviceInfo {
+    /// Whether the device has a characteristic. Before connecting (and in
+    /// demo mode) everything is assumed present.
+    pub fn has(&self, c: Characteristic) -> bool {
+        self.characteristics.is_empty() || self.characteristics.contains(&c)
+    }
 }
 
 impl DeviceInfo {
@@ -96,6 +126,7 @@ impl DeviceInfo {
             dialect: Dialect::for_vendor(vendor_id),
             panel: Arc::new(catalog::panel(vendor_id)),
             profile: qcy_protocol::profile::for_vendor(vendor_id),
+            characteristics: BTreeSet::new(),
         }
     }
 }
@@ -556,7 +587,9 @@ impl<B: Backend> Worker<B> {
                 self.watch_link(&buds);
                 self.snapshot.send_modify(|s| {
                     s.link = LinkStatus::Connected;
-                    s.device = Some(DeviceInfo::from(buds.endpoint()));
+                    let mut device = DeviceInfo::from(buds.endpoint());
+                    device.characteristics = PROBED.into_iter().filter(|c| buds.has(*c)).collect();
+                    s.device = Some(device);
                     s.state = buds.state();
                 });
                 self.buds = Some(buds);

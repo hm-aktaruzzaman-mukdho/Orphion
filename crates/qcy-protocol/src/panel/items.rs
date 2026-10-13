@@ -63,6 +63,9 @@ pub enum ItemKind {
     FocusMode,
     /// Media volume of both buds (command `0x08`).
     Volume,
+    /// Head gestures for calls: enabled with command `0x50`, actions
+    /// through command `0x51`.
+    HeadGestures(super::KeyControl),
 }
 
 /// An on/off setting.
@@ -78,6 +81,34 @@ pub struct Switch {
 }
 
 impl Switch {
+    /// The command that turns the switch on or off.
+    pub fn command(&self, on: bool) -> crate::Command {
+        let write = if on { &self.on } else { &self.off };
+        // The value the setting reads back as: the payload of the frame.
+        let value = match crate::frame::decode(&write.data).as_deref() {
+            Ok([tlv]) if write.characteristic == Characteristic::COMMAND => {
+                Some(tlv.payload.clone())
+            }
+            _ => None,
+        };
+        crate::Command::Panel(crate::PanelWrite {
+            write: write.clone(),
+            setting: self.setting,
+            value,
+        })
+    }
+
+    /// Whether the switch is on in `state`, if known.
+    pub fn is_on(&self, state: &crate::state::DeviceState) -> Option<bool> {
+        if let Some((c, index)) = self.state_characteristic()
+            && let Some(&b) = state.characteristics.get(&c).and_then(|d| d.get(index))
+            && b != 0xFF
+        {
+            return Some(b == 1);
+        }
+        state.setting_on(self.setting?)
+    }
+
     /// For older models the in-ear and monitor switches are a byte of the
     /// characteristic `0x000F` (0 = in-ear, 1 = monitor).
     pub fn state_characteristic(&self) -> Option<(Characteristic, usize)> {
@@ -376,7 +407,13 @@ pub(super) fn parse_layout(layout_type: i64, v: &Value) -> Option<Item> {
         }
         106 => Some(item(title(v).if_empty("Focus mode"), ItemKind::FocusMode)),
         110 => Some(item(title(v).if_empty("Fit test"), ItemKind::FitTest)),
-        111 | 107 => {
+        114 => super::keys::parse_head(v).map(|keys| {
+            item(
+                title(v).if_empty("Head gestures"),
+                ItemKind::HeadGestures(keys),
+            )
+        }),
+        111 | 107 | 116 => {
             let id = setting(v, "cmdid")?;
             let options: Vec<(Vec<u8>, String)> = array(v, "subItem")
                 .iter()
