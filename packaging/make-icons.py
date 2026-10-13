@@ -24,8 +24,8 @@ def render(size: int) -> Image.Image:
     return img.resize((size, size), Image.LANCZOS)
 
 big = render(256)
-big.save(f"{out_dir}/qcy-earbuds.png")
-big.save(f"{out_dir}/qcy-earbuds.ico", sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
+big.save(f"{out_dir}/orphion.png")
+big.save(f"{out_dir}/orphion.ico", sizes=[(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)])
 # Raw RGBA for the tray / window icon (no image decoder needed at runtime).
 for size in (32, 64):
     open(f"{out_dir}/icon-{size}.rgba", "wb").write(render(size).tobytes())

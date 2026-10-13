@@ -1,13 +1,13 @@
 <#
 .SYNOPSIS
-    Installs QCY Earbuds for the current user (no administrator rights needed).
+    Installs Orphion for the current user (no administrator rights needed).
 
 .DESCRIPTION
-    Copies the programs to %LOCALAPPDATA%\Programs\QCY Earbuds and adds Start
+    Copies the programs to %LOCALAPPDATA%\Programs\Orphion and adds Start
     menu shortcuts.
 
     -Autostart  also start the tray icon when you sign in
-    -AddToPath  make `qcyctl` available in new terminals
+    -AddToPath  make `orphionctl` available in new terminals
 
 .EXAMPLE
     powershell -ExecutionPolicy Bypass -File install.ps1 -Autostart
@@ -19,20 +19,46 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $source = $PSScriptRoot
-$target = Join-Path $env:LOCALAPPDATA 'Programs\QCY Earbuds'
-$startMenu = Join-Path ([Environment]::GetFolderPath('Programs')) 'QCY Earbuds'
+$target = Join-Path $env:LOCALAPPDATA 'Programs\Orphion'
+$startMenu = Join-Path ([Environment]::GetFolderPath('Programs')) 'Orphion'
 $startup = [Environment]::GetFolderPath('Startup')
 
 # Running copies would keep the files locked. Stop-Process returns before
 # they are gone: wait for them, then drop our own handles to them (an open
 # process handle keeps its .exe locked).
-$running = @(Get-Process qcy-gui, qcy-tray -ErrorAction SilentlyContinue)
+# (qcy-gui and qcy-tray are the names from before the rename to Orphion.)
+$running = @(Get-Process orphion, orphion-tray, qcy-gui, qcy-tray -ErrorAction SilentlyContinue)
 $running | Stop-Process -Force
 $running | Wait-Process -Timeout 10 -ErrorAction SilentlyContinue
 $running | ForEach-Object { $_.Dispose() }
 
+# Replace a version from before the rename ("QCY Earbuds"), keeping its
+# autostart and Path choices. Its settings are picked up by Orphion itself.
+$legacyTarget = Join-Path $env:LOCALAPPDATA 'Programs\QCY Earbuds'
+$legacyStartMenu = Join-Path ([Environment]::GetFolderPath('Programs')) 'QCY Earbuds'
+$legacyStartup = Join-Path $startup 'QCY Earbuds tray.lnk'
+$legacyKey = Get-Item 'HKCU:\Environment'
+$legacyPath = $legacyKey.GetValue('Path', '', 'DoNotExpandEnvironmentNames')
+if (Test-Path $legacyStartup) { $Autostart = $true }
+if (($legacyPath -split ';') -contains $legacyTarget) {
+    $AddToPath = $true
+    $kept = ($legacyPath -split ';') | Where-Object { $_ -ne $legacyTarget }
+    Set-ItemProperty 'HKCU:\Environment' -Name Path -Value ($kept -join ';') -Type $legacyKey.GetValueKind('Path')
+}
+foreach ($item in $legacyStartup, $legacyStartMenu, $legacyTarget,
+        (Join-Path $env:LOCALAPPDATA 'qcy-earbuds')) {
+    for ($i = 1; Test-Path $item; $i++) {
+        try {
+            Remove-Item $item -Recurse -Force
+        } catch {
+            if ($i -ge 20) { throw }
+            Start-Sleep -Milliseconds 250
+        }
+    }
+}
+
 New-Item -ItemType Directory -Force -Path $target, $startMenu | Out-Null
-foreach ($file in 'qcy-gui.exe', 'qcy-tray.exe', 'qcyctl.exe', 'README.txt') {
+foreach ($file in 'orphion.exe', 'orphion-tray.exe', 'orphionctl.exe', 'README.txt') {
     # Windows releases the files of a just-ended program with a short delay.
     for ($i = 1; ; $i++) {
         try {
@@ -64,12 +90,12 @@ function New-Shortcut($path, $exe, $description) {
     $link.Description = $description
     $link.Save()
 }
-New-Shortcut (Join-Path $startMenu 'QCY Earbuds.lnk') 'qcy-gui.exe' 'Control your QCY earbuds'
-New-Shortcut (Join-Path $startMenu 'QCY Earbuds tray.lnk') 'qcy-tray.exe' 'Tray icon for your QCY earbuds'
+New-Shortcut (Join-Path $startMenu 'Orphion.lnk') 'orphion.exe' 'Control your QCY earbuds'
+New-Shortcut (Join-Path $startMenu 'Orphion tray.lnk') 'orphion-tray.exe' 'Tray icon for your QCY earbuds'
 
 if ($Autostart) {
-    New-Shortcut (Join-Path $startup 'QCY Earbuds tray.lnk') 'qcy-tray.exe' 'Tray icon for your QCY earbuds'
-    Start-Process (Join-Path $target 'qcy-tray.exe')
+    New-Shortcut (Join-Path $startup 'Orphion tray.lnk') 'orphion-tray.exe' 'Tray icon for your QCY earbuds'
+    Start-Process (Join-Path $target 'orphion-tray.exe')
 }
 
 if ($AddToPath) {
@@ -86,4 +112,4 @@ if ($AddToPath) {
 }
 
 Write-Host "Installed to $target"
-Write-Host 'Start "QCY Earbuds" from the Start menu.'
+Write-Host 'Start "Orphion" from the Start menu.'

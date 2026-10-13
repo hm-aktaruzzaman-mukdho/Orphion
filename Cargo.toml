@@ -3,9 +3,9 @@ resolver = "3"
 members = [
     "crates/qcy-protocol",
     "crates/qcy-client",
-    "crates/qcyctl",
-    "crates/qcy-gui",
-    "crates/qcy-tray",
+    "crates/orphionctl",
+    "crates/orphion",
+    "crates/orphion-tray",
 ]
 
 [workspace.package]

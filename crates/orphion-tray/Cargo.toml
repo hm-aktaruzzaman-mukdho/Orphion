@@ -1,6 +1,6 @@
 [package]
-name = "qcy-tray"
-description = "System tray applet for QCY earbuds (KDE/StatusNotifierItem on Linux, notification area on Windows)"
+name = "orphion-tray"
+description = "Orphion: system tray applet for QCY earbuds (KDE/StatusNotifierItem on Linux, notification area on Windows)"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

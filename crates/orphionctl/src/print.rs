@@ -72,7 +72,7 @@ pub fn status(
     }
     let settings = controls::settings(panel);
     if !settings.is_empty() {
-        println!("  Settings (qcyctl set NAME VALUE)");
+        println!("  Settings (orphionctl set NAME VALUE)");
         for (slug, item) in settings {
             println!("    {slug:<28} {}", controls::value(item, s));
         }
@@ -134,7 +134,7 @@ pub fn keys(panel: &Panel, s: &DeviceState, has: impl Fn(Characteristic) -> bool
     if gestures.is_empty() {
         return;
     }
-    println!("  Gestures (qcyctl keys set GESTURE ACTION)");
+    println!("  Gestures (orphionctl keys set GESTURE ACTION)");
     for (name, slot) in gestures {
         let action = controls::key_action(slot, s).map_or("unknown".into(), |a| {
             slot.label_of(a)
@@ -152,7 +152,7 @@ pub fn panel(model: u16, panel: &Panel) {
         qcy_protocol::advert::ChipFamily::from_vendor_id(model)
     );
     if panel.anc.is_some() {
-        println!("\nNoise control (qcyctl anc MODE [SCENE] [--level N])");
+        println!("\nNoise control (orphionctl anc MODE [SCENE] [--level N])");
         controls::list_anc(panel);
     }
     if let Some(eq) = &panel.eq {
@@ -173,11 +173,11 @@ pub fn panel(model: u16, panel: &Panel) {
         }
     }
     if panel.balance.is_some() {
-        println!("\nBalance (qcyctl balance 0..100)");
+        println!("\nBalance (orphionctl balance 0..100)");
     }
     let gestures = controls::gestures(panel, |_| true);
     if !gestures.is_empty() {
-        println!("\nGestures (qcyctl keys set GESTURE ACTION)");
+        println!("\nGestures (orphionctl keys set GESTURE ACTION)");
         for (name, slot) in gestures {
             let actions: Vec<String> = slot.choices.iter().map(|(_, l)| slug(l)).collect();
             println!("  {name:<28} {}", actions.join(" | "));
@@ -185,7 +185,7 @@ pub fn panel(model: u16, panel: &Panel) {
     }
     let settings = controls::settings(panel);
     if !settings.is_empty() {
-        println!("\nSettings (qcyctl set NAME VALUE)");
+        println!("\nSettings (orphionctl set NAME VALUE)");
         for (name, item) in settings {
             println!("  {name:<28} {}", controls::accepted(item));
         }
@@ -197,6 +197,6 @@ pub fn panel(model: u16, panel: &Panel) {
         .map(|i| i.title.as_str())
         .collect();
     if !actions.is_empty() {
-        println!("\nReset (qcyctl reset … --yes): {}", actions.join(", "));
+        println!("\nReset (orphionctl reset … --yes): {}", actions.join(", "));
     }
 }

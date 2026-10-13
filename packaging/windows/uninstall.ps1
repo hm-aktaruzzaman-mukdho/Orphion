@@ -6,13 +6,13 @@
 #>
 $ErrorActionPreference = 'Stop'
 
-$target = Join-Path $env:LOCALAPPDATA 'Programs\QCY Earbuds'
-$startMenu = Join-Path ([Environment]::GetFolderPath('Programs')) 'QCY Earbuds'
-$startupLink = Join-Path ([Environment]::GetFolderPath('Startup')) 'QCY Earbuds tray.lnk'
+$target = Join-Path $env:LOCALAPPDATA 'Programs\Orphion'
+$startMenu = Join-Path ([Environment]::GetFolderPath('Programs')) 'Orphion'
+$startupLink = Join-Path ([Environment]::GetFolderPath('Startup')) 'Orphion tray.lnk'
 
 # Stop-Process returns before the processes are gone; wait for them, then
 # drop our own handles to them (an open process handle keeps its .exe locked).
-$running = @(Get-Process qcy-gui, qcy-tray -ErrorAction SilentlyContinue)
+$running = @(Get-Process orphion, orphion-tray -ErrorAction SilentlyContinue)
 $running | Stop-Process -Force
 $running | Wait-Process -Timeout 10 -ErrorAction SilentlyContinue
 $running | ForEach-Object { $_.Dispose() }
@@ -31,7 +31,7 @@ function Remove-Retrying($item) {
 
 # Program, shortcuts, then settings and the endpoint cache.
 $items = $startupLink, $startMenu, $target,
-    (Join-Path $env:APPDATA 'qcy-earbuds'), (Join-Path $env:LOCALAPPDATA 'qcy-earbuds')
+    (Join-Path $env:APPDATA 'orphion'), (Join-Path $env:LOCALAPPDATA 'orphion')
 foreach ($item in $items) { Remove-Retrying $item }
 
 # Only touch the user's Path if install.ps1 -AddToPath put us there, and edit
@@ -53,4 +53,4 @@ public static extern IntPtr SendMessageTimeout(IntPtr hWnd, uint msg, UIntPtr wP
     [void][Win32.Env]::SendMessageTimeout([IntPtr]0xffff, 0x1A, [UIntPtr]::Zero, 'Environment', 2, 5000, [ref]$result)
 }
 
-Write-Host 'QCY Earbuds has been removed.'
+Write-Host 'Orphion has been removed.'

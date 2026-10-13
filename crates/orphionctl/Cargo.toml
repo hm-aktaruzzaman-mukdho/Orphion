@@ -1,6 +1,6 @@
 [package]
-name = "qcyctl"
-description = "Command line control for QCY earbuds"
+name = "orphionctl"
+description = "Orphion: command line control for QCY earbuds"
 version.workspace = true
 edition.workspace = true
 license.workspace = true

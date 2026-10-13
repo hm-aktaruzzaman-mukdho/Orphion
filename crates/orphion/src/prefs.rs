@@ -63,17 +63,25 @@ impl Default for Prefs {
 }
 
 impl Prefs {
-    /// `%APPDATA%\qcy-earbuds\gui.conf` on Windows,
-    /// `$XDG_CONFIG_HOME/qcy-earbuds/gui.conf` (or `~/.config/…`) elsewhere.
+    /// `%APPDATA%\orphion\gui.conf` on Windows,
+    /// `$XDG_CONFIG_HOME/orphion/gui.conf` (or `~/.config/…`) elsewhere.
     fn path() -> Option<PathBuf> {
-        let base = if cfg!(windows) {
+        Some(Self::config_dir()?.join("orphion").join("gui.conf"))
+    }
+
+    /// Where versions before the rename to Orphion kept the file.
+    fn legacy_path() -> Option<PathBuf> {
+        Some(Self::config_dir()?.join("qcy-earbuds").join("gui.conf"))
+    }
+
+    fn config_dir() -> Option<PathBuf> {
+        if cfg!(windows) {
             std::env::var_os("APPDATA").map(PathBuf::from)
         } else {
             std::env::var_os("XDG_CONFIG_HOME")
                 .map(PathBuf::from)
                 .or_else(|| std::env::var_os("HOME").map(|h| PathBuf::from(h).join(".config")))
-        }?;
-        Some(base.join("qcy-earbuds").join("gui.conf"))
+        }
     }
 
     /// Loads the saved preferences; `--appearance` on the command line
@@ -90,7 +98,12 @@ impl Prefs {
 
     fn load_file() -> Self {
         let mut prefs = Self::default();
-        let Some(text) = Self::path().and_then(|p| std::fs::read_to_string(p).ok()) else {
+        // Settings saved under the old name are picked up once and then
+        // saved under the new one.
+        let text = Self::path()
+            .and_then(|p| std::fs::read_to_string(p).ok())
+            .or_else(|| Self::legacy_path().and_then(|p| std::fs::read_to_string(p).ok()));
+        let Some(text) = text else {
             return prefs;
         };
         for line in text.lines() {

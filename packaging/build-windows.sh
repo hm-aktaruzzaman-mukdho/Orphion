@@ -4,13 +4,13 @@
 # Needs once:  rustup target add x86_64-pc-windows-gnu
 #              sudo apt install mingw-w64   (the linker; often already present)
 #
-# Output: dist/qcy-earbuds-<version>-windows-x64.zip
+# Output: dist/orphion-<version>-windows-x64.zip
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 TARGET=x86_64-pc-windows-gnu
 VERSION=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
-NAME="qcy-earbuds-$VERSION-windows-x64"
+NAME="orphion-$VERSION-windows-x64"
 OUT="dist/$NAME"
 
 echo "==> Building $NAME"
@@ -18,7 +18,7 @@ cargo build --release --workspace --target "$TARGET"
 
 rm -rf "$OUT" "$OUT.zip"
 mkdir -p "$OUT"
-cp "target/$TARGET/release/"{qcy-gui,qcy-tray,qcyctl}.exe "$OUT/"
+cp "target/$TARGET/release/"{orphion,orphion-tray,orphionctl}.exe "$OUT/"
 cp packaging/windows/{install.ps1,uninstall.ps1,README.txt} "$OUT/"
 # Windows tools expect CRLF line endings in text files.
 for f in "$OUT"/*.ps1 "$OUT/README.txt"; do

@@ -18,7 +18,7 @@ pub fn show(ui: &mut Ui, view: &mut ViewCtx<'_>) {
         // In the charging case the earbuds may report an empty name.
         .filter(|n| !n.trim().is_empty())
         .or_else(|| snap.device.as_ref().map(|d| d.name.clone()))
-        .unwrap_or_else(|| "QCY Earbuds".into());
+        .unwrap_or_else(|| "QCY earbuds".into());
 
     m3::card(ui, |ui| {
         ui.horizontal(|ui| {

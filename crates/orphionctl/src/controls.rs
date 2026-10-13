@@ -2,7 +2,7 @@
 //!
 //! Every row of the model's control panel gets a *slug* derived from its
 //! title ("LDAC Switch" → `ldac-switch`), and every value a slug of its label,
-//! so `qcyctl set ldac-switch on` works for any model without this program
+//! so `orphionctl set ldac-switch on` works for any model without this program
 //! knowing about LDAC. Names can be shortened to any unambiguous prefix.
 
 use anyhow::{Context, Result, bail};
@@ -336,7 +336,7 @@ pub fn command(item: &Item, value: &str, s: &DeviceState) -> Result<Command> {
             id: CommandId::HeadAction,
             payload: vec![u8::from(parse_on_off(value)?)],
         },
-        ItemKind::Action(_) => bail!("use `qcyctl reset` for this"),
+        ItemKind::Action(_) => bail!("use `orphionctl reset` for this"),
     })
 }
 

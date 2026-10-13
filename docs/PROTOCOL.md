@@ -68,7 +68,7 @@ The app routes models to different code paths by model id
 | otherwise                     | generic | this protocol (§3–§9)                      |
 
 Of the 193 earphones in QCY's catalogue, 95 are JieLi, 9 ZR, 25 WuQi,
-9 Realtek and 55 generic. `qcyctl models` lists them.
+9 Realtek and 55 generic. `orphionctl models` lists them.
 
 ## 3. GATT layout
 

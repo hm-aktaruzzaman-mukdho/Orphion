@@ -1983,6 +1983,53 @@ dependencies = [
 ]
 
 [[package]]
+name = "orphion"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "eframe",
+ "egui_material_icons",
+ "embed-resource",
+ "material-colors",
+ "qcy-client",
+ "qcy-protocol",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "winit",
+]
+
+[[package]]
+name = "orphion-tray"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "embed-resource",
+ "ksni",
+ "qcy-client",
+ "qcy-protocol",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+ "tray-icon",
+ "windows",
+]
+
+[[package]]
+name = "orphionctl"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "embed-resource",
+ "qcy-client",
+ "qcy-protocol",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "owned_ttf_parser"
 version = "0.25.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2166,7 +2213,7 @@ checksum = "d55d956fa96f5ec02be2e13af0e20391a5aa83d6a074e3ad368959d0fab299ea"
 
 [[package]]
 name = "qcy-client"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "futures-util",
  "qcy-protocol",
@@ -2178,60 +2225,13 @@ dependencies = [
 ]
 
 [[package]]
-name = "qcy-gui"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "eframe",
- "egui_material_icons",
- "embed-resource",
- "material-colors",
- "qcy-client",
- "qcy-protocol",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "winit",
-]
-
-[[package]]
 name = "qcy-protocol"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
  "miniz_oxide 0.8.9",
  "serde",
  "serde_json",
  "thiserror 2.0.21",
-]
-
-[[package]]
-name = "qcy-tray"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "embed-resource",
- "ksni",
- "qcy-client",
- "qcy-protocol",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "tray-icon",
- "windows",
-]
-
-[[package]]
-name = "qcyctl"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "embed-resource",
- "qcy-client",
- "qcy-protocol",
- "tokio",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]

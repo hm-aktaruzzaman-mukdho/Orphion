@@ -13,8 +13,8 @@ resumed without starting over. None of it is needed to build or run the app.
 | `panel_json/`     | QCY's control panels: `models/<id>.json` for every earphone (API response + chip family), `catalog/` the product list, `defaults/` the app's built-in fallback panels. Refreshed by `scripts/update-panels.py --fetch`, which also rebuilds the bundle compiled into `qcy-protocol` |
 | `notes/`          | Protocol write-ups: `panel_semantics.md` (the panel format and every layout/item/command id), `jieli.md` (JieLi RCSP as QCY uses it), `zr.md` (ZR chips), `web_research.md` (public sources, with licences) |
 | `web_sources/`    | Local copies of the public sources cited in `notes/web_research.md` (not in git: mixed licences) |
-| `logs/`           | bluetoothctl captures and `qcyctl -vv` protocol traces from real earbuds |
-| `screenshots/`    | GUI captures (`qcy-gui --screenshots research/screenshots`) |
+| `logs/`           | bluetoothctl captures and `orphionctl -vv` protocol traces from real earbuds |
+| `screenshots/`    | GUI captures (`orphion --screenshots research/screenshots`) |
 
 ## Regenerating the decompiled sources
 
@@ -47,8 +47,8 @@ All paths below are relative to `decompiled/sources/`.
 
 ```bash
 bluetoothctl                       # then: scan le → look for ManufacturerData 0x521c
-qcyctl -vv status                  # full hex trace of reads/writes/notifications
-qcyctl raw ff03fe0117              # ask for the ANC setting (0x17); reply shows in the trace
+orphionctl -vv status                  # full hex trace of reads/writes/notifications
+orphionctl raw ff03fe0117              # ask for the ANC setting (0x17); reply shows in the trace
 ```
 
 Do **not** write to the WuQi OTA service (`0x7033`). Firmware updates are out

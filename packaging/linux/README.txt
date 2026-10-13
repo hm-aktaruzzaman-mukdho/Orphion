@@ -1,5 +1,5 @@
-QCY Earbuds for Linux
-=====================
+Orphion for Linux
+=================
 
 Control QCY earbuds (noise cancelling, transparency, equalizer, touch
 controls, dual device, LDAC, wear detection and more) without the phone app.
@@ -26,17 +26,17 @@ The programs also run directly from bin/ without installing.
 
 Programs
 --------
-bin/qcy-gui   The control panel.
-bin/qcy-tray  Tray icon with battery levels and quick controls.
-bin/qcyctl    Command line, e.g.  qcyctl anc   (lists your model's noise modes)
-              Run `qcyctl --help` for everything it can do.
+bin/orphion       The control panel.
+bin/orphion-tray  Tray icon with battery levels and quick controls.
+bin/orphionctl    Command line, e.g.  orphionctl anc   (lists your model's noise modes)
+                  Run `orphionctl --help` for everything it can do.
 
 Tips
 ----
 - Pair the earbuds for audio as usual, then take them out of the case.
 - Close the QCY app on your phone: the earbuds accept only one control
   connection at a time.
-- Something wrong? Run `qcyctl -vv status` and keep the output.
+- Something wrong? Run `orphionctl -vv status` and keep the output.
 
 Uninstall
 ---------

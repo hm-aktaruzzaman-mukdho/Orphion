@@ -183,11 +183,7 @@ impl WinRt {
 
     fn cache_path() -> Option<PathBuf> {
         let base = std::env::var_os("LOCALAPPDATA")?;
-        Some(
-            PathBuf::from(base)
-                .join("qcy-earbuds")
-                .join("endpoints.txt"),
-        )
+        Some(PathBuf::from(base).join("orphion").join("endpoints.txt"))
     }
 
     /// Loads endpoints remembered by earlier runs (`<address> <random> <adv hex>` lines).

@@ -1,9 +1,9 @@
 [Desktop Entry]
 Type=Application
-Name=QCY Earbuds Tray
+Name=Orphion Tray
 Comment=Tray icon with battery levels and quick noise control for QCY earbuds
-Exec=qcy-tray
-Icon=qcy-earbuds
+Exec=orphion-tray
+Icon=orphion
 Terminal=false
 Categories=AudioVideo;Audio;
 X-KDE-autostart-after=panel

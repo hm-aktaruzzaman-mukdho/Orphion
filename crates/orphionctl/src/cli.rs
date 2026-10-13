@@ -2,7 +2,7 @@
 //!
 //! Model specific names (modes, settings, gestures, actions) come from the
 //! connected model's control panel; run a command without its value to list
-//! what the model accepts, e.g. `qcyctl anc` or `qcyctl set`.
+//! what the model accepts, e.g. `orphionctl anc` or `orphionctl set`.
 
 use clap::{Parser, Subcommand, ValueEnum};
 use qcy_protocol::advert::MacAddress;
@@ -10,7 +10,7 @@ use qcy_protocol::types::WearMusicBehavior;
 
 #[derive(Debug, Parser)]
 #[command(
-    name = "qcyctl",
+    name = "orphionctl",
     version,
     about = "Control QCY earbuds from Linux or Windows"
 )]

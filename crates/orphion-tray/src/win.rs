@@ -19,7 +19,7 @@ use windows::Win32::UI::WindowsAndMessaging::{
 use crate::menu::{self, Action, Entry};
 use crate::window::GuiWindow;
 
-/// 32×32 RGBA rendering of `assets/qcy-earbuds.png`.
+/// 32×32 RGBA rendering of `assets/orphion.png`.
 const ICON_RGBA: &[u8] = include_bytes!("../../../assets/icon-32.rgba");
 /// How often to look for state changes between window messages.
 const TICK: Duration = Duration::from_millis(40);

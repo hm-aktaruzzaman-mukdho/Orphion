@@ -1,4 +1,4 @@
-//! `qcyctl` – command line control for QCY earbuds.
+//! `orphionctl` – command line control for QCY earbuds.
 //!
 //! Every invocation finds the earbuds, opens the BLE control link, performs
 //! one action and (unless `--keep-connected`) closes the link again.
@@ -132,7 +132,7 @@ async fn run(buds: &Earbuds, cmd: Cmd) -> Result<()> {
                                 || name.parse() == Ok(p.id)
                         })
                         .with_context(|| {
-                            format!("unknown preset {name:?}; see `qcyctl eq list`")
+                            format!("unknown preset {name:?}; see `orphionctl eq list`")
                         })?;
                     if let Some(w) = &preset.warning
                         && !yes

@@ -1,11 +1,11 @@
 // A background program: no console window on Windows.
 #![cfg_attr(windows, windows_subsystem = "windows")]
 
-//! `qcy-tray` – tray applet for QCY earbuds.
+//! `orphion-tray` – tray applet for QCY earbuds.
 //!
 //! Shows battery levels in the tooltip and offers quick noise control,
 //! gaming mode and EQ presets from the menu; clicking the icon opens the full
-//! control panel (`qcy-gui`). On Linux, scrolling over the icon also cycles
+//! control panel (`orphion`). On Linux, scrolling over the icon also cycles
 //! noise control.
 //!
 //! It keeps reconnecting in the background, so it can be started with the

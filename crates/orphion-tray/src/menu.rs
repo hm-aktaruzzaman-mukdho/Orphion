@@ -272,7 +272,7 @@ fn device_name(snap: &Snapshot) -> String {
         .clone()
         .filter(|n| !n.trim().is_empty())
         .or_else(|| snap.device.as_ref().map(|d| d.name.clone()))
-        .unwrap_or_else(|| "QCY Earbuds".into())
+        .unwrap_or_else(|| "QCY earbuds".into())
 }
 
 fn battery_line(snap: &Snapshot) -> Option<String> {

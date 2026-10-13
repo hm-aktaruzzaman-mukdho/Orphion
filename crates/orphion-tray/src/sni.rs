@@ -30,11 +30,11 @@ impl QcyTray {
 
 impl ksni::Tray for QcyTray {
     fn id(&self) -> String {
-        "qcy-tray".into()
+        "orphion-tray".into()
     }
 
     fn title(&self) -> String {
-        "QCY Earbuds".into()
+        "Orphion".into()
     }
 
     fn category(&self) -> Category {
@@ -44,7 +44,7 @@ impl ksni::Tray for QcyTray {
     /// Installed into the icon theme by `packaging/linux/install.sh`; hosts fall
     /// back to [`Self::icon_pixmap`] when it is missing.
     fn icon_name(&self) -> String {
-        "qcy-earbuds".into()
+        "orphion".into()
     }
 
     fn icon_pixmap(&self) -> Vec<ksni::Icon> {
@@ -62,7 +62,7 @@ impl ksni::Tray for QcyTray {
     fn tool_tip(&self) -> ToolTip {
         let content = menu::content(&self.snapshot);
         ToolTip {
-            icon_name: "qcy-earbuds".into(),
+            icon_name: "orphion".into(),
             title: content.title,
             description: content.tooltip.join("\n"),
             ..Default::default()

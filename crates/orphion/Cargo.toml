@@ -1,13 +1,13 @@
 [package]
-name = "qcy-gui"
-description = "Desktop control panel for QCY earbuds"
+name = "orphion"
+description = "Orphion: desktop control panel for QCY earbuds"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
 rust-version.workspace = true
 
 [[bin]]
-name = "qcy-gui"
+name = "orphion"
 path = "src/main.rs"
 
 [dependencies]

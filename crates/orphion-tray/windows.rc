@@ -1,7 +1,7 @@
 // Windows resources: application icon and the details shown in
 // File Explorer -> Properties. Compiled by build.rs for Windows targets only.
 
-1 ICON "../../assets/qcy-earbuds.ico"
+1 ICON "../../assets/orphion.ico"
 
 1 VERSIONINFO
 FILEVERSION 0,1,0,0
@@ -13,11 +13,11 @@ BEGIN
     BEGIN
         BLOCK "040904B0"
         BEGIN
-            VALUE "FileDescription", "QCY Earbuds command line"
+            VALUE "FileDescription", "Orphion tray"
             VALUE "FileVersion", "0.1.0"
-            VALUE "InternalName", "qcyctl"
-            VALUE "OriginalFilename", "qcyctl.exe"
-            VALUE "ProductName", "QCY Earbuds"
+            VALUE "InternalName", "orphion-tray"
+            VALUE "OriginalFilename", "orphion-tray.exe"
+            VALUE "ProductName", "Orphion"
             VALUE "ProductVersion", "0.1.0"
         END
     END

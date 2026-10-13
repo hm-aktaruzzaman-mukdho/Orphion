@@ -1,7 +1,7 @@
 // A GUI program: no console window on Windows.
 #![cfg_attr(windows, windows_subsystem = "windows")]
 
-//! `qcy-gui` – desktop control panel for QCY earbuds.
+//! `orphion` – desktop control panel for QCY earbuds.
 //!
 //! Threading model: egui owns the main thread; a tokio runtime runs in the
 //! background and hosts the [`Manager`], which talks to the Bluetooth stack. The UI only
@@ -12,7 +12,7 @@
 //!
 //! * `--device <MAC>`: use specific earbuds (audio or BLE address)
 //! * `--demo [MODEL]`: simulated earbuds, no Bluetooth. `MODEL` is a model id
-//!   from the catalogue (`qcyctl models`); the default is the MeloBuds Pro,
+//!   from the catalogue (`orphionctl models`); the default is the MeloBuds Pro,
 //!   simulated from data captured on real earbuds
 //! * `--appearance system|light|dark`: override the saved theme for this run
 //! * `--screenshots <DIR>`: save every tab as `DIR/<tab>.ppm` once connected, then quit
@@ -31,7 +31,7 @@ use tracing_subscriber::EnvFilter;
 
 /// Model simulated by `--demo` without a model id: the MeloBuds Pro.
 const DEMO_MODEL: u16 = 19786;
-const APP_ID: &str = "io.github.qcy_linux.Control";
+const APP_ID: &str = "io.github.orphion.Orphion";
 
 fn main() -> Result<()> {
     tracing_subscriber::fmt()
@@ -64,7 +64,7 @@ fn main() -> Result<()> {
 
     let options = eframe::NativeOptions {
         viewport: eframe::egui::ViewportBuilder::default()
-            .with_title("QCY Earbuds")
+            .with_title("Orphion")
             .with_app_id(APP_ID)
             .with_inner_size([640.0, 860.0])
             .with_min_inner_size([500.0, 560.0])
@@ -79,13 +79,13 @@ fn main() -> Result<()> {
     let handle = runtime.handle().clone();
     let app_manager = manager.clone();
     let result = eframe::run_native(
-        "QCY Earbuds",
+        "Orphion",
         options,
         Box::new(move |cc| Ok(Box::new(app::App::new(cc, app_manager, handle)))),
     );
 
     // Release the BLE link so the phone app can connect again. A running
-    // `qcy-tray` notices and reconnects on its own.
+    // `orphion-tray` notices and reconnects on its own.
     runtime.block_on(manager.shutdown(std::time::Duration::from_secs(2)));
     runtime.shutdown_timeout(std::time::Duration::from_millis(500));
     result.map_err(|e| anyhow::anyhow!("{e}"))

@@ -1,4 +1,4 @@
-//! Launching the control panel (`qcy-gui`) from the tray.
+//! Launching the control panel (`orphion`) from the tray.
 
 use std::path::PathBuf;
 use std::process::{Child, Command};
@@ -23,15 +23,15 @@ impl GuiWindow {
         }
         match Command::new(gui_binary()).spawn() {
             Ok(child) => self.child = Some(child),
-            Err(e) => warn!("cannot start qcy-gui: {e}"),
+            Err(e) => warn!("cannot start orphion: {e}"),
         }
     }
 }
 
-/// `qcy-gui` (`qcy-gui.exe` on Windows) next to this executable, otherwise
+/// `orphion` (`orphion.exe` on Windows) next to this executable, otherwise
 /// from `PATH`.
 fn gui_binary() -> PathBuf {
-    let file = format!("qcy-gui{}", std::env::consts::EXE_SUFFIX);
+    let file = format!("orphion{}", std::env::consts::EXE_SUFFIX);
     std::env::current_exe()
         .ok()
         .and_then(|exe| exe.parent().map(|dir| dir.join(&file)))

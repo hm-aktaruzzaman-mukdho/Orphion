@@ -2,7 +2,7 @@
 
 ```
 ┌──────────────┐  ┌───────────────────┐  ┌──────────────┐
-│   qcy-gui    │  │     qcy-tray      │  │    qcyctl    │   front-ends
+│   orphion    │  │     orphion-tray      │  │    orphionctl    │   front-ends
 │ egui window  │  │ KDE SNI / Windows │  │ command line │
 └──────┬───────┘  └─────────┬─────────┘  └──────┬───────┘
        │ Manager            │ Manager           │ Earbuds (direct)
@@ -45,9 +45,9 @@ Two questions decide everything about a model, and each has its own module:
 |----------------|----------------|
 | `qcy-protocol` | Turns typed [`Command`]s into GATT operations and bytes into typed [`Update`]s for every chip family (`dialect`), and describes every model (`catalog`, `panel`). No Bluetooth code at all. |
 | `qcy-client`   | The stateful `Earbuds` client and the long-running `Manager`, written against two traits ([`Backend`, `Link`]). Implements them for BlueZ (`backend/bluez`, Linux) and WinRT (`backend/winrt`, Windows); `Platform` is the one for the build target. |
-| `qcyctl`       | One-shot CLI on top of `Earbuds`. `controls.rs` addresses the panel's rows, modes and gestures by name. |
-| `qcy-gui`      | egui control panel on top of `Manager`. Its `material/` module is a small, app-independent Material 3 design system (colour roles, type scale, Material Symbols icons, cards, switches, chips, segmented buttons, navigation rail, snackbars, dialogs); `views/` render the panel; `widgets.rs` holds the app-specific drawings (battery rings, EQ curve). |
-| `qcy-tray`     | Tray applet on top of `Manager`. `menu.rs` decides what is shown and done; `sni.rs` draws it as a KDE StatusNotifierItem (Linux), `win.rs` as a notification-area icon (Windows). |
+| `orphionctl`       | One-shot CLI on top of `Earbuds`. `controls.rs` addresses the panel's rows, modes and gestures by name. |
+| `orphion`      | egui control panel on top of `Manager`. Its `material/` module is a small, app-independent Material 3 design system (colour roles, type scale, Material Symbols icons, cards, switches, chips, segmented buttons, navigation rail, snackbars, dialogs); `views/` render the panel; `widgets.rs` holds the app-specific drawings (battery rings, EQ curve). |
+| `orphion-tray`     | Tray applet on top of `Manager`. `menu.rs` decides what is shown and done; `sni.rs` draws it as a KDE StatusNotifierItem (Linux), `win.rs` as a notification-area icon (Windows). |
 
 ### Inside `qcy-protocol`
 
@@ -65,7 +65,7 @@ Two questions decide everything about a model, and each has its own module:
    `0x521C`), parses them into `Advertisement`s and matches their embedded
    classic address to paired audio devices. BlueZ keeps a system-wide device
    cache; on Windows an advertisement watcher feeds the backend's own cache,
-   persisted in `%LOCALAPPDATA%\qcy-earbuds\endpoints.txt` so a second
+   persisted in `%LOCALAPPDATA%\orphion\endpoints.txt` so a second
    program can find already-connected earbuds (which stop advertising).
    `Endpoint::pick` ranks candidates: already-connected link, then the headset
    connected for audio, then paired, then any.
@@ -118,11 +118,11 @@ Two questions decide everything about a model, and each has its own module:
 
 Usually nothing to do: run `scripts/update-panels.py --fetch` to download
 the current catalogue and panels, rebuild, and the model is supported with
-the controls QCY's app shows for it. `qcyctl panel <model id>` prints what
+the controls QCY's app shows for it. `orphionctl panel <model id>` prints what
 it got.
 
 If the model's panel uses a layout type this project does not parse yet,
-`qcyctl panel` will not list it: add it to `panel/` (see
+`orphionctl panel` will not list it: add it to `panel/` (see
 `research/notes/panel_semantics.md` for every known type), then render it in
 the GUI view it belongs to.
 
@@ -161,12 +161,12 @@ unchanged; only the tray needs a renderer for the platform's tray API.
   `CARGO_TARGET_X86_64_PC_WINDOWS_GNU_RUNNER=wine cargo test -p qcy-protocol
   -p qcy-client --target x86_64-pc-windows-gnu`. (Wine has no Bluetooth LE
   API, so the backend itself is only testable on real Windows.)
-* `qcyctl -vv …` logs every read/write/notification in hex (`TRACE`).
-* `qcy-gui --demo [MODEL]` runs against `Manager::spawn_demo()`: simulated
+* `orphionctl -vv …` logs every read/write/notification in hex (`TRACE`).
+* `orphion --demo [MODEL]` runs against `Manager::spawn_demo()`: simulated
   earbuds of any catalogue model (the MeloBuds Pro from real captured data).
   Commands go through the model's real codec, so invalid ones still fail,
   and are then applied to the state.
-* `qcy-gui --screenshots DIR [--appearance light|dark]` renders every tab and
+* `orphion --screenshots DIR [--appearance light|dark]` renders every tab and
   a few interactive states (custom EQ editor, a dialog) once connected, saves
   them as PPM files, then exits. Combine with `--demo MODEL` to review the UI
   of any model without hardware; this also works for the Windows build under
