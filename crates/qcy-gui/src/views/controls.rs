@@ -26,7 +26,7 @@ pub fn show(ui: &mut Ui, view: &mut ViewCtx<'_>) {
     let action_of = |g: Gesture| {
         bindings
             .iter()
-            .find(|b| b.gesture_id == g.id())
+            .find(|b| b.gesture_id == u16::from(g.id()))
             .map(|b| b.action)
     };
 

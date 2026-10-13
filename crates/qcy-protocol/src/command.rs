@@ -2,6 +2,7 @@
 
 use crate::eq::{GraphicEq, ParametricEq};
 use crate::frame;
+use crate::panel::KeyTarget;
 use crate::types::{AncMode, AutoPowerOff, KeyAction, KeyBinding, Toggle, WearDetection};
 use crate::{Characteristic, CommandId, ProtocolError, Update};
 
@@ -65,6 +66,12 @@ pub enum Command {
     SetGraphicEq(GraphicEq),
     /// Re-bind touch gestures: `(gesture id, action)` pairs.
     SetKeyFunctions(Vec<(u8, KeyAction)>),
+    /// Binds an action byte to one gesture slot of a model's control panel.
+    SetKey {
+        target: KeyTarget,
+        event: u16,
+        action: u8,
+    },
     /// Restore settings to defaults (keeps pairings).
     ResetDefaults,
     /// Forget every paired phone.
@@ -154,6 +161,36 @@ impl Command {
                     data: pairs.iter().flat_map(|(g, a)| [*g, a.id()]).collect(),
                 })
             }
+            Command::SetKey {
+                target,
+                event,
+                action,
+            } => match target {
+                KeyTarget::Table => Ok(Write {
+                    characteristic: C::KEYS,
+                    data: vec![
+                        u8::try_from(*event).map_err(|_| {
+                            ProtocolError::InvalidValue(format!(
+                                "gesture {event} does not fit the key table"
+                            ))
+                        })?,
+                        *action,
+                    ],
+                }),
+                // The legacy long-press characteristics share their UUIDs
+                // with the language and reset characteristics; on anything
+                // but JieLi (handled by its dialect) a key byte there could
+                // reset the earbuds.
+                KeyTarget::Characteristic(c) if *c == C::LANGUAGE || *c == C::RESET => {
+                    Err(ProtocolError::InvalidValue(format!(
+                        "refusing to write a key function to {c:?}"
+                    )))
+                }
+                KeyTarget::Characteristic(c) => Ok(Write {
+                    characteristic: *c,
+                    data: vec![*action],
+                }),
+            },
             Command::ResetDefaults => cmd(CommandId::ResetDefault, &[]),
             Command::ClearPairing => cmd(CommandId::ClearPairing, &[]),
             Command::FactoryReset => cmd(CommandId::FactoryReset, &[]),
@@ -196,9 +233,16 @@ impl Command {
             Command::SetKeyFunctions(pairs) => Update::KeyBindings(
                 pairs
                     .iter()
-                    .map(|&(gesture_id, action)| KeyBinding { gesture_id, action })
+                    .map(|&(gesture_id, action)| KeyBinding {
+                        gesture_id: u16::from(gesture_id),
+                        action,
+                    })
                     .collect(),
             ),
+            Command::SetKey { event, action, .. } => Update::KeyBindings(vec![KeyBinding {
+                gesture_id: *event,
+                action: KeyAction::from_id(*action),
+            }]),
             _ => return None,
         })
     }

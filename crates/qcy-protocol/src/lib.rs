@@ -27,6 +27,7 @@
 pub mod advert;
 pub mod catalog;
 pub mod command;
+pub mod dialect;
 pub mod eq;
 pub mod frame;
 pub mod ids;

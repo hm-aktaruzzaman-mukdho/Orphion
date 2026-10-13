@@ -110,7 +110,15 @@ pub fn panel(id: u16) -> Panel {
             &c.defaults.qcy
         }
     });
-    Panel::parse_str(raw.get()).unwrap_or_default()
+    let mut panel = Panel::parse_str(raw.get()).unwrap_or_default();
+    if ChipFamily::from_vendor_id(id) == ChipFamily::Zr {
+        // ZR firmware only takes its graphic EQ blob; the `q`/`freq` keys of
+        // some ZR panels are ignored by the app as well.
+        for eq in [&mut panel.eq, &mut panel.game_eq].into_iter().flatten() {
+            eq.kind = crate::panel::EqKind::Graphic;
+        }
+    }
+    panel
 }
 
 #[cfg(test)]

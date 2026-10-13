@@ -449,15 +449,20 @@ impl KeyAction {
 
 /// One `(gesture id, action id)` pair of the key table, kept raw so unknown
 /// slots survive a read-modify-write cycle untouched.
+///
+/// Gesture ids are the panel's event ids: 1..=10 for touch gestures, 17..32
+/// for headphone buttons, and `key << 8 | clicks` for JieLi headphone keys.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct KeyBinding {
-    pub gesture_id: u8,
+    pub gesture_id: u16,
     pub action: KeyAction,
 }
 
 impl KeyBinding {
     pub fn gesture(&self) -> Option<Gesture> {
-        Gesture::from_id(self.gesture_id)
+        u8::try_from(self.gesture_id)
+            .ok()
+            .and_then(Gesture::from_id)
     }
 
     /// Parses the key table: a flat list of `[gesture, action]` byte pairs.
@@ -467,7 +472,7 @@ impl KeyBinding {
             .chunks_exact(2)
             .filter(|pair| pair[0] != 0)
             .map(|pair| KeyBinding {
-                gesture_id: pair[0],
+                gesture_id: u16::from(pair[0]),
                 action: KeyAction::from_id(pair[1]),
             })
             .collect()
