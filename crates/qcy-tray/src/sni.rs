@@ -41,7 +41,7 @@ impl ksni::Tray for QcyTray {
         Category::Hardware
     }
 
-    /// Installed into the icon theme by `packaging/install.sh`; hosts fall
+    /// Installed into the icon theme by `packaging/linux/install.sh`; hosts fall
     /// back to [`Self::icon_pixmap`] when it is missing.
     fn icon_name(&self) -> String {
         "qcy-earbuds".into()

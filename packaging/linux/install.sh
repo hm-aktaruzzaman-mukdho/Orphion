@@ -3,13 +3,14 @@
 # tree it builds first; from a release tarball (made by build-linux.sh) it
 # installs the prebuilt binaries in bin/.
 #
-#   packaging/install.sh              install qcy-gui, qcy-tray and qcyctl
-#   packaging/install.sh --autostart  additionally start the tray on login
+#   packaging/linux/install.sh              install qcy-gui, qcy-tray and qcyctl
+#   packaging/linux/install.sh --autostart  additionally start the tray on login
 #
 # PREFIX defaults to ~/.local (binaries in ~/.local/bin).
 set -euo pipefail
 
-cd "$(dirname "$0")/.."
+# Work from the repository (or tarball) root, two levels up.
+cd "$(dirname "$0")/../.."
 PREFIX="${PREFIX:-$HOME/.local}"
 BIN="$PREFIX/bin"
 APPS="${XDG_DATA_HOME:-$HOME/.local/share}/applications"
@@ -29,7 +30,7 @@ install -Dm755 "$SRC/qcy-gui" "$SRC/qcy-tray" "$SRC/qcyctl" -t "$BIN"
 # Desktop sessions often do not have ~/.local/bin in PATH, so use absolute paths.
 install_desktop() { # <source> <destination dir> <binary>
     install -d "$2"
-    sed "s|^Exec=.*|Exec=$BIN/$3|" "packaging/$1" > "$2/$1"
+    sed "s|^Exec=.*|Exec=$BIN/$3|" "packaging/linux/$1" > "$2/$1"
     echo "    $2/$1"
 }
 

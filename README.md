@@ -99,7 +99,7 @@ below). On any supported distribution:
 ```bash
 tar xzf qcy-earbuds-<version>-linux-x64.tar.gz
 cd qcy-earbuds-<version>-linux-x64
-./packaging/install.sh --autostart   # or run bin/qcy-gui directly
+./packaging/linux/install.sh --autostart   # or run bin/qcy-gui directly
 ```
 
 `install.sh` notices the prebuilt `bin/` folder and skips compiling. To build
@@ -140,8 +140,8 @@ cd qcy-earbuds
 ### 3. Build and install
 
 ```bash
-packaging/install.sh               # build and install the three programs
-packaging/install.sh --autostart   # same, and start the tray icon on login
+packaging/linux/install.sh               # build and install the three programs
+packaging/linux/install.sh --autostart   # same, and start the tray icon on login
 ```
 
 The script runs `cargo build --release --workspace` (the first build takes a
@@ -149,7 +149,7 @@ few minutes) and installs:
 
 | What | Where |
 |------|-------|
-| `qcy-gui`, `qcy-tray`, `qcyctl` | `~/.local/bin`, or `$PREFIX/bin` with e.g. `PREFIX=~/apps packaging/install.sh` (use the same `PREFIX` for `uninstall.sh`) |
+| `qcy-gui`, `qcy-tray`, `qcyctl` | `~/.local/bin`, or `$PREFIX/bin` with e.g. `PREFIX=~/apps packaging/linux/install.sh` (use the same `PREFIX` for `uninstall.sh`) |
 | Menu entries "QCY Earbuds" and "QCY Earbuds Tray" | `~/.local/share/applications` |
 | Icon | `~/.local/share/icons/hicolor/256x256/apps/qcy-earbuds.png` |
 | Tray autostart (`--autostart` only) | `~/.config/autostart` |
@@ -190,11 +190,11 @@ MeloBuds Pro using data captured from real hardware.
 
 ### Update and uninstall
 
-To update, pull the new source and run `packaging/install.sh` again (quit
+To update, pull the new source and run `packaging/linux/install.sh` again (quit
 the tray first so the new version is started).
 
 ```bash
-packaging/uninstall.sh
+packaging/linux/uninstall.sh
 ```
 
 removes the programs, menu entries, icon and autostart entry. The GUI
@@ -420,7 +420,12 @@ docs/
   PROTOCOL.md     full protocol reference
   ARCHITECTURE.md design and how to extend it
 assets/           application icon
-packaging/        Linux install scripts, Windows build script and installer
+packaging/
+  build-linux.sh    portable Linux build → dist/…-linux-x64.tar.gz
+  build-windows.sh  Windows cross-build → dist/…-windows-x64.zip
+  make-icons.py     regenerates assets/
+  linux/            install.sh, uninstall.sh, desktop entries, tarball README
+  windows/          install.ps1, uninstall.ps1, zip README
 research/         decompiled app, captured data and logs (see research/README.md)
 ```
 

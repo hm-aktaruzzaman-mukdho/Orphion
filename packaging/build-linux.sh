@@ -28,10 +28,11 @@ echo "==> Building $NAME (glibc $GLIBC baseline)"
 cargo zigbuild --release --workspace --target "$TARGET.$GLIBC"
 
 rm -rf "$OUT" "$OUT.tar.gz"
-mkdir -p "$OUT/bin" "$OUT/assets" "$OUT/packaging"
+mkdir -p "$OUT/bin" "$OUT/assets" "$OUT/packaging/linux"
 cp "target/$TARGET/release/"{qcy-gui,qcy-tray,qcyctl} "$OUT/bin/"
 cp assets/qcy-earbuds.png "$OUT/assets/"
-cp packaging/{install.sh,uninstall.sh,io.github.qcy_linux.Control.desktop,io.github.qcy_linux.Tray.desktop} "$OUT/packaging/"
+# Same layout as the source tree, so install.sh works unchanged in both.
+cp packaging/linux/{install.sh,uninstall.sh,io.github.qcy_linux.Control.desktop,io.github.qcy_linux.Tray.desktop} "$OUT/packaging/linux/"
 cp packaging/linux/README.txt "$OUT/"
 
 tar -C dist -czf "$OUT.tar.gz" "$NAME"

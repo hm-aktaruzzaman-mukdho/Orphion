@@ -19,8 +19,8 @@ Requirements
 
 Install
 -------
-    ./packaging/install.sh              # into ~/.local, with menu entries
-    ./packaging/install.sh --autostart  # also start the tray icon at login
+    ./packaging/linux/install.sh              # into ~/.local, with menu entries
+    ./packaging/linux/install.sh --autostart  # also start the tray icon at login
 
 The programs also run directly from bin/ without installing.
 
@@ -40,6 +40,6 @@ Tips
 
 Uninstall
 ---------
-    ./packaging/uninstall.sh
+    ./packaging/linux/uninstall.sh
 
 Firmware updates are intentionally not supported.
