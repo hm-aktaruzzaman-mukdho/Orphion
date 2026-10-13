@@ -148,11 +148,11 @@ impl<L: Link> Earbuds<L> {
     pub async fn refresh(&self) -> Result<(), Error> {
         let s = &self.inner.session;
         for c in [
-            Characteristic::Version,
-            Characteristic::Battery,
-            Characteristic::Settings,
-            Characteristic::Keys,
-            Characteristic::Eq,
+            Characteristic::VERSION,
+            Characteristic::BATTERY,
+            Characteristic::SETTINGS,
+            Characteristic::KEYS,
+            Characteristic::EQ,
         ] {
             if !s.has(c) {
                 continue;
@@ -189,7 +189,7 @@ impl<L: Link> Earbuds<L> {
         // to apply; asking too early returns the previous value.
         let confirm = match write.characteristic {
             // These have no "request" command; read them back instead.
-            Characteristic::Keys | Characteristic::Eq => Some(Confirm::Read(write.characteristic)),
+            Characteristic::KEYS | Characteristic::EQ => Some(Confirm::Read(write.characteristic)),
             _ => command.confirmation_request().map(Confirm::Request),
         };
         if let Some(confirm) = confirm {

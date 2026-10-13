@@ -225,9 +225,9 @@ async fn run(buds: &Earbuds, cmd: Cmd) -> Result<()> {
         } => {
             let data = parse_hex(&hex)?;
             let characteristic = match characteristic {
-                CharArg::Command => Characteristic::Command,
-                CharArg::Keys => Characteristic::Keys,
-                CharArg::Eq => Characteristic::Eq,
+                CharArg::Command => Characteristic::COMMAND,
+                CharArg::Keys => Characteristic::KEYS,
+                CharArg::Eq => Characteristic::EQ,
             };
             buds.send(Command::Raw(Write {
                 characteristic,

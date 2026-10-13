@@ -81,7 +81,7 @@ mod tests {
     #[test]
     fn service_guid() {
         assert_eq!(
-            guid(qcy_protocol::uuids::SERVICE).to_u128(),
+            guid(&qcy_protocol::uuids::Service::Control.uuid()).to_u128(),
             0x0000a001_0000_1000_8000_00805f9b34fb
         );
     }

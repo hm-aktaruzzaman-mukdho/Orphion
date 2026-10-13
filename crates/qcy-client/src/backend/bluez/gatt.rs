@@ -1,11 +1,12 @@
-//! A GATT session with the QCY vendor service, on top of BlueZ.
+//! A GATT session with the QCY vendor services, on top of BlueZ.
 
 use std::collections::HashMap;
 use std::time::Duration;
 
 use futures_util::StreamExt;
 use futures_util::stream::{self, BoxStream};
-use qcy_protocol::{Characteristic, Write, uuids};
+use qcy_protocol::uuids::{self, Service};
+use qcy_protocol::{Characteristic, Write};
 use tokio::time::{sleep, timeout};
 use tracing::{debug, trace, warn};
 use zbus::Connection;
@@ -26,12 +27,21 @@ const RESOLVE_TIMEOUT: Duration = Duration::from_secs(20);
 /// Default ATT MTU if BlueZ does not report one.
 const DEFAULT_MTU: u16 = 23;
 
-/// An open GATT connection to the earbuds' control service.
+/// One resolved characteristic.
+#[derive(Debug, Clone)]
+struct Char {
+    proxy: GattCharacteristic1Proxy<'static>,
+    /// Supports write without response (otherwise writes are requests).
+    write_command: bool,
+    notifies: bool,
+}
+
+/// An open GATT connection to the earbuds' vendor services.
 #[derive(Debug, Clone)]
 pub struct GattSession {
     conn: Connection,
     device: Device1Proxy<'static>,
-    chars: HashMap<Characteristic, GattCharacteristic1Proxy<'static>>,
+    chars: HashMap<Characteristic, Char>,
     mtu: u16,
 }
 
@@ -47,18 +57,10 @@ impl GattSession {
         wait_services_resolved(&device).await?;
 
         let chars = resolve_characteristics(conn, device_path).await?;
-        for required in [Characteristic::Command, Characteristic::Settings] {
-            if !chars.contains_key(&required) {
-                return Err(Error::NotFound(format!(
-                    "the device does not expose the QCY control characteristic {required:?}"
-                )));
-            }
+        let mut mtu = DEFAULT_MTU;
+        if let Some(c) = chars.values().next() {
+            mtu = c.proxy.mtu().await.unwrap_or(DEFAULT_MTU);
         }
-
-        let mtu = chars[&Characteristic::Command]
-            .mtu()
-            .await
-            .unwrap_or(DEFAULT_MTU);
         debug!(mtu, characteristics = chars.len(), "GATT session ready");
 
         Ok(Self {
@@ -69,7 +71,7 @@ impl GattSession {
         })
     }
 
-    fn char(&self, c: Characteristic) -> Result<&GattCharacteristic1Proxy<'static>, Error> {
+    fn char(&self, c: Characteristic) -> Result<&Char, Error> {
         self.chars
             .get(&c)
             .ok_or_else(|| Error::NotFound(format!("characteristic {c:?} not available")))
@@ -91,31 +93,38 @@ impl Link for GattSession {
     }
 
     async fn read(&self, c: Characteristic) -> Result<Vec<u8>, Error> {
-        let value = self.char(c)?.read_value(HashMap::new()).await?;
+        let value = self.char(c)?.proxy.read_value(HashMap::new()).await?;
         trace!(?c, data = %hex(&value), "read");
         Ok(value)
     }
 
-    /// Writes without response, like the official app.
+    /// Writes like Android's default write type: without response if the
+    /// characteristic supports it, otherwise as a write request (which BlueZ
+    /// turns into a long write when the value exceeds the MTU).
     async fn write(&self, w: &Write) -> Result<(), Error> {
-        if w.data.len() > self.max_write_len() {
+        let ch = self.char(w.characteristic)?;
+        if ch.write_command && w.data.len() > self.max_write_len() {
             return Err(Error::TooLarge {
                 len: w.data.len(),
                 max: self.max_write_len(),
             });
         }
         trace!(c = ?w.characteristic, data = %hex(&w.data), "write");
-        let options = HashMap::from([("type", Value::from("command"))]);
-        self.char(w.characteristic)?
-            .write_value(&w.data, options)
-            .await?;
+        let kind = if ch.write_command {
+            "command"
+        } else {
+            "request"
+        };
+        let options = HashMap::from([("type", Value::from(kind))]);
+        ch.proxy.write_value(&w.data, options).await?;
         Ok(())
     }
 
     /// Enables notifications and returns a stream of everything received.
     async fn notifications(&self) -> Result<BoxStream<'static, Notification>, Error> {
         let mut streams = Vec::new();
-        for (&c, proxy) in self.chars.iter().filter(|(c, _)| c.notifies()) {
+        for (&c, ch) in self.chars.iter().filter(|(_, ch)| ch.notifies) {
+            let proxy = &ch.proxy;
             let props = PropertiesProxy::builder(&self.conn)
                 .destination(SERVICE)?
                 .path(proxy.inner().path().to_owned())?
@@ -246,47 +255,62 @@ async fn wait_services_resolved(device: &Device1Proxy<'_>) -> Result<(), Error> 
         .map_err(|_| Error::Timeout("discovering GATT services"))
 }
 
-/// Finds the characteristics of the `0xA001` service below `device_path`.
+/// Finds the characteristics of the vendor services (`0xA001`, and `0xA002`
+/// on JieLi models) below `device_path`.
 ///
-/// The earbuds also expose a WuQi OTA service (`0x7033`) whose characteristics
-/// re-use the UUIDs `0x1001`/`0x1002`, so matching on the parent service is
-/// essential.
+/// The earbuds may also expose a firmware-update service (WuQi `0x7033`)
+/// whose characteristics re-use the UUIDs `0x1001`/`0x1002`, so matching on
+/// the parent service is essential: anything outside [`Service`] is ignored.
 async fn resolve_characteristics(
     conn: &Connection,
     device_path: &ObjectPath<'_>,
-) -> Result<HashMap<Characteristic, GattCharacteristic1Proxy<'static>>, Error> {
+) -> Result<HashMap<Characteristic, Char>, Error> {
     let objects = managed_objects(conn).await?;
     let prefix = format!("{}/", device_path.as_str());
 
-    let service_path: OwnedObjectPath = objects
+    let services: HashMap<OwnedObjectPath, Service> = objects
         .iter()
         .filter(|(path, _)| path.as_str().starts_with(&prefix))
-        .find_map(|(path, ifaces)| {
+        .filter_map(|(path, ifaces)| {
             let uuid: String = prop(ifaces.get(GATT_SERVICE_IFACE)?, "UUID")?;
-            uuid.eq_ignore_ascii_case(uuids::SERVICE)
-                .then(|| path.clone())
+            Some((path.clone(), Service::from_uuid(&uuid)?))
         })
-        .ok_or_else(|| {
-            Error::NotFound("the device does not expose the QCY control service (0xA001)".into())
-        })?;
+        .collect();
+    if !services.values().any(|s| *s == Service::Control) {
+        return Err(Error::NotFound(
+            "the device does not expose the QCY control service (0xA001)".into(),
+        ));
+    }
 
     let mut chars = HashMap::new();
     for (path, ifaces) in &objects {
         let Some(props) = ifaces.get(GATT_CHAR_IFACE) else {
             continue;
         };
-        if prop::<OwnedObjectPath>(props, "Service").as_ref() != Some(&service_path) {
-            continue;
-        }
-        let Some(c) = prop::<String>(props, "UUID").and_then(|u| Characteristic::from_uuid(&u))
+        let Some(&service) = prop::<OwnedObjectPath>(props, "Service")
+            .as_ref()
+            .and_then(|s| services.get(s))
         else {
             continue;
         };
+        let Some(id) = prop::<String>(props, "UUID").and_then(|u| uuids::shorten(&u)) else {
+            continue;
+        };
+        let flags: Vec<String> = prop(props, "Flags").unwrap_or_default();
+        let has = |f: &str| flags.iter().any(|x| x == f);
         let proxy = GattCharacteristic1Proxy::builder(conn)
             .path(path.clone())?
             .build()
             .await?;
-        chars.insert(c, proxy);
+        chars.insert(
+            Characteristic::new(service, id),
+            Char {
+                proxy,
+                write_command: has("write-without-response"),
+                notifies: has("notify") || has("indicate"),
+            },
+        );
     }
+    debug!(chars = ?chars.keys().collect::<Vec<_>>(), "resolved characteristics");
     Ok(chars)
 }

@@ -66,7 +66,7 @@ impl Command {
         use Characteristic as C;
         let cmd = |id: CommandId, payload: &[u8]| -> Result<Write, ProtocolError> {
             Ok(Write {
-                characteristic: C::Command,
+                characteristic: C::COMMAND,
                 data: frame::encode_one(id, payload)?,
             })
         };
@@ -117,7 +117,7 @@ impl Command {
             Command::SetVolume { left, right } => cmd(CommandId::Volume, &[*left, *right, 0]),
             Command::SetParametricEq(eq) => cmd(CommandId::MultiEq2, &eq.encode_v2()?),
             Command::SetGraphicEq(eq) => Ok(Write {
-                characteristic: C::Eq,
+                characteristic: C::EQ,
                 data: eq.encode(),
             }),
             Command::SetKeyFunctions(pairs) => {
@@ -125,7 +125,7 @@ impl Command {
                     return Err(ProtocolError::InvalidValue("no key bindings given".into()));
                 }
                 Ok(Write {
-                    characteristic: C::Keys,
+                    characteristic: C::KEYS,
                     data: pairs.iter().flat_map(|(g, a)| [*g, a.id()]).collect(),
                 })
             }
@@ -269,7 +269,7 @@ mod tests {
         let w = Command::SetKeyFunctions(vec![(g, KeyAction::NextTrack)])
             .encode()
             .unwrap();
-        assert_eq!(w.characteristic, Characteristic::Keys);
+        assert_eq!(w.characteristic, Characteristic::KEYS);
         assert_eq!(w.data, [4, 3]);
     }
 

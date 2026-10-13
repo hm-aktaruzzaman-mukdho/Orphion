@@ -47,4 +47,6 @@ pub trait GattCharacteristic1 {
 
     #[zbus(property, name = "MTU")]
     fn mtu(&self) -> zbus::Result<u16>;
+    #[zbus(property)]
+    fn flags(&self) -> zbus::Result<Vec<String>>;
 }

@@ -43,14 +43,16 @@ pub enum Update {
 /// [`Update::Unknown`] instead of failing the whole frame.
 pub fn decode(characteristic: Characteristic, data: &[u8]) -> Result<Vec<Update>, ProtocolError> {
     Ok(match characteristic {
-        Characteristic::Battery => vec![Update::Battery(BatteryStatus::parse(data)?)],
-        Characteristic::Version => vec![Update::Firmware(FirmwareVersions::parse(data))],
-        Characteristic::Eq => vec![Update::GraphicEq(GraphicEq::parse(data)?)],
-        Characteristic::Keys => vec![Update::KeyBindings(KeyBinding::parse_table(data))],
-        Characteristic::Settings | Characteristic::Command => frame::decode(data)?
+        Characteristic::BATTERY => vec![Update::Battery(BatteryStatus::parse(data)?)],
+        Characteristic::VERSION => vec![Update::Firmware(FirmwareVersions::parse(data))],
+        Characteristic::EQ => vec![Update::GraphicEq(GraphicEq::parse(data)?)],
+        Characteristic::KEYS => vec![Update::KeyBindings(KeyBinding::parse_table(data))],
+        Characteristic::SETTINGS | Characteristic::COMMAND => frame::decode(data)?
             .into_iter()
             .map(|tlv| decode_entry(&tlv).unwrap_or_else(|_| unknown(&tlv)))
             .collect(),
+        // Dialect specific characteristics are decoded elsewhere.
+        _ => Vec::new(),
     })
 }
 
@@ -148,7 +150,7 @@ mod tests {
             0x01, 0x02, 0x23, 0x01, 0x00, 0x24, 0x01, 0x01, 0x1f, 0x02, 0x05, 0x00, 0x1d, 0x02,
             0x08, 0x0f, 0x19, 0x04, 0x57, 0x51, 0x30, 0x30,
         ];
-        let updates = decode(Characteristic::Settings, &raw).unwrap();
+        let updates = decode(Characteristic::SETTINGS, &raw).unwrap();
         let expected = vec![
             Update::WearDetection(WearDetection {
                 enabled: false,
@@ -181,7 +183,7 @@ mod tests {
     #[test]
     fn malformed_entry_becomes_unknown() {
         // ANC entry with a 1-byte payload is invalid; must not poison the frame.
-        let updates = decode(Characteristic::Settings, &[0xFF, 3, 0x17, 1, 9]).unwrap();
+        let updates = decode(Characteristic::SETTINGS, &[0xFF, 3, 0x17, 1, 9]).unwrap();
         assert!(matches!(updates[0], Update::Unknown { .. }));
     }
 }

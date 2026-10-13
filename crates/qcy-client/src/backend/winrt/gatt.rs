@@ -1,4 +1,4 @@
-//! A GATT connection to the QCY control service through WinRT.
+//! A GATT connection to the QCY vendor services through WinRT.
 
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
@@ -6,14 +6,16 @@ use std::time::Duration;
 
 use futures_util::StreamExt;
 use futures_util::stream::{self, BoxStream};
-use qcy_protocol::{Characteristic, Write, uuids};
+use qcy_protocol::uuids::{self, Service};
+use qcy_protocol::{Characteristic, Write};
 use tokio::sync::mpsc;
 use tokio::time::{sleep, timeout};
 use tracing::{debug, trace, warn};
 use windows::Devices::Bluetooth::GenericAttributeProfile::{
-    GattCharacteristic, GattClientCharacteristicConfigurationDescriptorValue,
-    GattCommunicationStatus, GattDeviceService, GattOpenStatus, GattSession, GattSharingMode,
-    GattValueChangedEventArgs, GattWriteOption,
+    GattCharacteristic, GattCharacteristicProperties,
+    GattClientCharacteristicConfigurationDescriptorValue, GattCommunicationStatus,
+    GattDeviceService, GattOpenStatus, GattSession, GattSharingMode, GattValueChangedEventArgs,
+    GattWriteOption,
 };
 use windows::Devices::Bluetooth::{
     BluetoothAddressType, BluetoothCacheMode, BluetoothConnectionStatus, BluetoothLEDevice,
@@ -41,12 +43,21 @@ pub struct WinGattLink {
 
 struct Inner {
     device: BluetoothLEDevice,
-    service: GattDeviceService,
+    /// The vendor services found (`0xA001`, and `0xA002` on JieLi models).
+    services: Vec<GattDeviceService>,
     session: GattSession,
-    /// Characteristics of service `0xA001` only (never the OTA service).
-    chars: HashMap<Characteristic, GattCharacteristic>,
+    /// Characteristics of the vendor services only (never the OTA service).
+    chars: HashMap<Characteristic, Char>,
     subscribers: Arc<Subscribers>,
     handlers: Mutex<Handlers>,
+}
+
+/// One resolved characteristic.
+struct Char {
+    ch: GattCharacteristic,
+    /// Supports write without response (otherwise writes are requests).
+    write_command: bool,
+    notifies: bool,
 }
 
 /// Receivers of the events forwarded by the WinRT handlers.
@@ -118,20 +129,33 @@ impl WinGattLink {
                 return Err(e);
             }
         };
+        let mut services = vec![(Service::Control, service)];
+        // The JieLi RCSP service is optional; the link is already up.
+        if let Ok(Some(rcsp)) = find_service(&device, Service::Rcsp).await {
+            services.push((Service::Rcsp, rcsp));
+        }
         let setup = async {
-            // An implicitly opened service is exclusive to this process; open
-            // it shared so the tray and the window can use it side by side.
-            open_shared(&service).await?;
+            let mut chars = HashMap::new();
+            for (kind, service) in &services {
+                // An implicitly opened service is exclusive to this process;
+                // open it shared so the tray and the window can use it side
+                // by side.
+                open_shared(service).await?;
+                chars.extend(vendor_characteristics(*kind, service).await?);
+            }
             // Keep the link up while this program holds it, even when idle.
-            let session = service.Session()?;
+            let session = services[0].1.Session()?;
             session.SetMaintainConnection(true)?;
-            let chars = control_characteristics(&service).await?;
             Ok::<_, Error>((session, chars))
         };
-        let (session, chars) = match setup.await {
+        let outcome = setup.await;
+        let services: Vec<GattDeviceService> = services.into_iter().map(|(_, s)| s).collect();
+        let (session, chars) = match outcome {
             Ok(parts) => parts,
             Err(e) => {
-                service.Close().ok();
+                for service in &services {
+                    service.Close().ok();
+                }
                 device.Close().ok();
                 return Err(e);
             }
@@ -146,7 +170,7 @@ impl WinGattLink {
         let link = Self {
             inner: Arc::new(Inner {
                 device,
-                service,
+                services,
                 session,
                 chars,
                 subscribers: Arc::default(),
@@ -158,7 +182,7 @@ impl WinGattLink {
         Ok(link)
     }
 
-    fn char(&self, c: Characteristic) -> Result<&GattCharacteristic, Error> {
+    fn char(&self, c: Characteristic) -> Result<&Char, Error> {
         self.inner
             .chars
             .get(&c)
@@ -192,7 +216,7 @@ impl WinGattLink {
     /// Registers value handlers and writes the CCCDs of every notifying
     /// characteristic. Fails if the link is unusable, so `open` can retry.
     async fn enable_notifications(&self) -> Result<(), Error> {
-        for (&c, ch) in self.inner.chars.iter().filter(|(c, _)| c.notifies()) {
+        for (&c, Char { ch, .. }) in self.inner.chars.iter().filter(|(_, ch)| ch.notifies) {
             // Register the handler before enabling notifications so nothing is
             // lost. The delegate is not `Send`, so it lives in its own scope.
             let subscribers = Arc::clone(&self.inner.subscribers);
@@ -248,6 +272,7 @@ impl Link for WinGattLink {
     async fn read(&self, c: Characteristic) -> Result<Vec<u8>, Error> {
         let result = self
             .char(c)?
+            .ch
             .ReadValueWithCacheModeAsync(BluetoothCacheMode::Uncached)?
             .await?;
         check(result.Status()?, "reading")?;
@@ -256,8 +281,11 @@ impl Link for WinGattLink {
         Ok(data)
     }
 
+    /// Writes like Android's default write type: without response if the
+    /// characteristic supports it, otherwise as a write request.
     async fn write(&self, w: &Write) -> Result<(), Error> {
-        if w.data.len() > self.max_write_len() {
+        let ch = self.char(w.characteristic)?;
+        if ch.write_command && w.data.len() > self.max_write_len() {
             return Err(Error::TooLarge {
                 len: w.data.len(),
                 max: self.max_write_len(),
@@ -267,11 +295,12 @@ impl Link for WinGattLink {
         // The buffer is not `Send`; it must be gone before awaiting.
         let operation = {
             let buffer = to_buffer(&w.data)?;
-            self.char(w.characteristic)?
-                .WriteValueWithResultAndOptionAsync(
-                    &buffer,
-                    GattWriteOption::WriteWithoutResponse,
-                )?
+            let option = if ch.write_command {
+                GattWriteOption::WriteWithoutResponse
+            } else {
+                GattWriteOption::WriteWithResponse
+            };
+            ch.ch.WriteValueWithResultAndOptionAsync(&buffer, option)?
         };
         let result = operation.await?;
         check(result.Status()?, "writing")
@@ -323,7 +352,9 @@ impl Inner {
         }
         self.session.SetMaintainConnection(false).ok();
         self.session.Close().ok();
-        self.service.Close().ok();
+        for service in &self.services {
+            service.Close().ok();
+        }
         self.device.Close().ok();
         debug!("GATT link released");
     }
@@ -335,23 +366,29 @@ impl Drop for Inner {
     }
 }
 
-/// Finds the control service; on Windows this is what opens the link.
+/// Finds the control service `0xA001`; on Windows this is what opens the link.
 async fn discover_service(device: &BluetoothLEDevice) -> Result<GattDeviceService, Error> {
-    let operation = device.GetGattServicesForUuidWithCacheModeAsync(
-        guid(uuids::SERVICE),
-        BluetoothCacheMode::Uncached,
-    )?;
-    let result = timeout(CONNECT_TIMEOUT, operation)
+    let found = timeout(CONNECT_TIMEOUT, find_service(device, Service::Control))
         .await
         .map_err(|_| Error::Timeout("discovering GATT services"))??;
+    found.ok_or_else(|| {
+        Error::NotFound("the device does not expose the QCY control service (0xA001)".into())
+    })
+}
+
+/// Looks up one vendor service, `None` if the device does not have it.
+async fn find_service(
+    device: &BluetoothLEDevice,
+    service: Service,
+) -> Result<Option<GattDeviceService>, Error> {
+    let result = device
+        .GetGattServicesForUuidWithCacheModeAsync(
+            guid(&service.uuid()),
+            BluetoothCacheMode::Uncached,
+        )?
+        .await?;
     match result.Status()? {
-        GattCommunicationStatus::Success => {
-            result.Services()?.into_iter().next().ok_or_else(|| {
-                Error::NotFound(
-                    "the device does not expose the QCY control service (0xA001)".into(),
-                )
-            })
-        }
+        GattCommunicationStatus::Success => Ok(result.Services()?.into_iter().next()),
         // Not advertising (in the case, connected elsewhere) or out of range.
         GattCommunicationStatus::Unreachable => Err(Error::DeviceGone),
         status => Err(Error::Backend(format!(
@@ -378,32 +415,42 @@ async fn open_shared(service: &GattDeviceService) -> Result<(), Error> {
     }
 }
 
-/// The characteristics of the control service, by role. Only `service`
-/// (`0xA001`) is searched, so the OTA service's identically named
-/// characteristics can never be reached.
-async fn control_characteristics(
+/// The characteristics of one vendor service. Only `service` itself is
+/// searched, so the OTA service's identically named characteristics can never
+/// be reached.
+async fn vendor_characteristics(
+    kind: Service,
     service: &GattDeviceService,
-) -> Result<HashMap<Characteristic, GattCharacteristic>, Error> {
+) -> Result<HashMap<Characteristic, Char>, Error> {
     let result = service
         .GetCharacteristicsWithCacheModeAsync(BluetoothCacheMode::Uncached)?
         .await?;
     check(result.Status()?, "listing characteristics")?;
     let mut chars = HashMap::new();
     for ch in result.Characteristics()? {
-        let uuid = ch.Uuid()?.to_u128();
-        if let Some(c) = Characteristic::ALL
-            .into_iter()
-            .find(|c| guid(c.uuid()).to_u128() == uuid)
-        {
-            chars.insert(c, ch);
-        }
-    }
-    for required in [Characteristic::Command, Characteristic::Settings] {
-        if !chars.contains_key(&required) {
-            return Err(Error::NotFound(format!(
-                "the device does not expose the QCY control characteristic {required:?}"
-            )));
-        }
+        let uuid = format!("{:032x}", ch.Uuid()?.to_u128());
+        let uuid = format!(
+            "{}-{}-{}-{}-{}",
+            &uuid[0..8],
+            &uuid[8..12],
+            &uuid[12..16],
+            &uuid[16..20],
+            &uuid[20..]
+        );
+        let Some(id) = uuids::shorten(&uuid) else {
+            continue;
+        };
+        let props = ch.CharacteristicProperties()?;
+        let has = |p: GattCharacteristicProperties| props & p == p;
+        chars.insert(
+            Characteristic::new(kind, id),
+            Char {
+                write_command: has(GattCharacteristicProperties::WriteWithoutResponse),
+                notifies: has(GattCharacteristicProperties::Notify)
+                    || has(GattCharacteristicProperties::Indicate),
+                ch,
+            },
+        );
     }
     Ok(chars)
 }

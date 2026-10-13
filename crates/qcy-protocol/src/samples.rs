@@ -37,11 +37,11 @@ pub const NAME_REPLY: [u8; 36] = [
 pub fn state() -> DeviceState {
     let mut state = DeviceState::default();
     let reads: [(Characteristic, &[u8]); 5] = [
-        (Characteristic::Version, &VERSION),
-        (Characteristic::Battery, &BATTERY),
-        (Characteristic::Settings, &SETTINGS),
-        (Characteristic::Keys, &KEYS),
-        (Characteristic::Settings, &NAME_REPLY),
+        (Characteristic::VERSION, &VERSION),
+        (Characteristic::BATTERY, &BATTERY),
+        (Characteristic::SETTINGS, &SETTINGS),
+        (Characteristic::KEYS, &KEYS),
+        (Characteristic::SETTINGS, &NAME_REPLY),
     ];
     for (c, data) in reads {
         for u in update::decode(c, data).expect("samples are valid") {
