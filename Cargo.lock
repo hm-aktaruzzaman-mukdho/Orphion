@@ -1984,7 +1984,7 @@ dependencies = [
 
 [[package]]
 name = "orphion"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "eframe",
@@ -2005,7 +2005,7 @@ dependencies = [
 
 [[package]]
 name = "orphionctl"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "anyhow",
  "clap",
@@ -2201,7 +2201,7 @@ checksum = "d55d956fa96f5ec02be2e13af0e20391a5aa83d6a074e3ad368959d0fab299ea"
 
 [[package]]
 name = "qcy-client"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "futures-util",
  "qcy-protocol",
@@ -2214,7 +2214,7 @@ dependencies = [
 
 [[package]]
 name = "qcy-protocol"
-version = "0.2.0"
+version = "0.3.0"
 dependencies = [
  "miniz_oxide 0.8.9",
  "serde",
