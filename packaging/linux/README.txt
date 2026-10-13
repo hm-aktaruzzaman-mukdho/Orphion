@@ -19,15 +19,17 @@ Requirements
 
 Install
 -------
-    ./packaging/linux/install.sh              # into ~/.local, with menu entries
+    ./packaging/linux/install.sh              # into ~/.local, with a menu entry
     ./packaging/linux/install.sh --autostart  # also start the tray icon at login
 
 The programs also run directly from bin/ without installing.
 
 Programs
 --------
-bin/orphion       The control panel.
-bin/orphion-tray  Tray icon with battery levels and quick controls.
+bin/orphion       The control panel. It also starts a tray icon with battery
+                  levels and quick controls, which stays after the window is
+                  closed (turn off under Settings -> Appearance, or run
+                  `orphion --no-tray`). `orphion --tray` starts only the tray.
 bin/orphionctl    Command line, e.g.  orphionctl anc   (lists your model's noise modes)
                   Run `orphionctl --help` for everything it can do.
 

@@ -1,18 +1,19 @@
 # Architecture
 
 ```
-┌──────────────┐  ┌───────────────────┐  ┌──────────────┐
-│   orphion    │  │     orphion-tray      │  │    orphionctl    │   front-ends
-│ egui window  │  │ KDE SNI / Windows │  │ command line │
-└──────┬───────┘  └─────────┬─────────┘  └──────┬───────┘
-       │ Manager            │ Manager           │ Earbuds (direct)
-┌──────▼────────────────────▼───────────────────▼─────────┐
+┌──────────────────────────────────────┐  ┌──────────────┐
+│ orphion                              │  │  orphionctl  │   front-ends
+│  window: egui │ --tray: KDE SNI /    │  │ command line │
+│  (default)    │   Windows tray icon  │  │              │
+└──────┬───────────────────┬───────────┘  └──────┬───────┘
+       │ Manager           │ Manager             │ Earbuds (direct)
+┌──────▼───────────────────▼─────────────────────▼─────────┐
 │ qcy-client                                               │   client
 │  client    ─ Earbuds: runs the codec's GATT operations   │
 │  manager   ─ background (re)connect, snapshots, demo     │
 │  transport ─ Backend / Link traits, Endpoint, Selector   │
-│  backend/  ─ bluez (Linux)  │  winrt (Windows)            │
-└──────┬───────────────────────────────┬──────────────────┘
+│  backend/  ─ bluez (Linux)  │  winrt (Windows)           │
+└──────┬───────────────────────────────┬───────────────────┘
        │ Command / Op / Update          │
 ┌──────▼────────────────────────────┐   │
 │ qcy-protocol (pure, no I/O)       │   │                     protocol
@@ -45,9 +46,8 @@ Two questions decide everything about a model, and each has its own module:
 |----------------|----------------|
 | `qcy-protocol` | Turns typed [`Command`]s into GATT operations and bytes into typed [`Update`]s for every chip family (`dialect`), and describes every model (`catalog`, `panel`). No Bluetooth code at all. |
 | `qcy-client`   | The stateful `Earbuds` client and the long-running `Manager`, written against two traits ([`Backend`, `Link`]). Implements them for BlueZ (`backend/bluez`, Linux) and WinRT (`backend/winrt`, Windows); `Platform` is the one for the build target. |
-| `orphionctl`       | One-shot CLI on top of `Earbuds`. `controls.rs` addresses the panel's rows, modes and gestures by name. |
-| `orphion`      | egui control panel on top of `Manager`. Its `material/` module is a small, app-independent Material 3 design system (colour roles, type scale, Material Symbols icons, cards, switches, chips, segmented buttons, navigation rail, snackbars, dialogs); `views/` render the panel; `widgets.rs` holds the app-specific drawings (battery rings, EQ curve). |
-| `orphion-tray`     | Tray applet on top of `Manager`. `menu.rs` decides what is shown and done; `sni.rs` draws it as a KDE StatusNotifierItem (Linux), `win.rs` as a notification-area icon (Windows). |
+| `orphionctl`   | One-shot CLI on top of `Earbuds`. `controls.rs` addresses the panel's rows, modes and gestures by name. |
+| `orphion`      | The app, one program with two modes picked in `main.rs` (`args.rs`) before any window or GL state exists. **Window** (default): egui control panel on top of `Manager`. Its `material/` module is a small, app-independent Material 3 design system (colour roles, type scale, Material Symbols icons, cards, switches, chips, segmented buttons, navigation rail, snackbars, dialogs); `views/` render the panel; `widgets.rs` holds the app-specific drawings (battery rings, EQ curve). **Tray** (`--tray`, `tray/`): its own runtime and `Manager`; `menu.rs` decides what is shown and done, `sni.rs` draws it as a KDE StatusNotifierItem (Linux), `win.rs` as a notification-area icon (Windows). `instance.rs` keeps one window and one tray per session (a `flock` on Linux, named mutexes on Windows) and starts the tray, detached, when the window opens. |
 
 ### Inside `qcy-protocol`
 
@@ -88,7 +88,9 @@ Two questions decide everything about a model, and each has its own module:
    `Notice`s for snackbars.
 5. **Front-ends** render the panel and the state and push commands. The
    GUI's views are pure: they return `Action`s that `App` executes after the
-   frame.
+   frame. The window and the tray are separate processes of the same
+   program, each with its own `Manager`; BlueZ (and Windows, through shared
+   GATT sessions) lets them use one control link side by side.
 
 ## Design rules
 
@@ -99,8 +101,10 @@ Two questions decide everything about a model, and each has its own module:
 * **No per-model code.** Model differences are data (the panel) or chip
   families (the dialect). A model the code has never seen works if its panel
   is in the catalogue.
-* **Platform code lives only in `qcy-client/src/backend/`.** Everything above
-  the `Backend` / `Link` traits is shared by all operating systems.
+* **Bluetooth platform code lives only in `qcy-client/src/backend/`.**
+  Everything above the `Backend` / `Link` traits is shared by all operating
+  systems. The app's own platform code (tray renderers, single-instance
+  locks) stays in `orphion/src/tray/` and `orphion/src/instance.rs`.
 * **Unknown data is preserved.** Every setting's raw payload is kept in
   `DeviceState::settings`; unknown key actions and ANC values round-trip as
   `Other(..)`.

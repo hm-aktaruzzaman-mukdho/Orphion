@@ -26,11 +26,18 @@ The window adapts to each model. Some other models, shown in demo mode:
 
 ## What you get
 
-| Program    | What it is                                                                 |
-|------------|----------------------------------------------------------------------------|
-| `orphion`  | The control panel window, in Material 3 style with light and dark themes (follows the system, or pick one under Settings → Appearance) and a choice of accent colour; the whole colour scheme is generated from it. |
-| `orphion-tray` | A tray icon (KDE Plasma or any StatusNotifier host on Linux; the notification area on Windows). The tooltip shows battery levels; the menu offers the model's noise control modes, its quick switches (gaming mode, sleep mode, …) and EQ presets; clicking the icon opens the control panel. On Linux, scrolling over it cycles noise control. |
-| `orphionctl`   | Command line tool for scripts and keyboard shortcuts.                      |
+| Program      | What it is |
+|--------------|------------|
+| `orphion`    | The app. It opens the control panel window, in Material 3 style with light and dark themes (follows the system, or pick one under Settings → Appearance) and a choice of accent colour; the whole colour scheme is generated from it. It also keeps a **tray icon** running (KDE Plasma or any StatusNotifier host on Linux; the notification area on Windows): its tooltip shows battery levels, its menu offers the model's noise control modes, its quick switches (gaming mode, sleep mode, …) and EQ presets, and clicking it opens the window. On Linux, scrolling over it cycles noise control. |
+| `orphionctl` | Command line tool for scripts and keyboard shortcuts. |
+
+Starting `orphion` starts the tray too if it is not running yet, and the
+tray stays after you close the window; "Quit" in its menu ends it. Turn this
+off under Settings → Appearance → **Keep Orphion in the tray**, or for one
+run with `orphion --no-tray`. `orphion --tray` starts only the tray (that is
+what autostart uses). Only one window and one tray run at a time: launching
+Orphion again while the window is open brings it to the front on Windows and
+does nothing more on Linux.
 
 ### Supported models and features
 
@@ -155,8 +162,8 @@ cd orphion
 ### 3. Build and install
 
 ```bash
-packaging/linux/install.sh               # build and install the three programs
-packaging/linux/install.sh --autostart   # same, and start the tray icon on login
+packaging/linux/install.sh               # build and install orphion and orphionctl
+packaging/linux/install.sh --autostart   # same, and start the tray icon at login (and now)
 ```
 
 The script runs `cargo build --release --workspace` (the first build takes a
@@ -164,12 +171,12 @@ few minutes) and installs:
 
 | What | Where |
 |------|-------|
-| `orphion`, `orphion-tray`, `orphionctl` | `~/.local/bin`, or `$PREFIX/bin` with e.g. `PREFIX=~/apps packaging/linux/install.sh` (use the same `PREFIX` for `uninstall.sh`) |
-| Menu entries "Orphion" and "Orphion Tray" | `~/.local/share/applications` |
+| `orphion`, `orphionctl` | `~/.local/bin`, or `$PREFIX/bin` with e.g. `PREFIX=~/apps packaging/linux/install.sh` (use the same `PREFIX` for `uninstall.sh`) |
+| Menu entry "Orphion" | `~/.local/share/applications` |
 | Icon | `~/.local/share/icons/hicolor/256x256/apps/orphion.png` |
-| Tray autostart (`--autostart` only) | `~/.config/autostart` |
+| Tray autostart, `orphion --tray` (`--autostart` only) | `~/.config/autostart` |
 
-The menu entries use absolute paths, so they work even if `~/.local/bin` is
+The menu entry and autostart use absolute paths, so they work even if `~/.local/bin` is
 not in your `PATH`. To call `orphionctl` from a terminal, add it if needed:
 
 ```bash
@@ -197,16 +204,21 @@ their own. Start "Orphion" from the application menu, or run `orphion`.
 
 ```bash
 cargo build --release
-./target/release/orphion        # or orphion-tray, orphionctl
+./target/release/orphion        # the window (and the tray); or orphionctl
 ```
 
 To try the interface without earbuds, run `orphion --demo`. It simulates a
-MeloBuds Pro using data captured from real hardware.
+MeloBuds Pro using data captured from real hardware, and never starts a
+tray.
 
 ### Update and uninstall
 
 To update, pull the new source and run `packaging/linux/install.sh` again (quit
 the tray first so the new version is started).
+
+Earlier versions of Orphion had a separate `orphion-tray` program. The installers on
+both systems remove it with its menu entries, and turn its autostart into
+one for `orphion --tray`.
 
 Before it was renamed, Orphion was called "QCY Earbuds" (`qcy-gui`,
 `qcy-tray`, `qcyctl`). The installers on both systems remove such a version,
@@ -217,8 +229,8 @@ up its saved appearance settings.
 packaging/linux/uninstall.sh
 ```
 
-removes the programs, menu entries, icon, autostart entry and the settings
-in `~/.config/orphion/`.
+stops Orphion and removes the programs, menu entry, icon, autostart entry and
+the settings in `~/.config/orphion/`.
 
 ### Build a portable release tarball
 
@@ -248,8 +260,7 @@ Download `orphion-<version>-windows-x64.zip` from the
 `packaging/build-windows.sh` on Linux (see
 [Cross-compile from Linux](#cross-compile-from-linux)) or by the steps in
 [option B](#option-b-build-on-windows). It contains `orphion.exe`,
-`orphion-tray.exe`, `orphionctl.exe`, `install.ps1`, `uninstall.ps1` and a short
-`README.txt`.
+`orphionctl.exe`, `install.ps1`, `uninstall.ps1` and a short `README.txt`.
 
 1. If the zip was downloaded, right-click it → **Properties** → tick
    **Unblock** → OK, before extracting. Otherwise Windows marks every file as
@@ -306,8 +317,8 @@ run the `.exe` files straight from the extracted folder.
    cargo build --release
    ```
 
-   The programs are in `target\release\`: `orphion.exe`, `orphion-tray.exe` and
-   `orphionctl.exe`. They can be run from there directly.
+   The programs are in `target\release\`: `orphion.exe` and `orphionctl.exe`.
+   They can be run from there directly.
 
 4. **Install.** Put the programs next to the install scripts, the same layout
    as the release zip, and run the installer:
@@ -315,7 +326,7 @@ run the `.exe` files straight from the extracted folder.
    ```powershell
    $dist = "dist\orphion-windows-x64"
    New-Item -ItemType Directory -Force $dist | Out-Null
-   Copy-Item target\release\orphion.exe, target\release\orphion-tray.exe, target\release\orphionctl.exe, `
+   Copy-Item target\release\orphion.exe, target\release\orphionctl.exe, `
              packaging\windows\install.ps1, packaging\windows\uninstall.ps1, packaging\windows\README.txt $dist
    powershell -ExecutionPolicy Bypass -File "$dist\install.ps1" -Autostart
    ```
@@ -327,13 +338,13 @@ run the `.exe` files straight from the extracted folder.
 
 | What | Where |
 |------|-------|
-| `orphion.exe`, `orphion-tray.exe`, `orphionctl.exe`, `README.txt` | `%LOCALAPPDATA%\Programs\Orphion` |
-| Start menu shortcuts "Orphion" and "Orphion tray" | `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Orphion` |
-| Tray at sign-in (`-Autostart`), and the tray is started right away | `shell:startup` (`Orphion tray.lnk`) |
+| `orphion.exe`, `orphionctl.exe`, `README.txt` | `%LOCALAPPDATA%\Programs\Orphion` |
+| Start menu shortcut "Orphion" | `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Orphion` |
+| Tray at sign-in (`-Autostart`), `orphion.exe --tray`, and the tray is started right away | `shell:startup` (`Orphion.lnk`) |
 | `orphionctl` in new terminals (`-AddToPath`) | your user `Path` |
 
-Running copies of the GUI and tray are closed first, so running the script
-again is also how you **update**.
+Running copies of Orphion (window and tray) are closed first, so running the
+script again is also how you **update**.
 
 The tray icon may land in the hidden-icons overflow (the **^** next to the
 clock); drag it onto the taskbar to keep it visible.
@@ -369,18 +380,18 @@ packaging/build-windows.sh
 ```
 
 This produces `dist/orphion-<version>-windows-x64/` and the matching
-`.zip` with the three programs, the install scripts and `README.txt`. Install
+`.zip` with both programs, the install scripts and `README.txt`. Install
 it on the Windows PC with [option A](#option-a-from-a-release-zip).
 
 ## Usage
 
 Pair the earbuds with your computer for audio (see the install sections
-above). Then take them out of the case and start `orphion` or `orphion-tray`. The
-earbuds are found automatically.
+above). Then take them out of the case and start Orphion. The earbuds are found
+automatically, and the tray icon appears next to the clock.
 
 The earbuds accept only **one control connection**. If the QCY app on your
-phone is connected, close it first. The programs on your computer share one
-connection with each other, so the tray and the window can run together.
+phone is connected, close it first. The window, the tray and `orphionctl`
+share one connection with each other, so they can run together.
 
 ### Command line
 
@@ -431,12 +442,12 @@ model, without Bluetooth.
 | Connecting takes long | BLE connects can take 5–40 s while audio is streaming; the programs retry on their own. |
 | Buds disconnect after toggling LDAC / dual device | Expected: the firmware reboots. The GUI and tray reconnect on their own. |
 | A JieLi model connects but shows no values | Run `orphionctl -vv status` and open an issue with the output: these models are implemented from the app's code but not yet confirmed on hardware. |
-| The phone app cannot connect | Quit the tray and close the GUI on the computer (or run `orphionctl` without `--keep-connected`). Windows drops an idle link a few seconds after the last program releases it. |
+| The phone app cannot connect | Quit the tray (its menu → Quit) and close the window on the computer (or run `orphionctl` without `--keep-connected`). Windows drops an idle link a few seconds after the last program releases it. |
 | Rename has no visible effect | Reconnect audio; phones cache names. Keep both buds out of the case while renaming. |
 | "Bluetooth error" on Windows | Check Bluetooth is on in Settings and the adapter supports Bluetooth LE. Older adapters with vendor Bluetooth software (e.g. WIDCOMM) are not supported by Windows' BLE API. |
 | Windows build fails with `error calling dlltool` | You are on the GNU toolchain without MinGW-w64 in `PATH`; install it or use MSVC (see [Build on Windows](#option-b-build-on-windows)). |
 | `install.ps1` "cannot be loaded because running scripts is disabled" | Start it with `powershell -ExecutionPolicy Bypass -File install.ps1` as shown, which allows it for that one run only. |
-| Need details | `orphionctl -vv status` prints a full protocol trace. GUI and tray: Linux `RUST_LOG=qcy_client=debug orphion-tray`; Windows (no console window) `$env:RUST_LOG="qcy_client=debug"; Start-Process orphion-tray.exe -RedirectStandardOutput tray.log`. |
+| Need details | `orphionctl -vv status` prints a full protocol trace. Tray (quit the running one first): Linux `RUST_LOG=qcy_client=debug orphion --tray`; Windows (no console window) `$env:RUST_LOG="qcy_client=debug"; Start-Process orphion.exe -ArgumentList --tray -RedirectStandardOutput tray.log`. The window: the same without `--tray`, plus `--no-tray`. |
 
 ## Project layout
 
@@ -447,8 +458,8 @@ crates/
     data/         bundled control panels of all models (panels.json.zz)
   qcy-client/     stateful client, connection manager and the Bluetooth backends
                   (BlueZ on Linux, WinRT on Windows)
-  orphion/        the control panel window (egui)
-  orphion-tray/   tray applet
+  orphion/        the app: control panel window (egui) and, with --tray, the tray
+                  icon (src/tray/: ksni on Linux, tray-icon on Windows)
   orphionctl/     command line
 scripts/
   update-panels.py  downloads QCY's control panels and rebuilds the bundle

@@ -16,16 +16,19 @@ Right-click install.ps1 -> "Run with PowerShell", or in a terminal:
 
     powershell -ExecutionPolicy Bypass -File install.ps1 -Autostart
 
--Autostart starts the tray icon when you sign in; -AddToPath makes the
-`orphionctl` command line tool available in new terminals. You can also simply
-run the .exe files from this folder without installing.
+-Autostart starts the tray icon when you sign in (and right away);
+-AddToPath makes the `orphionctl` command line tool available in new
+terminals. You can also simply run the .exe files from this folder without
+installing.
 
 Programs
 --------
-orphion.exe       The control panel.
-orphion-tray.exe  Tray icon: battery levels in the tooltip, quick noise control,
-                  switches and EQ presets in the menu. Click it to open the
-                  control panel.
+orphion.exe       The control panel. It also starts a tray icon: battery
+                  levels in the tooltip, quick noise control, switches and EQ
+                  presets in the menu; click it to open the control panel.
+                  The tray stays after the window is closed (turn off under
+                  Settings -> Appearance, or run `orphion --no-tray`).
+                  `orphion --tray` starts only the tray.
 orphionctl.exe    Command line, e.g.  orphionctl anc   (lists your model's noise modes)
                   Run `orphionctl --help` for everything it can do.
 
