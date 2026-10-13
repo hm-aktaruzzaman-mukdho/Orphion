@@ -1,0 +1,63 @@
+name: Nightly
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:      # also lets you start it by hand from the Actions tab
+
+permissions:
+  contents: write         # needed to create releases and upload files
+
+# If you push again while a build is running, cancel the old build:
+# only the newest commit matters for a nightly.
+concurrency:
+  group: nightly
+  cancel-in-progress: true
+
+jobs:
+  nightly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-gnu
+
+      - uses: Swatinem/rust-cache@v2      # makes later runs much faster
+
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y mingw-w64 zip
+
+      - uses: mlugg/setup-zig@v2           # zig, for the portable Linux build
+        with:
+          version: 0.15.2
+
+      - uses: taiki-e/install-action@v2    # prebuilt cargo-zigbuild, no compiling
+        with:
+          tool: cargo-zigbuild
+
+      - name: Run tests
+        run: cargo test --workspace
+
+      - name: Build Linux package
+        run: bash packaging/build-linux.sh
+
+      - name: Build Windows package
+        run: bash packaging/build-windows.sh
+
+      - name: Update the nightly release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          short_sha="${GITHUB_SHA::7}"
+          # Remove the previous nightly release and its tag (fine if none exists yet).
+          gh release delete nightly --yes --cleanup-tag || true
+          gh release create nightly \
+            dist/*.tar.gz dist/*.zip \
+            --target "$GITHUB_SHA" \
+            --prerelease \
+            --title "Nightly build ($short_sha)" \
+            --notes "Built automatically from commit $short_sha on main. This is a development build and may be unstable; use a numbered release for everyday use."

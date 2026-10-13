@@ -1,0 +1,59 @@
+name: Release
+
+on:
+    push:
+        tags: ["v*"]
+
+permissions:
+    contents: write
+
+jobs:
+    release:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Check that the tag matches Cargo.toml
+              run: |
+                version=$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)
+                if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+                    echo "Tag $GITHUB_REF_NAME does not match Cargo.toml version $version"
+                    exit 1
+                fi
+            
+            - uses: dtolnary/rust-toolchain@stable
+              with:
+                targets: x86_64-pc-windows-gnu
+
+            - uses: Swatinem/rust-cache@v2
+
+            - name: Install build tools
+              run: |
+                sudo apt-get update
+                sudo apt-get install -y mingw-w64 zip
+
+            - uses: mlugg/setup-zig@v2
+              with:
+                version: 0.15.2
+
+            - uses: taiki-e/install-action@v2
+              with:
+                tool: cargo-zigbuild
+
+            - name: Run tests
+              run: cargo test --workspace
+
+            - name: Build Linux package
+              run: bash packaging/build-linux.sh
+
+            - name: Build Windows package
+              run: bash packaging/build-windows.sh
+
+            - name: Publish the release
+              env:
+                GH_TOKEN: ${{ github.token}}
+              run: |
+                gh release create "$GITHUB_REF_NAME" \
+                    dist/*.tar.gz dist/*.zip \
+                    --title "QCY Earbuds $GITHUB_REF_NAME" \
+                    --generate-notes
