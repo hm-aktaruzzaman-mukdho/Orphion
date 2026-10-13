@@ -248,7 +248,7 @@ impl AncMode {
         match self {
             AncMode::Off => AncSetting::new(Self::MODE_OFF, 0, 0),
             AncMode::NoiseCancelling { scene, level } => {
-                AncSetting::new(Self::MODE_ANC, scene.id(), level.min(scene.max_level()))
+                AncSetting::new(Self::MODE_ANC, scene.id(), level)
             }
             AncMode::Transparency { level } => AncSetting::new(Self::MODE_TRANSPARENCY, 1, level),
             AncMode::VoiceTransparency => AncSetting::new(Self::MODE_TRANSPARENCY, 2, 0),

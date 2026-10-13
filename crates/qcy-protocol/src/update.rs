@@ -30,6 +30,18 @@ pub enum Update {
     ParametricEq(ParametricEq),
     /// How many parametric bands the firmware accepts.
     MaxEqBands(u8),
+    /// The raw payload of a setting, sent for every TLV entry (before its
+    /// typed form) so panel-driven controls can read any setting by id.
+    Setting {
+        id: CommandId,
+        payload: Vec<u8>,
+    },
+    /// The value of a characteristic without a dedicated decoder (legacy
+    /// per-gesture keys, `0x000F` switches, `0x0009` language, …).
+    Characteristic {
+        characteristic: Characteristic,
+        data: Vec<u8>,
+    },
     /// A setting this crate does not decode (yet); kept for logging / debugging.
     Unknown {
         id: CommandId,
@@ -47,13 +59,30 @@ pub fn decode(characteristic: Characteristic, data: &[u8]) -> Result<Vec<Update>
         Characteristic::VERSION => vec![Update::Firmware(FirmwareVersions::parse(data))],
         Characteristic::EQ => vec![Update::GraphicEq(GraphicEq::parse(data)?)],
         Characteristic::KEYS => vec![Update::KeyBindings(KeyBinding::parse_table(data))],
-        Characteristic::SETTINGS | Characteristic::COMMAND => frame::decode(data)?
-            .into_iter()
-            .map(|tlv| decode_entry(&tlv).unwrap_or_else(|_| unknown(&tlv)))
-            .collect(),
-        // Dialect specific characteristics are decoded elsewhere.
-        _ => Vec::new(),
+        Characteristic::SETTINGS | Characteristic::COMMAND => decode_tlvs(frame::decode(data)?),
+        other => vec![Update::Characteristic {
+            characteristic: other,
+            data: data.to_vec(),
+        }],
     })
+}
+
+/// Updates for the entries of a settings frame: the raw [`Update::Setting`]
+/// of each, followed by its typed form.
+pub fn decode_tlvs(entries: Vec<Tlv>) -> Vec<Update> {
+    entries
+        .into_iter()
+        .flat_map(|tlv| {
+            let typed = decode_entry(&tlv).unwrap_or_else(|_| unknown(&tlv));
+            [
+                Update::Setting {
+                    id: tlv.id.into(),
+                    payload: tlv.payload,
+                },
+                typed,
+            ]
+        })
+        .collect()
 }
 
 fn unknown(tlv: &Tlv) -> Update {
@@ -150,7 +179,11 @@ mod tests {
             0x01, 0x02, 0x23, 0x01, 0x00, 0x24, 0x01, 0x01, 0x1f, 0x02, 0x05, 0x00, 0x1d, 0x02,
             0x08, 0x0f, 0x19, 0x04, 0x57, 0x51, 0x30, 0x30,
         ];
-        let updates = decode(Characteristic::SETTINGS, &raw).unwrap();
+        let updates: Vec<Update> = decode(Characteristic::SETTINGS, &raw)
+            .unwrap()
+            .into_iter()
+            .filter(|u| !matches!(u, Update::Setting { .. }))
+            .collect();
         let expected = vec![
             Update::WearDetection(WearDetection {
                 enabled: false,
@@ -184,6 +217,7 @@ mod tests {
     fn malformed_entry_becomes_unknown() {
         // ANC entry with a 1-byte payload is invalid; must not poison the frame.
         let updates = decode(Characteristic::SETTINGS, &[0xFF, 3, 0x17, 1, 9]).unwrap();
-        assert!(matches!(updates[0], Update::Unknown { .. }));
+        assert!(matches!(updates[0], Update::Setting { .. }));
+        assert!(matches!(updates[1], Update::Unknown { .. }));
     }
 }

@@ -25,10 +25,12 @@
 //! See `docs/PROTOCOL.md` at the repository root for the full write-up.
 
 pub mod advert;
+pub mod catalog;
 pub mod command;
 pub mod eq;
 pub mod frame;
 pub mod ids;
+pub mod panel;
 pub mod profile;
 pub mod samples;
 pub mod state;
@@ -38,7 +40,7 @@ pub mod uuids;
 
 mod error;
 
-pub use command::{Command, Write};
+pub use command::{Command, PanelWrite, Write};
 pub use error::ProtocolError;
 pub use ids::CommandId;
 pub use update::Update;

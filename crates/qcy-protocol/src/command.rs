@@ -15,6 +15,16 @@ pub struct Write {
     pub data: Vec<u8>,
 }
 
+/// A write described by a control panel, with how to track its effect.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct PanelWrite {
+    pub write: Write,
+    /// The setting the write changes, read back afterwards.
+    pub setting: Option<CommandId>,
+    /// The value the setting is expected to read back as.
+    pub value: Option<Vec<u8>>,
+}
+
 /// Everything a client can ask the earbuds to do.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Command {
@@ -22,6 +32,9 @@ pub enum Command {
     Request(CommandId),
     /// Switch noise control mode.
     SetAnc(AncMode),
+    /// Legacy noise mode (command `0x0C`, older models): the meaning of each
+    /// value comes from the model's control panel.
+    SetNoiseMode(u8),
     /// Flip one of the simple boolean settings.
     SetToggle(Toggle, bool),
     /// Left/right balance, 0 = full left, 50 = centre, 100 = full right.
@@ -44,8 +57,10 @@ pub enum Command {
         left: u8,
         right: u8,
     },
-    /// Parametric EQ (presets and custom curves on current firmwares).
+    /// Parametric EQ with 7-byte bands (command `0x22`).
     SetParametricEq(ParametricEq),
+    /// Parametric EQ with 6-byte bands (command `0x20`, older firmwares).
+    SetParametricEqV1(ParametricEq),
     /// Legacy graphic EQ on characteristic `0x000B` (older models).
     SetGraphicEq(GraphicEq),
     /// Re-bind touch gestures: `(gesture id, action)` pairs.
@@ -56,6 +71,14 @@ pub enum Command {
     ClearPairing,
     /// Factory reset.
     FactoryReset,
+    /// Writes one setting: `FF len id n payload`. Used for settings that are
+    /// only known from control panels (anti-wind noise, eco mode, …).
+    SetValue {
+        id: CommandId,
+        payload: Vec<u8>,
+    },
+    /// Bytes taken verbatim from a model's control panel.
+    Panel(PanelWrite),
     /// Escape hatch for experiments: write raw bytes.
     Raw(Write),
 }
@@ -77,6 +100,7 @@ impl Command {
                 let s = mode.to_setting();
                 cmd(CommandId::Anc, &[s.mode, s.scene, s.level])
             }
+            Command::SetNoiseMode(m) => cmd(CommandId::NoiseMode, &[*m]),
             Command::SetToggle(toggle, on) => cmd(toggle.command_id(), &[Toggle::encode(*on)]),
             Command::SetBalance(v) => {
                 if *v > 100 {
@@ -116,6 +140,7 @@ impl Command {
             }
             Command::SetVolume { left, right } => cmd(CommandId::Volume, &[*left, *right, 0]),
             Command::SetParametricEq(eq) => cmd(CommandId::MultiEq2, &eq.encode_v2()?),
+            Command::SetParametricEqV1(eq) => cmd(CommandId::MultiEq, &eq.encode_v1()?),
             Command::SetGraphicEq(eq) => Ok(Write {
                 characteristic: C::EQ,
                 data: eq.encode(),
@@ -132,6 +157,8 @@ impl Command {
             Command::ResetDefaults => cmd(CommandId::ResetDefault, &[]),
             Command::ClearPairing => cmd(CommandId::ClearPairing, &[]),
             Command::FactoryReset => cmd(CommandId::FactoryReset, &[]),
+            Command::SetValue { id, payload } => cmd(*id, payload),
+            Command::Panel(p) => Ok(p.write.clone()),
             Command::Raw(w) => Ok(w.clone()),
         }
     }
@@ -141,13 +168,31 @@ impl Command {
     pub fn implied_update(&self) -> Option<Update> {
         Some(match self {
             Command::SetAnc(mode) => Update::Anc(*mode),
+            Command::SetNoiseMode(m) => Update::Setting {
+                id: CommandId::NoiseMode,
+                payload: vec![*m],
+            },
+            Command::SetValue { id, payload } => Update::Setting {
+                id: *id,
+                payload: payload.clone(),
+            },
+            Command::Panel(PanelWrite {
+                setting: Some(id),
+                value: Some(v),
+                ..
+            }) => Update::Setting {
+                id: *id,
+                payload: v.clone(),
+            },
             Command::SetToggle(t, on) => Update::Toggle(*t, *on),
             Command::SetBalance(v) => Update::Balance(*v),
             Command::SetPromptLanguage(code) => Update::PromptLanguage(code.clone()),
             Command::SetDeviceName(name) => Update::DeviceName(name.trim().to_string()),
             Command::SetWearDetection(w) => Update::WearDetection(*w),
             Command::SetAutoPowerOff(a) => Update::AutoPowerOff(*a),
-            Command::SetParametricEq(eq) => Update::ParametricEq(eq.clone()),
+            Command::SetParametricEq(eq) | Command::SetParametricEqV1(eq) => {
+                Update::ParametricEq(eq.clone())
+            }
             Command::SetKeyFunctions(pairs) => Update::KeyBindings(
                 pairs
                     .iter()
@@ -162,6 +207,11 @@ impl Command {
     pub fn confirmation_request(&self) -> Option<CommandId> {
         Some(match self {
             Command::SetAnc(_) => CommandId::Anc,
+            Command::SetNoiseMode(_) => CommandId::NoiseMode,
+            Command::SetValue { id, .. } => *id,
+            Command::Panel(PanelWrite {
+                setting: Some(id), ..
+            }) => *id,
             Command::SetToggle(t, _) => t.command_id(),
             Command::SetBalance(_) => CommandId::Balance,
             Command::SetPromptVolume(_) => CommandId::PromptVolume,
@@ -172,6 +222,7 @@ impl Command {
             Command::SetPowerOffTimer(_) => CommandId::PowerOffTimer,
             Command::SetVolume { .. } => CommandId::Volume,
             Command::SetParametricEq(_) => CommandId::MultiEq2,
+            Command::SetParametricEqV1(_) => CommandId::MultiEq,
             _ => return None,
         })
     }

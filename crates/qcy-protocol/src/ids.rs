@@ -90,6 +90,8 @@ command_ids! {
     PromptVolume = 0x1D,
     /// Camera shutter (`CMDID_TAKEPHOTO`).
     TakePhoto = 0x1E,
+    /// aptX codec switch; the earbuds restart (no constant in the app).
+    Aptx = 0x1B,
     /// Power off after being disconnected for N minutes (`CMDID_STANDBY`).
     AutoPowerOff = 0x1F,
     /// Parametric EQ, 6-byte bands (`CMDID_MULTIEQ`).
@@ -106,6 +108,8 @@ command_ids! {
     AncResult = 0x28,
     /// ANC wear state (`CMDID_ANC_WEAR`).
     AncWear = 0x29,
+    /// Anti-wind noise switch (no constant in the app).
+    AntiWind = 0x2A,
     /// Touch key functions inside a frame (`CMDID_KEYFUN`).
     KeyFunctions = 0x2B,
     /// Wear detection configuration (`CMDID_PEIDAI`, 佩戴 = "wearing").
@@ -120,20 +124,47 @@ command_ids! {
     Version = 0x30,
     /// Environment adaptation (`CMDID_ENV_ADAPTATION`).
     EnvAdaptation = 0x32,
+    /// Unnamed level setting offered as Medium/Normal/High (no constant in
+    /// the app; takes effect after a restart).
+    Level51 = 0x33,
     /// TWS enable (`CMDID_TWS_ENABLE`).
     TwsEnable = 0x34,
+    /// LED switch (`CMDID_LED_SWITCH`).
+    LedSwitch = 0x35,
+    /// LED effect (`CMDID_LED_EFFECT`).
+    LedEffect = 0x36,
+    /// Playback source: 2 = SD card / focus, 4 = aux (`CMDID_PLAY_MODE`).
+    PlayMode = 0x37,
+    /// Bluetooth (0) or focus / SD card (1) mode (`CMDID_FOCUS_MODE`).
+    FocusMode = 0x39,
     /// Synchronise the clock (`CMDID_SYNC_TIME`).
     SyncTime = 0x3E,
+    /// Adaptive volume switch (no constant in the app).
+    AdaptiveVolume = 0x40,
     /// Maximum number of parametric EQ bands supported (`CMDID_MAXEQ_COUNT`).
     MaxEqCount = 0x44,
+    /// Parametric EQ of the left bud only (`CMDID_MULTIEQ_LEFT`).
+    MultiEqLeft = 0x46,
+    /// Parametric EQ of the right bud only (`CMDID_MULTIEQ_RIGHT`).
+    MultiEqRight = 0x47,
     /// In-ear sensitivity (`CMDID_INEAR_SENSITIVITY`).
     InEarSensitivity = 0x48,
+    /// Game mode with optional game EQ sync: `[enabled, sync]` (`CMDID_GAME_CONFIG`).
+    GameConfig = 0x4A,
     /// Paired phones list (`CMDID_PHONE_INFO`).
     PhoneInfo = 0x4D,
     /// Paired phone status (`CMDID_PHONE_STATUS`).
     PhoneStatus = 0x4F,
+    /// Head gestures (`CMDID_HEAD_ACTION`).
+    HeadAction = 0x50,
+    /// Head gesture configuration (`CMDID_SENSOR_CONFIG`).
+    SensorConfig = 0x51,
+    /// Eco mode: ANC off at low battery (no constant in the app).
+    EcoMode = 0x53,
     /// AI ANC (`CMDID_AI_ANC`).
     AiAnc = 0x54,
+    /// Bass enhancement switch (no constant in the app).
+    BassBoost = 0x57,
     /// Hearing health statistics (`CMDID_HEAR_HEALTH`).
     HearHealth = 0x58,
     /// Spatial audio mode (`CMDID_SPACE_AUDIO_MODE`).

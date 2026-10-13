@@ -7,7 +7,7 @@ use crate::types::{
     AncMode, AutoPowerOff, BatteryStatus, FirmwareVersions, KeyBinding, PowerOffTimer,
     PromptVolume, Toggle, Volume, WearDetection,
 };
-use crate::{CommandId, Update};
+use crate::{Characteristic, CommandId, Update};
 
 /// Latest known value of every setting. `None` means "not reported yet".
 #[derive(Debug, Clone, Default, PartialEq)]
@@ -31,6 +31,10 @@ pub struct DeviceState {
     pub max_eq_bands: Option<u8>,
     /// Raw payloads of settings without a decoder, keyed by id.
     pub unknown: BTreeMap<u8, Vec<u8>>,
+    /// Raw payload of every setting reported, keyed by id.
+    pub settings: BTreeMap<u8, Vec<u8>>,
+    /// Last value of characteristics without a dedicated decoder.
+    pub characteristics: BTreeMap<Characteristic, Vec<u8>>,
 }
 
 impl DeviceState {
@@ -72,7 +76,26 @@ impl DeviceState {
             Update::Unknown { id, payload } => {
                 self.unknown.insert(u8::from(id), payload);
             }
+            Update::Setting { id, payload } => {
+                self.settings.insert(u8::from(id), payload);
+            }
+            Update::Characteristic {
+                characteristic,
+                data,
+            } => {
+                self.characteristics.insert(characteristic, data);
+            }
         }
+    }
+
+    /// Raw payload of a setting, if reported.
+    pub fn setting(&self, id: CommandId) -> Option<&[u8]> {
+        self.settings.get(&u8::from(id)).map(Vec::as_slice)
+    }
+
+    /// Whether a setting reads back as "on" (first byte 1, like the app).
+    pub fn setting_on(&self, id: CommandId) -> Option<bool> {
+        self.setting(id).map(|p| p.first() == Some(&1))
     }
 
     pub fn toggle(&self, t: Toggle) -> Option<bool> {
