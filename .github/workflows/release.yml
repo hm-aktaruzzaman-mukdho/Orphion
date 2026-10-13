@@ -21,7 +21,7 @@ jobs:
                     exit 1
                 fi
             
-            - uses: dtolnary/rust-toolchain@stable
+            - uses: dtolnay/rust-toolchain@stable
               with:
                 targets: x86_64-pc-windows-gnu
 

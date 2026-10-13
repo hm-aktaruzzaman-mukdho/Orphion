@@ -8,11 +8,11 @@ on:
 permissions:
   contents: write         # needed to create releases and upload files
 
-# If you push again while a build is running, cancel the old build:
-# only the newest commit matters for a nightly.
+# Runs one at a time: a new push waits for the running build to finish,
+# and only the newest waiting push is kept (older waiting ones are skipped).
 concurrency:
   group: nightly
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   nightly:
