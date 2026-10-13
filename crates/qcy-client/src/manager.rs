@@ -11,12 +11,16 @@
 //! exponential backoff: earbuds reboot after some setting changes (LDAC,
 //! dual device) and disappear while in the case.
 
+use std::sync::Arc;
 use std::time::Duration;
 
-use qcy_protocol::Command;
 use qcy_protocol::advert::MacAddress;
+use qcy_protocol::dialect::{Codec, Context, Dialect, Op};
+use qcy_protocol::panel::{AncControl, ModeKind, Panel};
 use qcy_protocol::profile::DeviceProfile;
 use qcy_protocol::state::DeviceState;
+use qcy_protocol::types::{AncMode, AncSetting, KeyAction, KeyBinding};
+use qcy_protocol::{Command, Update, catalog};
 use tokio::sync::{broadcast, mpsc, watch};
 use tokio::time::sleep;
 use tracing::{info, warn};
@@ -73,18 +77,37 @@ pub struct DeviceInfo {
     pub ble_address: MacAddress,
     pub classic_address: MacAddress,
     pub vendor_id: u16,
+    /// Marketing name of the model, if it is in the catalogue.
+    pub model: Option<&'static str>,
+    pub dialect: Dialect,
+    /// Everything the model offers.
+    pub panel: Arc<Panel>,
     pub profile: &'static DeviceProfile,
+}
+
+impl DeviceInfo {
+    fn new(name: String, ble: MacAddress, classic: MacAddress, vendor_id: u16) -> Self {
+        Self {
+            name,
+            ble_address: ble,
+            classic_address: classic,
+            vendor_id,
+            model: catalog::name(vendor_id),
+            dialect: Dialect::for_vendor(vendor_id),
+            panel: Arc::new(catalog::panel(vendor_id)),
+            profile: qcy_protocol::profile::for_vendor(vendor_id),
+        }
+    }
 }
 
 impl From<&Endpoint> for DeviceInfo {
     fn from(e: &Endpoint) -> Self {
-        Self {
-            name: e.display_name(),
-            ble_address: e.ble_address,
-            classic_address: e.advertisement.classic_address,
-            vendor_id: e.advertisement.vendor_id,
-            profile: e.profile(),
-        }
+        Self::new(
+            e.display_name(),
+            e.ble_address,
+            e.advertisement.classic_address,
+            e.advertisement.vendor_id,
+        )
     }
 }
 
@@ -223,11 +246,13 @@ impl Manager {
 }
 
 impl Manager {
-    /// A manager backed by *simulated* earbuds built from data captured on a
-    /// real MeloBuds Pro ([`qcy_protocol::samples`]). No Bluetooth is used;
-    /// commands are validated by encoding them and then applied to the state.
-    /// Meant for UI development, screenshots and demos.
-    pub fn spawn_demo() -> Self {
+    /// A manager backed by *simulated* earbuds of model `vendor_id` (any
+    /// model of the catalogue). No Bluetooth is used; commands are encoded
+    /// by the model's real codec, so invalid ones are reported, and then
+    /// applied to the state. The MeloBuds Pro (19786) starts from data
+    /// captured on real earbuds ([`qcy_protocol::samples`]), other models
+    /// from their panel defaults. Meant for UI development and screenshots.
+    pub fn spawn_demo(vendor_id: u16) -> Self {
         let (requests_tx, mut requests_rx) = mpsc::unbounded_channel();
         let (snapshot, snapshot_rx) = watch::channel(Snapshot::default());
         let (notices, _) = broadcast::channel(32);
@@ -235,12 +260,18 @@ impl Manager {
         let advert =
             qcy_protocol::advert::Advertisement::parse(&qcy_protocol::samples::ADVERTISEMENT)
                 .expect("sample advertisement is valid");
-        let device = DeviceInfo {
-            name: "QCY MeloBuds Pro (demo)".into(),
-            ble_address: "C4:AC:60:89:A4:B1".parse().expect("valid address"),
-            classic_address: advert.classic_address,
-            vendor_id: advert.vendor_id,
-            profile: qcy_protocol::profile::for_vendor(advert.vendor_id),
+        let name = catalog::name(vendor_id).unwrap_or("QCY earbuds");
+        let device = DeviceInfo::new(
+            format!("{name} (demo)"),
+            "C4:AC:60:89:A4:B1".parse().expect("valid address"),
+            advert.classic_address,
+            vendor_id,
+        );
+        let mut codec = Codec::new(vendor_id, &device.panel);
+        let initial = if vendor_id == advert.vendor_id {
+            qcy_protocol::samples::state()
+        } else {
+            demo_state(&device.panel)
         };
         let demo_notices = notices.clone();
         tokio::spawn(async move {
@@ -250,12 +281,18 @@ impl Manager {
                         s.link = LinkStatus::Connected;
                         s.device = Some(device.clone());
                         if s.state == DeviceState::default() {
-                            s.state = qcy_protocol::samples::state();
+                            s.state = initial.clone();
                         }
                     }),
                     Request::Disconnect => snapshot.send_modify(|s| s.link = LinkStatus::Idle),
                     Request::Send(command) => {
-                        if let Err(e) = command.encode() {
+                        let state = snapshot.borrow().state.clone();
+                        let cx = Context {
+                            state: &state,
+                            max_write_len: 217,
+                            unix_time: 0,
+                        };
+                        if let Err(e) = codec.encode(&command, &cx).map(|ops: Vec<Op>| ops) {
                             demo_notices
                                 .send(Notice::Error(format!("Command failed: {e}")))
                                 .ok();
@@ -295,6 +332,73 @@ impl Manager {
             notices,
         }
     }
+}
+
+/// A plausible starting state for a simulated model: full batteries, the
+/// panel's default noise control, first EQ preset and default key bindings.
+fn demo_state(panel: &Panel) -> DeviceState {
+    let mut s = DeviceState::default();
+    let mut apply = |u| s.apply(u);
+    if let Ok(b) = qcy_protocol::types::BatteryStatus::parse(&[85, 80, 0x80 | 60]) {
+        apply(Update::Battery(b));
+    }
+    let v = qcy_protocol::types::Version(1, 0, 0);
+    apply(Update::Firmware(qcy_protocol::types::FirmwareVersions {
+        left: Some(v),
+        right: Some(v),
+    }));
+    match &panel.anc {
+        Some(AncControl::Scenes(a)) => {
+            if let Some(m) = a
+                .modes
+                .iter()
+                .find(|m| matches!(m.kind, ModeKind::Scenes(_)))
+                .or(a.modes.first())
+            {
+                apply(Update::Anc(AncMode::from_setting(AncSetting::from_packed(
+                    m.default,
+                ))));
+            }
+        }
+        Some(AncControl::Legacy(a)) => {
+            if let Some((_, m)) = a.modes.first() {
+                apply(Update::Setting {
+                    id: qcy_protocol::CommandId::NoiseMode,
+                    payload: vec![*m],
+                });
+            }
+        }
+        Some(AncControl::Percent(a)) => {
+            if let Some(m) = a.modes.first() {
+                apply(Update::Anc(AncMode::from_setting(AncSetting::from_packed(
+                    m.packed(m.max_percent / 2),
+                ))));
+            }
+        }
+        None => {}
+    }
+    if let Some(eq) = &panel.eq
+        && let Some(p) = eq.presets.first()
+    {
+        apply(Update::GraphicEq(qcy_protocol::eq::GraphicEq {
+            preset: p.id,
+            gains: p.gains.iter().map(|g| *g as i8).collect(),
+        }));
+    }
+    let bindings: Vec<KeyBinding> = [&panel.touch_keys, &panel.legacy_keys, &panel.buttons]
+        .into_iter()
+        .flatten()
+        .flat_map(|k| k.slots())
+        .filter_map(|slot| {
+            Some(KeyBinding {
+                gesture_id: slot.event,
+                action: KeyAction::from_id(slot.default.or(slot.choices.first().map(|c| c.0))?),
+            })
+        })
+        .collect();
+    apply(Update::KeyBindings(bindings));
+    apply(Update::Balance(50));
+    s
 }
 
 struct Worker<B: Backend> {

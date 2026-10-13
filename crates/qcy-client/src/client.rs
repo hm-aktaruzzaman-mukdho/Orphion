@@ -1,18 +1,20 @@
 //! High level, stateful client for one pair of earbuds.
 
-use std::sync::Arc;
-use std::time::Duration;
+use std::sync::{Arc, Mutex as StdMutex};
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use futures_util::StreamExt;
+use qcy_protocol::dialect::{Codec, Context, Dialect, Op};
+use qcy_protocol::panel::Panel;
 use qcy_protocol::profile::DeviceProfile;
 use qcy_protocol::state::DeviceState;
-use qcy_protocol::{Characteristic, Command, Update, update};
+use qcy_protocol::{Characteristic, Command, Update, catalog};
 use tokio::sync::{Mutex, watch};
 use tokio::task::JoinHandle;
 use tokio::time::sleep;
 use tracing::{debug, info, warn};
 
-use crate::transport::{Backend, Endpoint, Link, Notification, hex};
+use crate::transport::{Backend, Endpoint, Link, hex};
 use crate::{Error, PlatformLink};
 
 /// Pause between consecutive writes. Writes are unacknowledged, and the
@@ -21,15 +23,9 @@ const WRITE_GAP: Duration = Duration::from_millis(40);
 /// Delay before asking the earbuds to confirm a change. Measured on a
 /// MeloBuds Pro: an ANC switch is not reported back until ~0.5 s later.
 pub const CONFIRM_DELAY: Duration = Duration::from_millis(1000);
-/// Band count used by the app when the firmware does not report one.
-const DEFAULT_MAX_EQ_BANDS: usize = 20;
-
-/// How to verify that a command took effect.
-#[derive(Debug, Clone, Copy)]
-enum Confirm {
-    Request(qcy_protocol::CommandId),
-    Read(Characteristic),
-}
+/// Resets and pairing changes make the earbuds busy for a moment; the app
+/// waits this long before reading everything again.
+const RESET_SETTLE: Duration = Duration::from_millis(2500);
 
 /// Link state changes reported by [`Earbuds::watch_connection`].
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -56,18 +52,30 @@ impl<L: Link> Clone for Earbuds<L> {
 struct Inner<L: Link> {
     session: L,
     endpoint: Endpoint,
+    panel: Arc<Panel>,
+    /// Translates commands and data for this model; shared with the
+    /// notification task (never held across an `.await`).
+    codec: Arc<StdMutex<Codec>>,
     state: watch::Sender<DeviceState>,
     link: watch::Sender<ConnectionEvent>,
     write_lock: Mutex<()>,
-    tasks: Vec<JoinHandle<()>>,
+    tasks: StdMutex<Vec<JoinHandle<()>>>,
 }
 
 impl<L: Link> Drop for Inner<L> {
     fn drop(&mut self) {
-        for t in &self.tasks {
-            t.abort();
+        if let Ok(tasks) = self.tasks.lock() {
+            for t in tasks.iter() {
+                t.abort();
+            }
         }
     }
+}
+
+fn unix_time() -> u32 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map_or(0, |d| d.as_secs() as u32)
 }
 
 impl<L: Link> Earbuds<L> {
@@ -76,9 +84,24 @@ impl<L: Link> Earbuds<L> {
         backend: &B,
         endpoint: &Endpoint,
     ) -> Result<Self, Error> {
-        info!(name = %endpoint.display_name(), address = %endpoint.ble_address, "connecting");
+        let vendor_id = endpoint.advertisement.vendor_id;
+        let dialect = Dialect::for_vendor(vendor_id);
+        info!(
+            name = %endpoint.display_name(),
+            address = %endpoint.ble_address,
+            model = vendor_id,
+            ?dialect,
+            "connecting"
+        );
         let session = backend.open(endpoint).await?;
+        if matches!(dialect, Dialect::JieLi { .. }) && !session.has(Characteristic::RCSP_WRITE) {
+            return Err(Error::NotFound(
+                "the JieLi control service (0xA002) is missing".into(),
+            ));
+        }
 
+        let panel = Arc::new(catalog::panel(vendor_id));
+        let codec = Arc::new(StdMutex::new(Codec::new(vendor_id, &panel)));
         let (state, _) = watch::channel(DeviceState::default());
         let (link, _) = watch::channel(ConnectionEvent::Connected);
 
@@ -87,9 +110,10 @@ impl<L: Link> Earbuds<L> {
 
         let notify_task = {
             let state = state.clone();
+            let codec = Arc::clone(&codec);
             tokio::spawn(async move {
                 while let Some(n) = notifications.next().await {
-                    apply_notification(&state, &n);
+                    apply(&state, &codec, n.characteristic, &n.data);
                 }
             })
         };
@@ -107,13 +131,18 @@ impl<L: Link> Earbuds<L> {
             inner: Arc::new(Inner {
                 session,
                 endpoint: endpoint.clone(),
+                panel,
+                codec,
                 state,
                 link,
                 write_lock: Mutex::new(()),
-                tasks: vec![notify_task, link_task],
+                tasks: StdMutex::new(vec![notify_task, link_task]),
             }),
         };
+        let hello = buds.with_codec(|c| c.connect(unix_time()))?;
+        buds.run(hello).await?;
         buds.refresh().await?;
+        buds.start_polling();
         Ok(buds)
     }
 
@@ -121,8 +150,24 @@ impl<L: Link> Earbuds<L> {
         &self.inner.endpoint
     }
 
+    /// Legacy hard-coded capabilities (superseded by [`Self::panel`]).
     pub fn profile(&self) -> &'static DeviceProfile {
         self.inner.endpoint.profile()
+    }
+
+    /// The model's control panel: everything it offers.
+    pub fn panel(&self) -> Arc<Panel> {
+        Arc::clone(&self.inner.panel)
+    }
+
+    /// How this model is driven.
+    pub fn dialect(&self) -> Dialect {
+        self.with_codec(|c| c.dialect())
+    }
+
+    /// Whether the device exposes a characteristic.
+    pub fn has(&self, c: Characteristic) -> bool {
+        self.inner.session.has(c)
     }
 
     /// Snapshot of the current state.
@@ -144,75 +189,63 @@ impl<L: Link> Earbuds<L> {
         *self.inner.link.borrow() == ConnectionEvent::Connected
     }
 
-    /// Re-reads every characteristic and requests model specific settings.
+    /// Reads every setting the model's panel shows.
     pub async fn refresh(&self) -> Result<(), Error> {
-        let s = &self.inner.session;
-        for c in [
-            Characteristic::VERSION,
-            Characteristic::BATTERY,
-            Characteristic::SETTINGS,
-            Characteristic::KEYS,
-            Characteristic::EQ,
-        ] {
-            if !s.has(c) {
-                continue;
-            }
-            match s.read(c).await {
-                Ok(data) => self.apply_raw(c, &data),
-                Err(e) => warn!(?c, "read failed: {e}"),
-            }
-        }
-        for &id in self.profile().requested_settings {
-            self.write(&Command::Request(id).encode()?).await?;
-        }
-        Ok(())
+        let session = &self.inner.session;
+        let ops = self.with_codec(|c| c.refresh(&self.inner.panel, |ch| session.has(ch)))?;
+        self.run(ops).await
     }
 
     /// Executes a command.
     ///
     /// The state is updated optimistically right away; [`CONFIRM_DELAY`]
-    /// later the earbuds are asked to report the setting back in the
-    /// background, which corrects the state if the change did not apply.
+    /// later the setting is read back in the background, which corrects the
+    /// state if the change did not apply.
     pub async fn send(&self, command: Command) -> Result<(), Error> {
         self.ensure_connected()?;
-        let command = self.prepare(command);
-        let write = command.encode()?;
+        let ops = {
+            let state = self.inner.state.borrow().clone();
+            let cx = Context {
+                state: &state,
+                max_write_len: self.inner.session.max_write_len(),
+                unix_time: unix_time(),
+            };
+            self.with_codec(|c| c.encode(&command, &cx))?
+        };
         debug!(?command, "sending");
-        self.write(&write).await?;
+        self.run(ops).await?;
 
         if let Some(update) = command.implied_update() {
             self.inner.state.send_modify(|s| s.apply(update));
         }
 
-        // Ask the earbuds to report the setting back, so the state reflects
-        // what really happened. Mode changes (ANC in particular) take a moment
-        // to apply; asking too early returns the previous value.
-        let confirm = match write.characteristic {
-            // These have no "request" command; read them back instead.
-            Characteristic::KEYS | Characteristic::EQ => Some(Confirm::Read(write.characteristic)),
-            _ => command.confirmation_request().map(Confirm::Request),
-        };
-        if let Some(confirm) = confirm {
-            let this = self.clone();
-            tokio::spawn(async move {
-                sleep(CONFIRM_DELAY).await;
-                if let Err(e) = this.confirm(confirm).await {
-                    debug!("confirmation failed: {e}");
+        let this = self.clone();
+        let resets = matches!(
+            command,
+            Command::ResetDefaults | Command::ClearPairing | Command::FactoryReset
+        ) || matches!(
+            &command,
+            Command::Panel(p) if p.setting.is_none() && p.value.is_none()
+        );
+        tokio::spawn(async move {
+            if resets {
+                // Like the app: give the earbuds time, then re-read it all.
+                sleep(RESET_SETTLE).await;
+                if let Err(e) = this.refresh().await {
+                    debug!("re-reading after reset failed: {e}");
                 }
-            });
-        }
-        Ok(())
-    }
-
-    async fn confirm(&self, confirm: Confirm) -> Result<(), Error> {
-        self.ensure_connected()?;
-        match confirm {
-            Confirm::Read(c) => {
-                let data = self.inner.session.read(c).await?;
-                self.apply_raw(c, &data);
+                return;
             }
-            Confirm::Request(id) => self.write(&Command::Request(id).encode()?).await?,
-        }
+            sleep(CONFIRM_DELAY).await;
+            let confirm = this.with_codec(|c| c.confirm(&command));
+            let result = match confirm {
+                Ok(ops) => this.run(ops).await,
+                Err(e) => Err(e.into()),
+            };
+            if let Err(e) = result {
+                debug!("confirmation failed: {e}");
+            }
+        });
         Ok(())
     }
 
@@ -229,56 +262,90 @@ impl<L: Link> Earbuds<L> {
         }
     }
 
-    /// Adapts a command to the link and firmware (EQ padding, like the app).
-    fn prepare(&self, command: Command) -> Command {
-        match command {
-            Command::SetParametricEq(eq) => {
-                let max_len = self.inner.session.max_write_len();
-                let firmware_max = self
-                    .inner
-                    .state
-                    .borrow()
-                    .max_eq_bands
-                    .map_or(DEFAULT_MAX_EQ_BANDS, usize::from);
-                // `(mtu - 7) / 6` is the app's formula; additionally make sure
-                // the 7-byte bands plus headers really fit into one write.
-                let by_mtu = max_len.saturating_sub(7) / 6;
-                let fits = max_len.saturating_sub(4 + 3) / 7;
-                let total = by_mtu.min(firmware_max).min(fits);
-                Command::SetParametricEq(eq.padded(total))
+    fn with_codec<T>(&self, f: impl FnOnce(&mut Codec) -> T) -> T {
+        let mut codec = self.inner.codec.lock().unwrap_or_else(|e| e.into_inner());
+        f(&mut codec)
+    }
+
+    /// Polls status the model does not notify (JieLi battery, some ANC).
+    fn start_polling(&self) {
+        let Some(interval) = self.with_codec(|c| c.poll_interval()) else {
+            return;
+        };
+        // A weak handle, so the task does not keep the link alive.
+        let weak = Arc::downgrade(&self.inner);
+        let task = tokio::spawn(async move {
+            loop {
+                sleep(interval).await;
+                let Some(inner) = weak.upgrade() else { break };
+                let buds = Earbuds { inner };
+                if !buds.is_connected() {
+                    break;
+                }
+                let ops = buds.with_codec(|c| c.poll());
+                match ops {
+                    Ok(ops) => {
+                        if let Err(e) = buds.run(ops).await {
+                            debug!("poll failed: {e}");
+                        }
+                    }
+                    Err(e) => debug!("poll failed: {e}"),
+                }
             }
-            other => other,
+        });
+        if let Ok(mut tasks) = self.inner.tasks.lock() {
+            tasks.push(task);
         }
     }
 
-    async fn write(&self, write: &qcy_protocol::Write) -> Result<(), Error> {
-        let _guard = self.inner.write_lock.lock().await;
-        self.inner.session.write(write).await?;
-        sleep(WRITE_GAP).await;
+    /// Runs GATT operations in order. Operations on characteristics the
+    /// device does not have are skipped, like the app silently does.
+    async fn run(&self, ops: Vec<Op>) -> Result<(), Error> {
+        let session = &self.inner.session;
+        for op in ops {
+            match op {
+                Op::Read(c) => {
+                    if !session.has(c) {
+                        continue;
+                    }
+                    match session.read(c).await {
+                        Ok(data) => apply(&self.inner.state, &self.inner.codec, c, &data),
+                        Err(e) => warn!(?c, "read failed: {e}"),
+                    }
+                }
+                Op::Write(w) => {
+                    if !session.has(w.characteristic) {
+                        debug!(c = ?w.characteristic, "not on this device; write skipped");
+                        continue;
+                    }
+                    let _guard = self.inner.write_lock.lock().await;
+                    session.write(&w).await?;
+                    sleep(WRITE_GAP).await;
+                }
+            }
+        }
         Ok(())
-    }
-
-    fn apply_raw(&self, c: Characteristic, data: &[u8]) {
-        apply_notification(
-            &self.inner.state,
-            &Notification {
-                characteristic: c,
-                data: data.to_vec(),
-            },
-        );
     }
 }
 
-fn apply_notification(state: &watch::Sender<DeviceState>, n: &Notification) {
-    match update::decode(n.characteristic, &n.data) {
-        Ok(updates) => {
-            for u in &updates {
-                if let Update::Unknown { id, payload } = u {
-                    debug!(id = %id.name(), payload = %hex(payload), "undecoded setting");
-                }
-            }
-            state.send_modify(|s| updates.into_iter().for_each(|u| s.apply(u)));
-        }
-        Err(e) => warn!(c = ?n.characteristic, data = %hex(&n.data), "cannot decode: {e}"),
+fn apply(
+    state: &watch::Sender<DeviceState>,
+    codec: &StdMutex<Codec>,
+    c: Characteristic,
+    data: &[u8],
+) {
+    let updates = codec
+        .lock()
+        .unwrap_or_else(|e| e.into_inner())
+        .decode(c, data);
+    if updates.is_empty() {
+        debug!(?c, data = %hex(data), "nothing decoded");
+        return;
     }
+    for u in &updates {
+        if let Update::Unknown { id, payload } = u {
+            debug!(id = %id.name(), payload = %hex(payload), "undecoded setting");
+        }
+    }
+    state.send_modify(|s| updates.into_iter().for_each(|u| s.apply(u)));
 }

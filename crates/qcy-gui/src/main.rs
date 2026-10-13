@@ -11,7 +11,9 @@
 //! Options:
 //!
 //! * `--device <MAC>`: use specific earbuds (audio or BLE address)
-//! * `--demo`: simulated earbuds (captured MeloBuds Pro data), no Bluetooth
+//! * `--demo [MODEL]`: simulated earbuds, no Bluetooth. `MODEL` is a model id
+//!   from the catalogue (`qcyctl models`); the default is the MeloBuds Pro,
+//!   simulated from data captured on real earbuds
 //! * `--appearance system|light|dark`: override the saved theme for this run
 //! * `--screenshots <DIR>`: save every tab as `DIR/<tab>.ppm` once connected, then quit
 
@@ -27,6 +29,8 @@ use qcy_client::Selector;
 use qcy_client::manager::Manager;
 use tracing_subscriber::EnvFilter;
 
+/// Model simulated by `--demo` without a model id: the MeloBuds Pro.
+const DEMO_MODEL: u16 = 19786;
 const APP_ID: &str = "io.github.qcy_linux.Control";
 
 fn main() -> Result<()> {
@@ -39,15 +43,19 @@ fn main() -> Result<()> {
     let selector = arg_value("--device")
         .and_then(|a| a.parse().ok())
         .map_or(Selector::Auto, Selector::Address);
-    let demo = std::env::args().any(|a| a == "--demo");
+    let demo = std::env::args().any(|a| a == "--demo").then(|| {
+        arg_value("--demo")
+            .and_then(|m| m.parse::<u16>().ok())
+            .unwrap_or(DEMO_MODEL)
+    });
 
     let runtime = tokio::runtime::Builder::new_multi_thread()
         .worker_threads(2)
         .enable_all()
         .build()?;
     let manager = runtime.block_on(async {
-        if demo {
-            Manager::spawn_demo()
+        if let Some(model) = demo {
+            Manager::spawn_demo(model)
         } else {
             Manager::spawn()
         }

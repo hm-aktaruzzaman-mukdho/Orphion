@@ -51,11 +51,13 @@ impl Endpoint {
         profile::for_vendor(self.advertisement.vendor_id)
     }
 
-    /// Best human readable name.
+    /// Best human readable name: the paired name, else the model's.
     pub fn display_name(&self) -> String {
-        self.name
-            .clone()
-            .unwrap_or_else(|| self.profile().name.to_string())
+        self.name.clone().unwrap_or_else(|| {
+            qcy_protocol::catalog::name(self.advertisement.vendor_id)
+                .unwrap_or("QCY earbuds")
+                .to_string()
+        })
     }
 
     pub fn matches(&self, selector: &Selector) -> bool {
