@@ -1,6 +1,6 @@
 [package]
 name = "orphion"
-description = "Orphion: desktop control panel for QCY earbuds"
+description = "Orphion: control panel and tray icon for QCY earbuds"
 version.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -17,7 +17,7 @@ anyhow.workspace = true
 eframe.workspace = true
 material-colors = "0.5"
 egui_material_icons = { version = "0.8", default-features = false, features = ["filled", "outline"] }
-tokio.workspace = true
+tokio = { workspace = true, features = ["signal"] }
 tracing.workspace = true
 tracing-subscriber.workspace = true
 
@@ -25,6 +25,13 @@ tracing-subscriber.workspace = true
 # window to draw its own title bar; eframe disables winit's default for it.
 [target.'cfg(target_os = "linux")'.dependencies]
 winit = { version = "0.30", default-features = false, features = ["wayland-csd-adwaita"] }
+# Tray mode: KDE / StatusNotifierItem.
+ksni.workspace = true
+
+# Tray mode: notification-area icon and its message loop.
+[target.'cfg(windows)'.dependencies]
+tray-icon = { version = "0.26", default-features = false }
+windows = { version = "0.62", features = ["Win32_Foundation", "Win32_UI_WindowsAndMessaging"] }
 
 [build-dependencies]
 embed-resource = "3"

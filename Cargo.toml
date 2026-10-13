@@ -5,7 +5,6 @@ members = [
     "crates/qcy-client",
     "crates/orphionctl",
     "crates/orphion",
-    "crates/orphion-tray",
 ]
 
 [workspace.package]

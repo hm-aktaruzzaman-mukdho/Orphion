@@ -7,8 +7,8 @@ use qcy_client::manager::{Manager, Snapshot};
 use tokio::sync::mpsc;
 use tracing::info;
 
-use crate::menu::{self, Action, Entry};
-use crate::window::GuiWindow;
+use super::menu::{self, Action, Entry};
+use super::window::GuiWindow;
 
 struct QcyTray {
     manager: Manager,
@@ -93,7 +93,7 @@ impl ksni::Tray for QcyTray {
 /// The application icon as StatusNotifierItem pixmap (ARGB32, network byte
 /// order), converted from `assets/icon-64.rgba`.
 fn app_icon() -> ksni::Icon {
-    const RGBA: &[u8] = include_bytes!("../../../assets/icon-64.rgba");
+    const RGBA: &[u8] = include_bytes!("../../../../assets/icon-64.rgba");
     let data = RGBA
         .chunks_exact(4)
         .flat_map(|px| [px[3], px[0], px[1], px[2]])

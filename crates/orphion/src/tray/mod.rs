@@ -1,19 +1,18 @@
-// A background program: no console window on Windows.
-#![cfg_attr(windows, windows_subsystem = "windows")]
-
-//! `orphion-tray` – tray applet for QCY earbuds.
+//! Tray mode (`orphion --tray`): the tray icon alone, without a window.
 //!
 //! Shows battery levels in the tooltip and offers quick noise control,
-//! gaming mode and EQ presets from the menu; clicking the icon opens the full
-//! control panel (`orphion`). On Linux, scrolling over the icon also cycles
-//! noise control.
+//! switches and EQ presets from the menu; clicking the icon opens the full
+//! control panel (this program without `--tray`). On Linux, scrolling over
+//! the icon also cycles noise control.
 //!
 //! It keeps reconnecting in the background, so it can be started with the
 //! desktop session and simply picks the earbuds up whenever they are in use.
+//! Nothing here touches eframe or the GPU stack.
 //!
 //! * [`menu`]: what the tray shows and does (platform-neutral)
 //! * `sni`: Linux renderer (KDE / StatusNotifierItem)
 //! * `win`: Windows renderer (notification area)
+//! * [`window`]: starting the control panel from the tray
 
 mod menu;
 #[cfg(target_os = "linux")]
@@ -29,7 +28,8 @@ use qcy_client::Selector;
 use qcy_client::manager::Manager;
 use tracing_subscriber::EnvFilter;
 
-fn main() -> Result<()> {
+/// Runs the tray until the user picks "Quit" (or presses Ctrl+C on Linux).
+pub fn run() -> Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter(
             EnvFilter::try_from_default_env()

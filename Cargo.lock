@@ -1990,22 +1990,8 @@ dependencies = [
  "eframe",
  "egui_material_icons",
  "embed-resource",
- "material-colors",
- "qcy-client",
- "qcy-protocol",
- "tokio",
- "tracing",
- "tracing-subscriber",
- "winit",
-]
-
-[[package]]
-name = "orphion-tray"
-version = "0.2.0"
-dependencies = [
- "anyhow",
- "embed-resource",
  "ksni",
+ "material-colors",
  "qcy-client",
  "qcy-protocol",
  "tokio",
@@ -2013,6 +1999,7 @@ dependencies = [
  "tracing-subscriber",
  "tray-icon",
  "windows",
+ "winit",
 ]
 
 [[package]]

@@ -1,15 +1,22 @@
 // A GUI program: no console window on Windows.
 #![cfg_attr(windows, windows_subsystem = "windows")]
 
-//! `orphion` – desktop control panel for QCY earbuds.
+//! `orphion` – control panel and tray icon for QCY earbuds.
 //!
-//! Threading model: egui owns the main thread; a tokio runtime runs in the
-//! background and hosts the [`Manager`], which talks to the Bluetooth stack. The UI only
-//! reads [`Snapshot`](qcy_client::manager::Snapshot)s and queues commands, so
-//! it never blocks on Bluetooth.
+//! One program, two modes, picked before any window or GPU state exists:
+//!
+//! * the control panel window (default);
+//! * `--tray`: only the tray icon ([`tray`]).
+//!
+//! Threading model of the window: egui owns the main thread; a tokio runtime
+//! runs in the background and hosts the [`Manager`], which talks to the
+//! Bluetooth stack. The UI only reads
+//! [`Snapshot`](qcy_client::manager::Snapshot)s and queues commands, so it
+//! never blocks on Bluetooth.
 //!
 //! Options:
 //!
+//! * `--tray`: run the tray icon instead of the window
 //! * `--device <MAC>`: use specific earbuds (audio or BLE address)
 //! * `--demo [MODEL]`: simulated earbuds, no Bluetooth. `MODEL` is a model id
 //!   from the catalogue (`orphionctl models`); the default is the MeloBuds Pro,
@@ -18,9 +25,11 @@
 //! * `--screenshots <DIR>`: save every tab as `DIR/<tab>.ppm` once connected, then quit
 
 mod app;
+mod args;
 mod capture;
 mod material;
 mod prefs;
+mod tray;
 mod views;
 mod widgets;
 
@@ -34,6 +43,15 @@ const DEMO_MODEL: u16 = 19786;
 const APP_ID: &str = "io.github.orphion.Orphion";
 
 fn main() -> Result<()> {
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    match args::mode(&args) {
+        args::Mode::Tray => tray::run(),
+        args::Mode::Window => run_window(),
+    }
+}
+
+/// The control panel window.
+fn run_window() -> Result<()> {
     tracing_subscriber::fmt()
         .with_env_filter(
             EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("warn,qcy=info")),
@@ -85,7 +103,7 @@ fn main() -> Result<()> {
     );
 
     // Release the BLE link so the phone app can connect again. A running
-    // `orphion-tray` notices and reconnects on its own.
+    // tray notices and reconnects on its own.
     runtime.block_on(manager.shutdown(std::time::Duration::from_secs(2)));
     runtime.shutdown_timeout(std::time::Duration::from_millis(500));
     result.map_err(|e| anyhow::anyhow!("{e}"))
@@ -93,5 +111,6 @@ fn main() -> Result<()> {
 
 /// Value following `flag` on the command line, e.g. `--device <MAC>`.
 pub fn arg_value(flag: &str) -> Option<String> {
-    std::env::args().skip_while(|a| a != flag).nth(1)
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    args::value(&args, flag)
 }

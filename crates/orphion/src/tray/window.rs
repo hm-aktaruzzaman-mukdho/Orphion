@@ -1,4 +1,4 @@
-//! Launching the control panel (`orphion`) from the tray.
+//! Opening the control panel from the tray.
 
 use std::path::PathBuf;
 use std::process::{Child, Command};
@@ -21,20 +21,16 @@ impl GuiWindow {
                 return;
             }
         }
-        match Command::new(gui_binary()).spawn() {
+        match Command::new(this_program()).spawn() {
             Ok(child) => self.child = Some(child),
-            Err(e) => warn!("cannot start orphion: {e}"),
+            Err(e) => warn!("cannot start the control panel: {e}"),
         }
     }
 }
 
-/// `orphion` (`orphion.exe` on Windows) next to this executable, otherwise
-/// from `PATH`.
-fn gui_binary() -> PathBuf {
-    let file = format!("orphion{}", std::env::consts::EXE_SUFFIX);
+/// This executable, which shows the window when started without `--tray`;
+/// `orphion` from `PATH` if its location is unknown.
+fn this_program() -> PathBuf {
     std::env::current_exe()
-        .ok()
-        .and_then(|exe| exe.parent().map(|dir| dir.join(&file)))
-        .filter(|p| p.exists())
-        .unwrap_or_else(|| PathBuf::from(file))
+        .unwrap_or_else(|_| PathBuf::from(format!("orphion{}", std::env::consts::EXE_SUFFIX)))
 }

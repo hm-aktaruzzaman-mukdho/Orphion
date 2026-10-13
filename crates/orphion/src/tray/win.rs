@@ -16,11 +16,11 @@ use windows::Win32::UI::WindowsAndMessaging::{
     DispatchMessageW, MSG, PM_REMOVE, PeekMessageW, TranslateMessage, WM_QUIT,
 };
 
-use crate::menu::{self, Action, Entry};
-use crate::window::GuiWindow;
+use super::menu::{self, Action, Entry};
+use super::window::GuiWindow;
 
 /// 32×32 RGBA rendering of `assets/orphion.png`.
-const ICON_RGBA: &[u8] = include_bytes!("../../../assets/icon-32.rgba");
+const ICON_RGBA: &[u8] = include_bytes!("../../../../assets/icon-32.rgba");
 /// How often to look for state changes between window messages.
 const TICK: Duration = Duration::from_millis(40);
 /// Windows truncates tray tooltips at 127 characters.
