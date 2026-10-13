@@ -4,6 +4,7 @@
 //! one action and (unless `--keep-connected`) closes the link again.
 
 mod cli;
+mod controls;
 mod print;
 
 use std::time::Duration;
@@ -12,17 +13,38 @@ use anyhow::{Context, Result, bail};
 use clap::Parser;
 use qcy_client::transport::Backend;
 use qcy_client::{Earbuds, Platform, Selector};
-use qcy_protocol::eq::ParametricEq;
-use qcy_protocol::types::{AncMode, AutoPowerOff, Gesture, WearDetection, WearMusicBehavior};
-use qcy_protocol::{Characteristic, Command, Write};
+use qcy_protocol::panel::{ActionKind, ItemKind};
+use qcy_protocol::types::{WearDetection, WearMusicBehavior};
+use qcy_protocol::{Characteristic, Command, PanelWrite, Write, catalog};
 use tracing_subscriber::EnvFilter;
 
-use crate::cli::{AncArg, CharArg, Cli, Cmd, EqCmd, KeysCmd, ResetArg};
+use crate::cli::{CharArg, Cli, Cmd, EqCmd, KeysCmd, ResetArg};
 
 #[tokio::main]
 async fn main() -> Result<()> {
     let cli = Cli::parse();
     init_logging(cli.verbose);
+
+    // Catalogue lookups need no Bluetooth.
+    match &cli.command {
+        Some(Cmd::Models { filter }) => {
+            let filter = filter.as_deref().map(str::to_lowercase);
+            for m in catalog::models() {
+                if filter
+                    .as_ref()
+                    .is_none_or(|f| m.name.to_lowercase().contains(f))
+                {
+                    println!("{:>6}  {:<8} {}", m.id, format!("{:?}", m.chip), m.name);
+                }
+            }
+            return Ok(());
+        }
+        Some(Cmd::Panel { model: Some(id) }) => {
+            print::panel(*id, &catalog::panel(*id));
+            return Ok(());
+        }
+        _ => {}
+    }
 
     let platform = Platform::init()
         .await
@@ -43,7 +65,7 @@ async fn main() -> Result<()> {
     let endpoint = platform.find(&selector, timeout).await?;
     let buds = Earbuds::connect(&platform, &endpoint).await?;
     // Give replies to the initial requests a moment to arrive.
-    tokio::time::sleep(Duration::from_millis(400)).await;
+    tokio::time::sleep(Duration::from_millis(600)).await;
 
     let result = run(&buds, cli.command.unwrap_or(Cmd::Status)).await;
 
@@ -54,14 +76,18 @@ async fn main() -> Result<()> {
 }
 
 async fn run(buds: &Earbuds, cmd: Cmd) -> Result<()> {
-    let profile = buds.profile();
+    let panel = buds.panel();
+    let model = buds.endpoint().advertisement.vendor_id;
     let name = buds.endpoint().display_name();
+    let has = |c: Characteristic| buds.has(c);
+    let status = |s: &qcy_protocol::state::DeviceState| print::status(&name, model, &panel, s, has);
 
     match cmd {
-        Cmd::Scan => unreachable!("handled before connecting"),
-        Cmd::Status => print::status(&name, profile, &buds.state()),
+        Cmd::Scan | Cmd::Models { .. } => unreachable!("handled before connecting"),
+        Cmd::Panel { .. } => print::panel(model, &panel),
+        Cmd::Status => status(&buds.state()),
         Cmd::Monitor => {
-            print::status(&name, profile, &buds.state());
+            status(&buds.state());
             let mut rx = buds.watch();
             let mut link = buds.watch_connection();
             loop {
@@ -69,7 +95,7 @@ async fn run(buds: &Earbuds, cmd: Cmd) -> Result<()> {
                     changed = rx.changed() => {
                         changed?;
                         println!("――――――――――――――――――――――――――――――――");
-                        print::status(&name, profile, &rx.borrow_and_update());
+                        status(&rx.borrow_and_update());
                     }
                     _ = link.changed() => bail!("connection lost"),
                     _ = tokio::signal::ctrl_c() => break,
@@ -77,80 +103,108 @@ async fn run(buds: &Earbuds, cmd: Cmd) -> Result<()> {
             }
         }
         Cmd::Anc { mode, scene, level } => {
-            let mode = match mode {
-                AncArg::Off => AncMode::Off,
-                AncArg::On => AncMode::NoiseCancelling {
-                    scene: scene.into(),
-                    level: level.unwrap_or(0),
-                },
-                AncArg::Transparency => {
-                    let default = profile.anc.map_or(4, |a| a.default_transparency_level);
-                    AncMode::Transparency {
-                        level: level.unwrap_or(default),
+            let Some(mode) = mode else {
+                controls::list_anc(&panel);
+                return Ok(());
+            };
+            let command = controls::anc(&panel, &mode, scene.as_deref(), level)?;
+            send_and_report(buds, command).await?;
+            println!(
+                "Noise control: {}",
+                controls::describe_anc(&panel, &buds.state()).unwrap_or_else(|| "unknown".into())
+            );
+        }
+        Cmd::Eq { action } => {
+            let eq = panel.eq.as_ref().context("this model has no equalizer")?;
+            match action.unwrap_or(EqCmd::Show) {
+                EqCmd::Show => print::eq(eq, &buds.state()),
+                EqCmd::List => {
+                    for p in &eq.presets {
+                        println!("{:>3}  {}", p.id, p.name);
                     }
                 }
-                AncArg::Voice => AncMode::VoiceTransparency,
-            };
-            send_and_report(buds, Command::SetAnc(mode)).await?;
-            println!("Noise control: {}", describe(buds.state().anc));
+                EqCmd::Preset { name, yes } => {
+                    let preset = eq
+                        .presets
+                        .iter()
+                        .find(|p| {
+                            controls::slug(&p.name) == controls::slug(&name)
+                                || name.parse() == Ok(p.id)
+                        })
+                        .with_context(|| {
+                            format!("unknown preset {name:?}; see `qcyctl eq list`")
+                        })?;
+                    if let Some(w) = &preset.warning
+                        && !yes
+                    {
+                        bail!("{w}\nAdd --yes to apply it anyway.");
+                    }
+                    for command in eq.apply_preset(preset) {
+                        send_and_report(buds, command).await?;
+                    }
+                    print::eq(eq, &buds.state());
+                }
+                EqCmd::Game { name } => {
+                    let game = panel
+                        .game_eq
+                        .as_ref()
+                        .context("this model has no game EQ")?;
+                    let preset = game
+                        .presets
+                        .iter()
+                        .find(|p| controls::slug(&p.name).starts_with(&controls::slug(&name)))
+                        .with_context(|| format!("unknown game preset {name:?}"))?;
+                    for command in game.apply_preset(preset) {
+                        send_and_report(buds, command).await?;
+                    }
+                }
+                EqCmd::Custom { gains } => {
+                    if gains.len() != eq.bands.len() {
+                        let labels: Vec<&str> = eq.bands.iter().map(|b| b.label.as_str()).collect();
+                        bail!(
+                            "this model's EQ has {} bands ({}); got {} gains",
+                            eq.bands.len(),
+                            labels.join(", "),
+                            gains.len()
+                        );
+                    }
+                    send_and_report(buds, eq.apply_custom(&gains)).await?;
+                    print::eq(eq, &buds.state());
+                }
+            }
         }
-        Cmd::Eq { action } => match action {
-            EqCmd::Show => print::eq(profile, &buds.state()),
-            EqCmd::List => {
-                for p in profile.eq_presets {
-                    println!("{:>3}  {}", p.id, p.name);
+        Cmd::Set { name, value, yes } => {
+            let settings = controls::settings(&panel);
+            let (Some(name), Some(value)) = (name, value) else {
+                let s = buds.state();
+                for (slug, item) in &settings {
+                    println!(
+                        "{slug:<28} {:<24} [{}]",
+                        controls::value(item, &s),
+                        controls::accepted(item)
+                    );
                 }
+                return Ok(());
+            };
+            let item = *controls::find(&settings, &name, "setting")?;
+            let command = controls::command(item, &value, &buds.state())?;
+            if controls::restarts(item) && !yes {
+                bail!(
+                    "changing {} restarts the earbuds; add --yes to go ahead",
+                    item.title
+                );
             }
-            EqCmd::Preset { name } => {
-                let preset = profile
-                    .eq_presets
-                    .iter()
-                    .find(|p| p.name.eq_ignore_ascii_case(&name) || name.parse() == Ok(p.id))
-                    .with_context(|| format!("unknown preset {name:?}; see `qcyctl eq list`"))?;
-                if let Some(w) = preset.warning {
-                    eprintln!("Note: {w}");
-                }
-                send_and_report(buds, Command::SetParametricEq(preset.to_parametric())).await?;
-                print::eq(profile, &buds.state());
-            }
-            EqCmd::Custom { gains } => {
-                let gains: [i8; 10] = gains.try_into().expect("clap enforces 10 values");
-                send_and_report(
-                    buds,
-                    Command::SetParametricEq(ParametricEq::from_graphic(&gains)),
-                )
-                .await?;
-                print::eq(profile, &buds.state());
-            }
-        },
-        Cmd::Toggle { feature, state } => {
-            let toggle = feature.into();
-            if let Some(w) = profile.toggle_warning(toggle) {
+            if let ItemKind::Switch(sw) = &item.kind
+                && let Some(w) = &sw.warning
+            {
                 eprintln!("Note: {w}");
             }
-            send_and_report(buds, Command::SetToggle(toggle, state.is_on())).await?;
-            println!(
-                "{}: {}",
-                toggle.label(),
-                on_off(buds.state().toggle(toggle))
-            );
+            send_and_report(buds, command).await?;
+            println!("{}: {}", item.title, controls::value(item, &buds.state()));
         }
         Cmd::Balance { value } => {
             send_and_report(buds, Command::SetBalance(value)).await?;
             println!("Balance: {:?}", buds.state().balance);
-        }
-        Cmd::PromptVolume { level } => {
-            send_and_report(buds, Command::SetPromptVolume(level)).await?;
-            println!("Prompt volume: {:?}", buds.state().prompt_volume);
-        }
-        Cmd::Language { code } => {
-            let code = profile
-                .prompt_languages
-                .iter()
-                .find(|c| c.label.eq_ignore_ascii_case(&code))
-                .map_or(code.to_uppercase(), |c| c.value.to_string());
-            send_and_report(buds, Command::SetPromptLanguage(code)).await?;
-            println!("Prompt language: {:?}", buds.state().prompt_language);
         }
         Cmd::Rename { name } => {
             send_and_report(buds, Command::SetDeviceName(name)).await?;
@@ -175,48 +229,40 @@ async fn run(buds: &Earbuds, cmd: Cmd) -> Result<()> {
             send_and_report(buds, Command::SetWearDetection(new)).await?;
             println!("Wear detection: {:?}", buds.state().wear_detection);
         }
-        Cmd::AutoOff { minutes } => {
-            let value = if minutes.eq_ignore_ascii_case("never") {
-                AutoPowerOff::Never
-            } else {
-                AutoPowerOff::After {
-                    minutes: minutes.parse().context("expected minutes or `never`")?,
-                }
-            };
-            send_and_report(buds, Command::SetAutoPowerOff(value)).await?;
-            println!(
-                "Auto power off: {}",
-                buds.state()
-                    .auto_power_off
-                    .map_or("?".into(), |a| a.label())
-            );
-        }
-        Cmd::SleepTimer { minutes } => {
-            send_and_report(buds, Command::SetPowerOffTimer(minutes)).await?;
-            println!("Sleep timer: {:?}", buds.state().power_off_timer);
-        }
         Cmd::Keys { action } => match action.unwrap_or(KeysCmd::Show) {
-            KeysCmd::Show => print::keys(&buds.state()),
+            KeysCmd::Show => print::keys(&panel, &buds.state(), has),
             KeysCmd::Set { gesture, action } => {
-                let gesture: Gesture = gesture.into();
-                send_and_report(
-                    buds,
-                    Command::SetKeyFunctions(vec![(gesture.id(), action.into())]),
-                )
-                .await?;
-                print::keys(&buds.state());
+                let gestures = controls::gestures(&panel, has);
+                let slot = *controls::find(&gestures, &gesture, "gesture")?;
+                send_and_report(buds, controls::key_command(slot, &action)?).await?;
+                print::keys(&panel, &buds.state(), has);
             }
         },
         Cmd::Reset { what, yes } => {
             if !yes {
                 bail!("this cannot be undone; add --yes to confirm");
             }
-            let command = match what {
-                ResetArg::Defaults => Command::ResetDefaults,
-                ResetArg::Pairing => Command::ClearPairing,
-                ResetArg::Factory => Command::FactoryReset,
+            let wanted = match what {
+                ResetArg::Defaults => ActionKind::ResetDefaults,
+                ResetArg::Pairing => ActionKind::ClearPairing,
+                ResetArg::Factory => ActionKind::FactoryReset,
             };
-            buds.send(command).await?;
+            // The model's own write for it, which may use an older
+            // characteristic than the generic command.
+            let write = panel
+                .items
+                .iter()
+                .find_map(|i| match &i.kind {
+                    ItemKind::Action(a) if a.kind == wanted => Some(a.write.clone()),
+                    _ => None,
+                })
+                .context("this model does not offer that")?;
+            buds.send(Command::Panel(PanelWrite {
+                write,
+                setting: None,
+                value: None,
+            }))
+            .await?;
             println!("Sent.");
         }
         Cmd::Raw {
@@ -235,7 +281,7 @@ async fn run(buds: &Earbuds, cmd: Cmd) -> Result<()> {
             }))
             .await?;
             tokio::time::sleep(Duration::from_millis(500)).await;
-            print::status(&name, profile, &buds.state());
+            status(&buds.state());
         }
         Cmd::Disconnect => {
             buds.disconnect().await?;
@@ -250,18 +296,6 @@ async fn send_and_report(buds: &Earbuds, command: Command) -> Result<()> {
     buds.send(command).await?;
     tokio::time::sleep(qcy_client::CONFIRM_DELAY + Duration::from_millis(400)).await;
     Ok(())
-}
-
-fn describe(anc: Option<AncMode>) -> String {
-    anc.map_or("unknown".into(), AncMode::describe)
-}
-
-fn on_off(v: Option<bool>) -> &'static str {
-    match v {
-        Some(true) => "on",
-        Some(false) => "off",
-        None => "unknown",
-    }
 }
 
 fn parse_hex(s: &str) -> Result<Vec<u8>> {

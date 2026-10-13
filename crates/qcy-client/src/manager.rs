@@ -18,7 +18,6 @@ use std::time::Duration;
 use qcy_protocol::advert::MacAddress;
 use qcy_protocol::dialect::{Codec, Context, Dialect, Op};
 use qcy_protocol::panel::{AncControl, ModeKind, Panel};
-use qcy_protocol::profile::DeviceProfile;
 use qcy_protocol::state::DeviceState;
 use qcy_protocol::types::{AncMode, AncSetting, KeyAction, KeyBinding};
 use qcy_protocol::{Characteristic, Command, Update, catalog};
@@ -83,7 +82,6 @@ pub struct DeviceInfo {
     pub dialect: Dialect,
     /// Everything the model offers.
     pub panel: Arc<Panel>,
-    pub profile: &'static DeviceProfile,
     /// Characteristics the device exposes (known once connected).
     pub characteristics: BTreeSet<Characteristic>,
 }
@@ -125,7 +123,6 @@ impl DeviceInfo {
             model: catalog::name(vendor_id),
             dialect: Dialect::for_vendor(vendor_id),
             panel: Arc::new(catalog::panel(vendor_id)),
-            profile: qcy_protocol::profile::for_vendor(vendor_id),
             characteristics: BTreeSet::new(),
         }
     }

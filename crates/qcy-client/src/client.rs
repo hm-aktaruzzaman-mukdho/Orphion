@@ -6,7 +6,6 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 use futures_util::StreamExt;
 use qcy_protocol::dialect::{Codec, Context, Dialect, Op};
 use qcy_protocol::panel::Panel;
-use qcy_protocol::profile::DeviceProfile;
 use qcy_protocol::state::DeviceState;
 use qcy_protocol::{Characteristic, Command, Update, catalog};
 use tokio::sync::{Mutex, watch};
@@ -148,11 +147,6 @@ impl<L: Link> Earbuds<L> {
 
     pub fn endpoint(&self) -> &Endpoint {
         &self.inner.endpoint
-    }
-
-    /// Legacy hard-coded capabilities (superseded by [`Self::panel`]).
-    pub fn profile(&self) -> &'static DeviceProfile {
-        self.inner.endpoint.profile()
     }
 
     /// The model's control panel: everything it offers.

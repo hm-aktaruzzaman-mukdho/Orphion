@@ -12,7 +12,6 @@ use std::time::Duration;
 
 use futures_util::stream::BoxStream;
 use qcy_protocol::advert::{Advertisement, MacAddress};
-use qcy_protocol::profile::{self, DeviceProfile};
 use qcy_protocol::{Characteristic, Write};
 
 use crate::Error;
@@ -47,10 +46,6 @@ pub struct Endpoint {
 }
 
 impl Endpoint {
-    pub fn profile(&self) -> &'static DeviceProfile {
-        profile::for_vendor(self.advertisement.vendor_id)
-    }
-
     /// Best human readable name: the paired name, else the model's.
     pub fn display_name(&self) -> String {
         self.name.clone().unwrap_or_else(|| {

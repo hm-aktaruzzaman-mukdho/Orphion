@@ -32,7 +32,6 @@ pub mod eq;
 pub mod frame;
 pub mod ids;
 pub mod panel;
-pub mod profile;
 pub mod samples;
 pub mod state;
 pub mod types;

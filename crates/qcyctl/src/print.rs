@@ -1,18 +1,21 @@
-//! Human readable rendering of the device state.
+//! Human readable rendering of the device state, with the model's own names.
 
 use qcy_client::Endpoint;
-use qcy_protocol::profile::DeviceProfile;
+use qcy_protocol::panel::{EqControl, EqKind, ItemKind, Panel};
 use qcy_protocol::state::DeviceState;
-use qcy_protocol::types::{BatteryLevel, Gesture, Toggle};
+use qcy_protocol::types::BatteryLevel;
+use qcy_protocol::{Characteristic, catalog};
+
+use crate::controls::{self, slug};
 
 pub fn endpoint(e: &Endpoint) {
+    let id = e.advertisement.vendor_id;
     println!(
-        "{}  ble={}  audio={}  model={:#06x} ({})  battery L{} R{} C{}{}",
+        "{}  ble={}  audio={}  model={id} ({})  battery L{} R{} C{}{}",
         e.display_name(),
         e.ble_address,
         e.advertisement.classic_address,
-        e.advertisement.vendor_id,
-        e.profile().name,
+        catalog::name(id).unwrap_or("unknown model"),
         battery(e.advertisement.battery.left),
         battery(e.advertisement.battery.right),
         battery(e.advertisement.battery.case),
@@ -28,118 +31,172 @@ pub fn battery(b: Option<BatteryLevel>) -> String {
     }
 }
 
-pub fn status(name: &str, profile: &DeviceProfile, s: &DeviceState) {
-    println!("{name} ({})", profile.name);
+/// Everything known about the connected earbuds.
+pub fn status(
+    name: &str,
+    model: u16,
+    panel: &Panel,
+    s: &DeviceState,
+    has: impl Fn(Characteristic) -> bool,
+) {
+    println!(
+        "{name} ({}, model {model})",
+        catalog::name(model).unwrap_or("unknown model")
+    );
     if let Some(n) = &s.device_name {
-        println!("  Bluetooth name   {n}");
+        println!("  {:<24} {n}", "Bluetooth name");
     }
     if let Some(fw) = s.firmware {
         let v = |v: Option<qcy_protocol::types::Version>| v.map_or("–".into(), |v| v.to_string());
-        println!("  Firmware         L {}  R {}", v(fw.left), v(fw.right));
+        println!("  {:<24} L {}  R {}", "Firmware", v(fw.left), v(fw.right));
     }
     if let Some(b) = s.battery {
         println!(
-            "  Battery          L {}  R {}  case {}",
+            "  {:<24} L {}  R {}  case {}",
+            "Battery",
             battery(b.left),
             battery(b.right),
             battery(b.case)
         );
     }
-    if let Some(a) = s.anc {
-        println!("  Noise control    {}", a.describe());
+    if let Some(anc) = controls::describe_anc(panel, s) {
+        println!("  {:<24} {anc}", "Noise control");
     }
-    eq(profile, s);
-    for t in Toggle::ALL {
-        if let Some(on) = s.toggle(t) {
-            println!("  {:<16} {}", t.label(), if on { "on" } else { "off" });
+    if let Some(eq) = &panel.eq {
+        self::eq(eq, s);
+    }
+    if panel.balance.is_some()
+        && let Some(b) = s.balance
+    {
+        println!("  {:<24} {b} (50 = centre)", "Balance");
+    }
+    let settings = controls::settings(panel);
+    if !settings.is_empty() {
+        println!("  Settings (qcyctl set NAME VALUE)");
+        for (slug, item) in settings {
+            println!("    {slug:<28} {}", controls::value(item, s));
         }
     }
-    if let Some(b) = s.balance {
-        println!("  Balance          {b} (50 = centre)");
-    }
-    if let Some(v) = s.volume {
-        println!(
-            "  Media volume     L {}  R {}  (max {})",
-            v.left, v.right, v.max
-        );
-    }
-    if let Some(p) = s.prompt_volume {
-        println!("  Prompt volume    {} / {}", p.level, p.max);
-    }
-    if let Some(l) = &s.prompt_language {
-        let label = profile
-            .prompt_languages
-            .iter()
-            .find(|c| c.value == l)
-            .map_or(l.as_str(), |c| c.label);
-        println!("  Prompt language  {label}");
-    }
-    if let Some(w) = s.wear_detection {
-        println!(
-            "  Wear detection   {}; music: {}; ANC follows wear: {}",
-            if w.enabled { "on" } else { "off" },
-            w.music.label(),
-            if w.anc_follows_wear { "yes" } else { "no" }
-        );
-    }
-    if let Some(a) = s.auto_power_off {
-        println!("  Auto power off   {} after disconnect", a.label());
-    }
-    if let Some(t) = s.power_off_timer {
-        if t.minutes == 0 || t.minutes == u16::MAX {
-            println!("  Sleep timer      off");
-        } else {
-            println!("  Sleep timer      {} min", t.minutes);
-        }
-    }
-    keys(s);
-    if !s.unknown.is_empty() {
-        println!("  Undecoded        {}", s.unknown.len());
-        for (id, payload) in &s.unknown {
-            let hex: Vec<String> = payload.iter().map(|b| format!("{b:02x}")).collect();
-            println!("    {:#04x}: {}", id, hex.join(" "));
-        }
-    }
+    keys(panel, s, has);
 }
 
-pub fn eq(profile: &DeviceProfile, s: &DeviceState) {
-    let Some(id) = s.active_eq_preset() else {
+/// The active EQ preset and, for parametric EQs, its bands.
+pub fn eq(eq: &EqControl, s: &DeviceState) {
+    let active = match eq.kind {
+        EqKind::Graphic => s.graphic_eq.as_ref().map(|g| g.preset),
+        _ => s.active_eq_preset(),
+    };
+    let Some(id) = active else {
         return;
     };
-    let name = profile
-        .eq_preset(id)
-        .map(|p| p.name.to_string())
-        .unwrap_or_else(|| {
-            if id >= 128 {
+    let name = eq.preset(id).map_or_else(
+        || {
+            if id >= 128 || id == 0 {
                 "Custom".into()
             } else {
                 format!("#{id}")
             }
-        });
-    println!("  Equalizer        {name}");
-    if let Some(eq) = &s.parametric_eq {
-        for b in eq.active_bands() {
-            println!(
-                "    {:>5} Hz  {:+5.1} dB  Q {:.2}  type {}",
-                b.freq_hz, b.gain_db, b.q, b.filter
-            );
+        },
+        |p| p.name.clone(),
+    );
+    println!("  {:<24} {name}", "Equalizer");
+    match eq.kind {
+        EqKind::Graphic => {
+            if let Some(g) = &s.graphic_eq {
+                let bands: Vec<String> = eq
+                    .bands
+                    .iter()
+                    .zip(&g.gains)
+                    .map(|(b, g)| format!("{} {g:+}", b.label))
+                    .collect();
+                println!("    {}", bands.join("  "));
+            }
         }
-        if eq.master_gain_db != 0.0 {
-            println!("    master gain {:+.2} dB", eq.master_gain_db);
+        _ => {
+            if let Some(p) = &s.parametric_eq {
+                for b in p.active_bands() {
+                    println!(
+                        "    {:>5} Hz  {:+5.1} dB  Q {:.2}  type {}",
+                        b.freq_hz, b.gain_db, b.q, b.filter
+                    );
+                }
+                if p.master_gain_db != 0.0 {
+                    println!("    master gain {:+.2} dB", p.master_gain_db);
+                }
+            }
         }
     }
 }
 
-pub fn keys(s: &DeviceState) {
-    if s.key_bindings.is_empty() {
+/// Gestures with their current actions.
+pub fn keys(panel: &Panel, s: &DeviceState, has: impl Fn(Characteristic) -> bool) {
+    let gestures = controls::gestures(panel, has);
+    if gestures.is_empty() {
         return;
     }
-    println!("  Touch controls");
-    for b in &s.key_bindings {
-        let gesture = b
-            .gesture()
-            .map(Gesture::label)
-            .unwrap_or_else(|| format!("gesture {}", b.gesture_id));
-        println!("    {:<24} {}", gesture, b.action.label());
+    println!("  Gestures (qcyctl keys set GESTURE ACTION)");
+    for (name, slot) in gestures {
+        let action = controls::key_action(slot, s).map_or("unknown".into(), |a| {
+            slot.label_of(a)
+                .map_or(format!("action {a}"), str::to_string)
+        });
+        println!("    {name:<28} {action}");
+    }
+}
+
+/// What a model offers, without connecting.
+pub fn panel(model: u16, panel: &Panel) {
+    println!(
+        "{} (model {model}, {:?} chip)",
+        catalog::name(model).unwrap_or("unknown model"),
+        qcy_protocol::advert::ChipFamily::from_vendor_id(model)
+    );
+    if panel.anc.is_some() {
+        println!("\nNoise control (qcyctl anc MODE [SCENE] [--level N])");
+        controls::list_anc(panel);
+    }
+    if let Some(eq) = &panel.eq {
+        println!(
+            "\nEqualizer: {:?}, {} bands, ±{} dB",
+            eq.kind,
+            eq.bands.len(),
+            eq.max_db
+        );
+        for p in &eq.presets {
+            println!("  {:>3}  {}", p.id, p.name);
+        }
+    }
+    if let Some(eq) = &panel.game_eq {
+        println!("\nGame EQ");
+        for p in &eq.presets {
+            println!("  {:>3}  {}", p.id, p.name);
+        }
+    }
+    if panel.balance.is_some() {
+        println!("\nBalance (qcyctl balance 0..100)");
+    }
+    let gestures = controls::gestures(panel, |_| true);
+    if !gestures.is_empty() {
+        println!("\nGestures (qcyctl keys set GESTURE ACTION)");
+        for (name, slot) in gestures {
+            let actions: Vec<String> = slot.choices.iter().map(|(_, l)| slug(l)).collect();
+            println!("  {name:<28} {}", actions.join(" | "));
+        }
+    }
+    let settings = controls::settings(panel);
+    if !settings.is_empty() {
+        println!("\nSettings (qcyctl set NAME VALUE)");
+        for (name, item) in settings {
+            println!("  {name:<28} {}", controls::accepted(item));
+        }
+    }
+    let actions: Vec<&str> = panel
+        .items
+        .iter()
+        .filter(|i| matches!(i.kind, ItemKind::Action(_)))
+        .map(|i| i.title.as_str())
+        .collect();
+    if !actions.is_empty() {
+        println!("\nReset (qcyctl reset … --yes): {}", actions.join(", "));
     }
 }

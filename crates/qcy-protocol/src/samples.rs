@@ -48,8 +48,14 @@ pub fn state() -> DeviceState {
             state.apply(u);
         }
     }
-    if let Some(p) = crate::profile::MELOBUDS_PRO.eq_preset(1) {
-        state.apply(crate::Update::ParametricEq(p.to_parametric()));
+    // The default preset, as the earbuds report it.
+    let panel = crate::catalog::panel(19786);
+    if let Some(p) = panel.eq.as_ref().and_then(|eq| eq.preset(1)) {
+        state.apply(crate::Update::ParametricEq(crate::eq::ParametricEq {
+            index: p.id,
+            master_gain_db: p.master_gain_db,
+            bands: p.bands.clone(),
+        }));
     }
     state
 }

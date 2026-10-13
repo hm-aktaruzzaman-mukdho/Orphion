@@ -1,8 +1,12 @@
 //! Command line definition.
+//!
+//! Model specific names (modes, settings, gestures, actions) come from the
+//! connected model's control panel; run a command without its value to list
+//! what the model accepts, e.g. `qcyctl anc` or `qcyctl set`.
 
 use clap::{Parser, Subcommand, ValueEnum};
 use qcy_protocol::advert::MacAddress;
-use qcy_protocol::types::{AncScene, Gesture, KeyAction, Side, Tap, Toggle, WearMusicBehavior};
+use qcy_protocol::types::WearMusicBehavior;
 
 #[derive(Debug, Parser)]
 #[command(
@@ -36,65 +40,65 @@ pub struct Cli {
 pub enum Cmd {
     /// List QCY earbuds nearby.
     Scan,
+    /// List every model this program knows (no Bluetooth needed).
+    Models {
+        /// Only models whose name contains this text.
+        filter: Option<String>,
+    },
+    /// Show the controls of a model, by id (no Bluetooth needed), or of the
+    /// connected earbuds.
+    Panel { model: Option<u16> },
     /// Show battery, firmware and every setting (default).
     Status,
     /// Print changes live until Ctrl+C.
     Monitor,
-    /// Noise control.
+    /// Noise control: `anc` lists the modes, `anc MODE [SCENE] [--level N]` sets one.
     Anc {
-        #[arg(value_enum)]
-        mode: AncArg,
-        /// Noise cancelling scene (with `on`).
-        #[arg(long, value_enum, default_value_t = SceneArg::Adaptive)]
-        scene: SceneArg,
-        /// Strength: 0-2 for noise cancelling scenes, 1-6 for transparency.
+        mode: Option<String>,
+        /// Scene within the mode, or `voice` for voice focus.
+        scene: Option<String>,
+        /// Strength, counting from 1 (percent for percent-based models).
         #[arg(long)]
-        level: Option<u8>,
+        level: Option<u32>,
     },
     /// Equalizer.
     Eq {
         #[command(subcommand)]
-        action: EqCmd,
+        action: Option<EqCmd>,
     },
-    /// Turn a feature on or off.
-    Toggle {
-        #[arg(value_enum)]
-        feature: ToggleArg,
-        #[arg(value_enum)]
-        state: OnOff,
+    /// Change a setting: `set` lists them, `set NAME VALUE` changes one,
+    /// e.g. `set ldac-switch on` or `set sleep-timer 30`.
+    Set {
+        name: Option<String>,
+        value: Option<String>,
+        /// Confirm settings that restart the earbuds.
+        #[arg(long)]
+        yes: bool,
     },
     /// Left/right balance: 0 = left, 50 = centre, 100 = right.
     Balance {
         #[arg(value_parser = clap::value_parser!(u8).range(0..=100))]
         value: u8,
     },
-    /// Volume of voice prompts and beeps (e.g. 4, 6, 8, 10).
-    PromptVolume { level: u8 },
-    /// Voice prompt language: `english`, `chinese` or a raw code like `WQ00`.
-    Language { code: String },
     /// Change the Bluetooth name (both buds out of the case).
     Rename { name: String },
-    /// Wear detection.
+    /// Wear detection details (the switch alone: `set wear-detection on`).
     WearDetection {
         #[arg(value_enum)]
         state: OnOff,
         /// What to do with playback.
         #[arg(long, value_enum)]
         music: Option<WearMusicArg>,
-        /// Switch ANC off when removed and back on when worn.
+        /// Switch noise control off when removed and back on when worn.
         #[arg(long, value_enum)]
         anc: Option<OnOff>,
     },
-    /// Power off after being disconnected for N minutes (`never` to disable).
-    AutoOff { minutes: String },
-    /// Power off after N minutes regardless of use (0 cancels).
-    SleepTimer { minutes: u16 },
-    /// Touch controls.
+    /// Touch, button and head gestures.
     Keys {
         #[command(subcommand)]
         action: Option<KeysCmd>,
     },
-    /// Reset settings, pairings or everything.
+    /// Reset settings, pairings or everything (what the model offers).
     Reset {
         #[arg(value_enum)]
         what: ResetArg,
@@ -114,78 +118,32 @@ pub enum Cmd {
 
 #[derive(Debug, Subcommand)]
 pub enum EqCmd {
-    /// Show the active EQ.
+    /// Show the active EQ (default).
     Show,
     /// List the presets of this model.
     List,
     /// Apply a preset by name or id.
-    Preset { name: String },
-    /// Apply a 10-band curve (31 Hz … 16 kHz), gains in dB from -8 to 8.
+    Preset {
+        name: String,
+        /// Confirm presets that come with a warning.
+        #[arg(long)]
+        yes: bool,
+    },
+    /// Apply a game EQ preset (models with a game EQ).
+    Game { name: String },
+    /// Apply a custom curve: one gain in dB per band of the model.
     Custom {
-        #[arg(num_args = 10, allow_hyphen_values = true)]
-        gains: Vec<i8>,
+        #[arg(num_args = 1.., allow_hyphen_values = true)]
+        gains: Vec<f32>,
     },
 }
 
 #[derive(Debug, Subcommand)]
 pub enum KeysCmd {
-    /// Show the gesture table.
+    /// Show the gestures and their actions (default).
     Show,
     /// Bind a gesture, e.g. `keys set left-double next`.
-    Set {
-        #[arg(value_enum)]
-        gesture: GestureArg,
-        #[arg(value_enum)]
-        action: ActionArg,
-    },
-}
-
-#[derive(Debug, Clone, Copy, ValueEnum)]
-pub enum AncArg {
-    Off,
-    On,
-    Transparency,
-    Voice,
-}
-
-#[derive(Debug, Clone, Copy, ValueEnum)]
-pub enum SceneArg {
-    Adaptive,
-    Indoor,
-    Commuting,
-    Noisy,
-    AntiWind,
-}
-
-impl From<SceneArg> for AncScene {
-    fn from(s: SceneArg) -> Self {
-        match s {
-            SceneArg::Adaptive => AncScene::Adaptive,
-            SceneArg::Indoor => AncScene::Indoor,
-            SceneArg::Commuting => AncScene::Commuting,
-            SceneArg::Noisy => AncScene::Noisy,
-            SceneArg::AntiWind => AncScene::AntiWind,
-        }
-    }
-}
-
-#[derive(Debug, Clone, Copy, ValueEnum)]
-pub enum ToggleArg {
-    GameMode,
-    SleepMode,
-    Ldac,
-    DualDevice,
-}
-
-impl From<ToggleArg> for Toggle {
-    fn from(t: ToggleArg) -> Self {
-        match t {
-            ToggleArg::GameMode => Toggle::GameMode,
-            ToggleArg::SleepMode => Toggle::SleepMode,
-            ToggleArg::Ldac => Toggle::Ldac,
-            ToggleArg::DualDevice => Toggle::DualDevice,
-        }
-    }
+    Set { gesture: String, action: String },
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, ValueEnum)]
@@ -215,68 +173,6 @@ impl From<WearMusicArg> for WearMusicBehavior {
             WearMusicArg::PauseResume => WearMusicBehavior::PauseAndResume,
             WearMusicArg::PauseOnly => WearMusicBehavior::PauseOnly,
             WearMusicArg::PauseResumeBoth => WearMusicBehavior::PauseAndResumeBoth,
-        }
-    }
-}
-
-#[derive(Debug, Clone, Copy, ValueEnum)]
-pub enum GestureArg {
-    LeftSingle,
-    RightSingle,
-    LeftDouble,
-    RightDouble,
-    LeftTriple,
-    RightTriple,
-    LeftQuadruple,
-    RightQuadruple,
-    LeftLong,
-    RightLong,
-}
-
-impl From<GestureArg> for Gesture {
-    fn from(g: GestureArg) -> Self {
-        use GestureArg::*;
-        let (side, tap) = match g {
-            LeftSingle => (Side::Left, Tap::Single),
-            RightSingle => (Side::Right, Tap::Single),
-            LeftDouble => (Side::Left, Tap::Double),
-            RightDouble => (Side::Right, Tap::Double),
-            LeftTriple => (Side::Left, Tap::Triple),
-            RightTriple => (Side::Right, Tap::Triple),
-            LeftQuadruple => (Side::Left, Tap::Quadruple),
-            RightQuadruple => (Side::Right, Tap::Quadruple),
-            LeftLong => (Side::Left, Tap::Long),
-            RightLong => (Side::Right, Tap::Long),
-        };
-        Gesture::new(side, tap)
-    }
-}
-
-#[derive(Debug, Clone, Copy, ValueEnum)]
-pub enum ActionArg {
-    None,
-    PlayPause,
-    Previous,
-    Next,
-    Assistant,
-    VolumeUp,
-    VolumeDown,
-    GameMode,
-    Anc,
-}
-
-impl From<ActionArg> for KeyAction {
-    fn from(a: ActionArg) -> Self {
-        match a {
-            ActionArg::None => KeyAction::None,
-            ActionArg::PlayPause => KeyAction::PlayPause,
-            ActionArg::Previous => KeyAction::PreviousTrack,
-            ActionArg::Next => KeyAction::NextTrack,
-            ActionArg::Assistant => KeyAction::VoiceAssistant,
-            ActionArg::VolumeUp => KeyAction::VolumeUp,
-            ActionArg::VolumeDown => KeyAction::VolumeDown,
-            ActionArg::GameMode => KeyAction::GameMode,
-            ActionArg::Anc => KeyAction::CycleAnc,
         }
     }
 }
