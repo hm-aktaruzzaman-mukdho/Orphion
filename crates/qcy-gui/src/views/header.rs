@@ -25,7 +25,7 @@ pub fn show(ui: &mut Ui, view: &mut ViewCtx<'_>) {
             ui.vertical(|ui| {
                 ui.spacing_mut().item_spacing.y = 6.0;
                 ui.label(text::headline_small(&name).color(s.on_surface));
-                let color = widgets::status_color(s, snap.is_connected(), snap.link.is_busy());
+                let color = widgets::status_color(&s, snap.is_connected(), snap.link.is_busy());
                 m3::status_pill(ui, &snap.link.label(), color);
             });
             ui.with_layout(Layout::right_to_left(Align::Center), |ui| match snap.link {

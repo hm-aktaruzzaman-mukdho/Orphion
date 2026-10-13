@@ -19,7 +19,7 @@ the official Android app and verified on real hardware
 
 | Program    | What it is                                                                 |
 |------------|----------------------------------------------------------------------------|
-| `qcy-gui`  | The control panel window, in Material 3 style with light and dark themes (follows the system, or pick one under Settings → Appearance). |
+| `qcy-gui`  | The control panel window, in Material 3 style with light and dark themes (follows the system, or pick one under Settings → Appearance) and a choice of accent colour; the whole colour scheme is generated from it. |
 | `qcy-tray` | A tray icon (KDE Plasma or any StatusNotifier host on Linux; the notification area on Windows). The tooltip shows battery levels; the menu offers noise control, gaming mode and EQ presets; clicking the icon opens the control panel. On Linux, scrolling over it cycles noise control. |
 | `qcyctl`   | Command line tool for scripts and keyboard shortcuts.                      |
 

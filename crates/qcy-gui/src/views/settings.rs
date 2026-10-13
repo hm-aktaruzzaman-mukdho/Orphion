@@ -7,6 +7,7 @@ use qcy_protocol::types::{Toggle, Version, WearDetection, WearMusicBehavior};
 
 use crate::app::{Action, Confirmation, ViewCtx};
 use crate::material::components::{self as m3, ButtonKind};
+use crate::material::scheme::{self, ACCENT_PRESETS};
 use crate::material::{MaterialIcon, Scheme, icons, text};
 use crate::prefs::Appearance;
 use crate::views::dropdown;
@@ -270,11 +271,42 @@ fn power(ui: &mut Ui, view: &mut ViewCtx<'_>) {
 /// Purely local, so it stays usable while disconnected.
 fn appearance(ui: &mut Ui, view: &mut ViewCtx<'_>) {
     m3::titled_card(ui, icons::ICON_PALETTE, "Appearance", |ui| {
+        let s = Scheme::of(ui);
+        ui.label(text::title_small("Theme").color(s.on_surface_variant));
         let labels: Vec<&str> = Appearance::ALL.iter().map(|a| a.label()).collect();
         let selected = Appearance::ALL.iter().position(|a| *a == view.appearance);
         if let Some(i) = m3::segmented(ui, &labels, selected) {
             view.act(Action::SetAppearance(Appearance::ALL[i]));
         }
+
+        ui.add_space(8.0);
+        ui.label(text::title_small("Accent colour").color(s.on_surface_variant));
+        ui.horizontal_wrapped(|ui| {
+            ui.spacing_mut().item_spacing = egui::vec2(10.0, 10.0);
+            let mut is_preset = false;
+            for (name, seed) in ACCENT_PRESETS {
+                let selected = view.accent == seed;
+                is_preset |= selected;
+                if m3::swatch(ui, seed, selected).on_hover_text(name).clicked() && !selected {
+                    view.act(Action::SetAccent(seed));
+                }
+            }
+            // Any other colour through the picker.
+            let mut custom = view.accent;
+            let picker = ui
+                .color_edit_button_srgba(&mut custom)
+                .on_hover_text("Custom colour");
+            if picker.changed() && custom != view.accent {
+                view.act(Action::SetAccent(custom.to_opaque()));
+            }
+            if !is_preset {
+                ui.label(text::body_small(scheme::to_hex(view.accent)).color(s.on_surface_variant));
+            }
+        });
+        m3::supporting(
+            ui,
+            "The whole colour scheme is generated from the accent, for light and dark mode.",
+        );
     });
 }
 

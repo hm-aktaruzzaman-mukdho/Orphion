@@ -547,6 +547,36 @@ pub fn chip(ui: &mut Ui, icon: Option<MaterialIcon>, label: &str, selected: bool
     response.on_hover_cursor(CursorIcon::PointingHand)
 }
 
+/// A round colour swatch (e.g. for accent colours); selected ones get a
+/// ring and a check mark in a contrasting colour.
+pub fn swatch(ui: &mut Ui, color: Color32, selected: bool) -> Response {
+    let s = Scheme::of(ui);
+    let (rect, response) = ui.allocate_exact_size(Vec2::splat(40.0), Sense::click());
+    let center = rect.center();
+    if response.hovered() {
+        ui.painter()
+            .circle_filled(center, 20.0, s.on_surface.gamma_multiply(HOVER));
+    }
+    if selected {
+        ui.painter()
+            .circle_stroke(center, 19.0, Stroke::new(2.0, s.on_surface));
+    }
+    ui.painter()
+        .circle_filled(center, if selected { 14.0 } else { 16.0 }, color);
+    if selected {
+        let luma = 0.299 * f32::from(color.r())
+            + 0.587 * f32::from(color.g())
+            + 0.114 * f32::from(color.b());
+        let mark = if luma > 150.0 {
+            Color32::BLACK
+        } else {
+            Color32::WHITE
+        };
+        paint_icon(ui, icons::ICON_CHECK, center, 18.0, mark);
+    }
+    response.on_hover_cursor(CursorIcon::PointingHand)
+}
+
 /// A large selectable tile with an icon, title and subtitle.
 pub fn tile(
     ui: &mut Ui,

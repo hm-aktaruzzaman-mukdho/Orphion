@@ -5,7 +5,9 @@
 
 use std::path::PathBuf;
 
-use eframe::egui::ThemePreference;
+use eframe::egui::{Color32, ThemePreference};
+
+use crate::material::scheme::{self, DEFAULT_SEED};
 
 /// Light / dark mode choice.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
@@ -44,9 +46,20 @@ impl Appearance {
     }
 }
 
-#[derive(Debug, Clone, Copy, Default)]
+#[derive(Debug, Clone, Copy)]
 pub struct Prefs {
     pub appearance: Appearance,
+    /// Seed colour of the Material scheme.
+    pub accent: Color32,
+}
+
+impl Default for Prefs {
+    fn default() -> Self {
+        Self {
+            appearance: Appearance::default(),
+            accent: DEFAULT_SEED,
+        }
+    }
 }
 
 impl Prefs {
@@ -81,12 +94,18 @@ impl Prefs {
             return prefs;
         };
         for line in text.lines() {
-            if let Some(("appearance", value)) =
-                line.split_once('=').map(|(k, v)| (k.trim(), v.trim()))
-            {
-                if let Some(a) = Appearance::ALL.into_iter().find(|a| a.key() == value) {
-                    prefs.appearance = a;
+            match line.split_once('=').map(|(k, v)| (k.trim(), v.trim())) {
+                Some(("appearance", value)) => {
+                    if let Some(a) = Appearance::ALL.into_iter().find(|a| a.key() == value) {
+                        prefs.appearance = a;
+                    }
                 }
+                Some(("accent", value)) => {
+                    if let Some(c) = scheme::from_hex(value) {
+                        prefs.accent = c;
+                    }
+                }
+                _ => {}
             }
         }
         prefs
@@ -98,7 +117,14 @@ impl Prefs {
             .parent()
             .map_or(Ok(()), std::fs::create_dir_all)
             .and_then(|()| {
-                std::fs::write(&path, format!("appearance={}\n", self.appearance.key()))
+                std::fs::write(
+                    &path,
+                    format!(
+                        "appearance={}\naccent={}\n",
+                        self.appearance.key(),
+                        scheme::to_hex(self.accent)
+                    ),
+                )
             });
         if let Err(e) = result {
             tracing::warn!("cannot save preferences to {}: {e}", path.display());

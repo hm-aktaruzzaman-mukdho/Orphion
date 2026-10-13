@@ -20,6 +20,8 @@ pub enum Shot {
     CustomEq,
     /// A confirmation dialog on top of the Settings tab.
     Dialog,
+    /// The end of the Settings tab (appearance and device sections).
+    SettingsEnd,
 }
 
 impl Shot {
@@ -28,6 +30,7 @@ impl Shot {
             Shot::Tab(t) => format!("{t:?}").to_lowercase(),
             Shot::CustomEq => "sound-custom".into(),
             Shot::Dialog => "dialog".into(),
+            Shot::SettingsEnd => "settings-end".into(),
         }
     }
 }
@@ -44,7 +47,7 @@ impl Capture {
     pub fn from_args() -> Option<Self> {
         let dir = crate::arg_value("--screenshots")?;
         let mut shots: Vec<Shot> = Tab::ALL.into_iter().map(Shot::Tab).collect();
-        shots.extend([Shot::CustomEq, Shot::Dialog]);
+        shots.extend([Shot::CustomEq, Shot::SettingsEnd, Shot::Dialog]);
         shots.reverse();
         Some(Self {
             dir: dir.into(),

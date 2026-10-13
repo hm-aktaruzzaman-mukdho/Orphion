@@ -1,13 +1,36 @@
 //! Material 3 colour roles, and their mapping onto egui's `Visuals`.
 //!
-//! Values are the Material 3 tonal palette for a blue seed (`#0B57D0`), the
-//! same family Google uses in its own Material 3 apps.
+//! The roles are generated from a single *seed* (accent) colour with Google's
+//! dynamic colour algorithm (the "tonal spot" variant Android uses for
+//! wallpaper-based themes), via the `material-colors` port of
+//! material-color-utilities. Changing the accent regenerates both the light
+//! and the dark scheme; see [`Scheme::set_seed`].
+
+use std::sync::{LazyLock, RwLock};
 
 use eframe::egui::{self, Color32, CornerRadius, Shadow, Stroke, Visuals, style::WidgetVisuals};
+use material_colors::color::Rgb;
+use material_colors::theme::ThemeBuilder;
 
 const fn rgb(hex: u32) -> Color32 {
     Color32::from_rgb((hex >> 16) as u8, (hex >> 8) as u8, hex as u8)
 }
+
+/// The accent the app starts with (Google blue).
+pub const DEFAULT_SEED: Color32 = rgb(0x0B57D0);
+
+/// Accent colours offered in Settings → Appearance, as `(name, seed)`.
+pub const ACCENT_PRESETS: [(&str, Color32); 9] = [
+    ("Blue", DEFAULT_SEED),
+    ("Indigo", rgb(0x3F51B5)),
+    ("Purple", rgb(0x6750A4)),
+    ("Pink", rgb(0xC2185B)),
+    ("Red", rgb(0xD32F2F)),
+    ("Orange", rgb(0xE8710A)),
+    ("Amber", rgb(0xF9A825)),
+    ("Green", rgb(0x2E7D32)),
+    ("Teal", rgb(0x00897B)),
+];
 
 /// The Material 3 colour roles used by this app.
 #[derive(Debug, Clone, Copy, PartialEq)]
@@ -33,70 +56,69 @@ pub struct Scheme {
     pub outline_variant: Color32,
     pub inverse_surface: Color32,
     pub inverse_on_surface: Color32,
+    /// Not a Material role: status colours that must not follow the accent.
     pub success: Color32,
     pub warning: Color32,
 }
 
-pub const DARK: Scheme = Scheme {
-    dark: true,
-    primary: rgb(0xA8C7FA),
-    on_primary: rgb(0x062E6F),
-    primary_container: rgb(0x0842A0),
-    on_primary_container: rgb(0xD3E3FD),
-    secondary_container: rgb(0x004A77),
-    on_secondary_container: rgb(0xC2E7FF),
-    tertiary: rgb(0x6DD58C),
-    error: rgb(0xF2B8B5),
-    on_error: rgb(0x601410),
-    surface: rgb(0x131314),
-    surface_container_low: rgb(0x1B1B1B),
-    surface_container: rgb(0x1E1F20),
-    surface_container_high: rgb(0x282A2C),
-    surface_container_highest: rgb(0x333537),
-    on_surface: rgb(0xE3E3E3),
-    on_surface_variant: rgb(0xC4C7C5),
-    outline: rgb(0x8E918F),
-    outline_variant: rgb(0x444746),
-    inverse_surface: rgb(0xE3E3E3),
-    inverse_on_surface: rgb(0x303030),
-    success: rgb(0x6DD58C),
-    warning: rgb(0xFFBA42),
-};
-
-pub const LIGHT: Scheme = Scheme {
-    dark: false,
-    primary: rgb(0x0B57D0),
-    on_primary: rgb(0xFFFFFF),
-    primary_container: rgb(0xD3E3FD),
-    on_primary_container: rgb(0x041E49),
-    secondary_container: rgb(0xC2E7FF),
-    on_secondary_container: rgb(0x001D35),
-    tertiary: rgb(0x146C2E),
-    error: rgb(0xB3261E),
-    on_error: rgb(0xFFFFFF),
-    surface: rgb(0xFFFFFF),
-    surface_container_low: rgb(0xF8FAFD),
-    surface_container: rgb(0xF0F4F9),
-    surface_container_high: rgb(0xE9EEF6),
-    surface_container_highest: rgb(0xDDE3EA),
-    on_surface: rgb(0x1F1F1F),
-    on_surface_variant: rgb(0x444746),
-    outline: rgb(0x747775),
-    outline_variant: rgb(0xC4C7C5),
-    inverse_surface: rgb(0x303030),
-    inverse_on_surface: rgb(0xF2F2F2),
-    success: rgb(0x146C2E),
-    warning: rgb(0x8A5100),
-};
+/// The schemes generated from the current seed: `[light, dark]`.
+static CURRENT: LazyLock<RwLock<[Scheme; 2]>> =
+    LazyLock::new(|| RwLock::new(Scheme::pair(DEFAULT_SEED)));
 
 impl Scheme {
     /// The scheme matching the current light/dark mode of `ui`.
-    pub fn of(ui: &egui::Ui) -> &'static Scheme {
+    pub fn of(ui: &egui::Ui) -> Scheme {
         Self::for_dark(ui.visuals().dark_mode)
     }
 
-    pub fn for_dark(dark: bool) -> &'static Scheme {
-        if dark { &DARK } else { &LIGHT }
+    /// The current light or dark scheme.
+    pub fn for_dark(dark: bool) -> Scheme {
+        let schemes = CURRENT.read().unwrap_or_else(|e| e.into_inner());
+        schemes[usize::from(dark)]
+    }
+
+    /// Regenerates both schemes from a new accent colour.
+    pub fn set_seed(seed: Color32) {
+        let pair = Self::pair(seed);
+        *CURRENT.write().unwrap_or_else(|e| e.into_inner()) = pair;
+    }
+
+    /// Light and dark scheme for `seed`.
+    fn pair(seed: Color32) -> [Scheme; 2] {
+        let theme = ThemeBuilder::with_source(Rgb::new(seed.r(), seed.g(), seed.b())).build();
+        [
+            Self::from_material(&theme.schemes.light, false),
+            Self::from_material(&theme.schemes.dark, true),
+        ]
+    }
+
+    fn from_material(m: &material_colors::scheme::Scheme, dark: bool) -> Scheme {
+        let c = |c: Rgb| Color32::from_rgb(c.red, c.green, c.blue);
+        Scheme {
+            dark,
+            primary: c(m.primary),
+            on_primary: c(m.on_primary),
+            primary_container: c(m.primary_container),
+            on_primary_container: c(m.on_primary_container),
+            secondary_container: c(m.secondary_container),
+            on_secondary_container: c(m.on_secondary_container),
+            tertiary: c(m.tertiary),
+            error: c(m.error),
+            on_error: c(m.on_error),
+            surface: c(m.surface),
+            surface_container_low: c(m.surface_container_low),
+            surface_container: c(m.surface_container),
+            surface_container_high: c(m.surface_container_high),
+            surface_container_highest: c(m.surface_container_highest),
+            on_surface: c(m.on_surface),
+            on_surface_variant: c(m.on_surface_variant),
+            outline: c(m.outline),
+            outline_variant: c(m.outline_variant),
+            inverse_surface: c(m.inverse_surface),
+            inverse_on_surface: c(m.inverse_on_surface),
+            success: if dark { rgb(0x6DD58C) } else { rgb(0x146C2E) },
+            warning: if dark { rgb(0xFFBA42) } else { rgb(0x8A5100) },
+        }
     }
 
     /// `color` with a Material "state layer" of `layer` blended on top
@@ -176,4 +198,44 @@ pub fn lerp(a: Color32, b: Color32, t: f32) -> Color32 {
     let t = t.clamp(0.0, 1.0);
     let mix = |x: u8, y: u8| (f32::from(x) + (f32::from(y) - f32::from(x)) * t).round() as u8;
     Color32::from_rgb(mix(a.r(), b.r()), mix(a.g(), b.g()), mix(a.b(), b.b()))
+}
+
+/// `#RRGGBB` for a colour.
+pub fn to_hex(c: Color32) -> String {
+    format!("#{:02X}{:02X}{:02X}", c.r(), c.g(), c.b())
+}
+
+/// Parses `#RRGGBB` (the `#` is optional).
+pub fn from_hex(s: &str) -> Option<Color32> {
+    let s = s.trim().trim_start_matches('#');
+    if s.len() != 6 {
+        return None;
+    }
+    u32::from_str_radix(s, 16).ok().map(rgb)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn hex_roundtrip() {
+        assert_eq!(from_hex(&to_hex(DEFAULT_SEED)), Some(DEFAULT_SEED));
+        assert_eq!(from_hex("#00897b"), Some(rgb(0x00897B)));
+        assert_eq!(from_hex("nope"), None);
+    }
+
+    #[test]
+    fn seeds_give_readable_schemes() {
+        for (_, seed) in ACCENT_PRESETS {
+            let [light, dark] = Scheme::pair(seed);
+            // Primary and its "on" colour must contrast strongly.
+            let luma = |c: Color32| {
+                0.2126 * f32::from(c.r()) + 0.7152 * f32::from(c.g()) + 0.0722 * f32::from(c.b())
+            };
+            assert!((luma(light.primary) - luma(light.on_primary)).abs() > 80.0);
+            assert!((luma(dark.primary) - luma(dark.on_primary)).abs() > 80.0);
+            assert!(dark.surface != light.surface);
+        }
+    }
 }

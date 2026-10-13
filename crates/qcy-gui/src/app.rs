@@ -32,6 +32,7 @@ pub enum Action {
     Disconnect,
     Refresh,
     SetAppearance(Appearance),
+    SetAccent(egui::Color32),
 }
 
 /// A pending "are you sure?" dialog.
@@ -86,6 +87,7 @@ pub struct ViewCtx<'a> {
     pub profile: &'static DeviceProfile,
     pub drafts: &'a mut Drafts,
     pub appearance: Appearance,
+    pub accent: egui::Color32,
     actions: &'a mut Vec<Action>,
 }
 
@@ -116,6 +118,10 @@ pub struct App {
     prefs: Prefs,
     pending: Option<Confirmation>,
     capture: Option<Capture>,
+    /// Scroll position to apply on the next frame (screenshots only).
+    scroll_to: Option<f32>,
+    /// Largest scroll offset of the content in the last frame.
+    scroll_max: f32,
 }
 
 impl App {
@@ -127,6 +133,7 @@ impl App {
         material::install(&cc.egui_ctx);
         let prefs = Prefs::load();
         cc.egui_ctx.set_theme(prefs.appearance.theme_preference());
+        material::set_accent(&cc.egui_ctx, prefs.accent);
 
         // Repaint whenever the device state changes; egui is otherwise idle.
         let ctx = cc.egui_ctx.clone();
@@ -151,6 +158,8 @@ impl App {
             prefs,
             pending: None,
             capture: Capture::from_args(),
+            scroll_to: None,
+            scroll_max: 0.0,
         }
     }
 
@@ -165,6 +174,11 @@ impl App {
                 self.prefs.appearance = a;
                 self.prefs.save();
                 ctx.set_theme(a.theme_preference());
+            }
+            Action::SetAccent(seed) => {
+                self.prefs.accent = seed;
+                self.prefs.save();
+                material::set_accent(ctx, seed);
             }
         }
     }
@@ -218,8 +232,13 @@ impl App {
 
     /// Puts the UI into the state a screenshot needs (`--screenshots`).
     fn stage(&mut self, shot: Shot) {
+        self.scroll_to = None;
         match shot {
             Shot::Tab(tab) => self.tab = tab,
+            Shot::SettingsEnd => {
+                self.tab = Tab::Settings;
+                self.scroll_to = Some(self.scroll_max);
+            }
             Shot::CustomEq => {
                 self.tab = Tab::Sound;
                 self.drafts
@@ -301,34 +320,38 @@ impl eframe::App for App {
             profile,
             drafts: &mut self.drafts,
             appearance: self.prefs.appearance,
+            accent: self.prefs.accent,
             actions: &mut actions,
         };
         egui::CentralPanel::default()
             .frame(egui::Frame::new().fill(s.surface))
             .show(ui, |ui| {
-                egui::ScrollArea::vertical()
-                    .auto_shrink([false, false])
-                    .show(ui, |ui| {
-                        // A centred column, so wide windows do not stretch the cards.
-                        let width = ui.available_width();
-                        let column = (width - 24.0).min(CONTENT_MAX_WIDTH);
-                        let side = ((width - column) / 2.0).max(8.0);
-                        ui.add_space(16.0);
-                        ui.horizontal_top(|ui| {
-                            ui.add_space(side - 8.0);
-                            ui.vertical(|ui| {
-                                ui.set_width(column);
-                                ui.spacing_mut().item_spacing.y = 12.0;
-                                if snap.device.is_none() {
-                                    views::searching::show(ui, &mut view);
-                                } else {
-                                    views::header::show(ui, &mut view);
-                                    views::show_tab(ui, self.tab, &mut view);
-                                }
-                            });
+                let mut scroll = egui::ScrollArea::vertical().auto_shrink([false, false]);
+                if let Some(offset) = self.scroll_to {
+                    scroll = scroll.vertical_scroll_offset(offset);
+                }
+                let output = scroll.show(ui, |ui| {
+                    // A centred column, so wide windows do not stretch the cards.
+                    let width = ui.available_width();
+                    let column = (width - 24.0).min(CONTENT_MAX_WIDTH);
+                    let side = ((width - column) / 2.0).max(8.0);
+                    ui.add_space(16.0);
+                    ui.horizontal_top(|ui| {
+                        ui.add_space(side - 8.0);
+                        ui.vertical(|ui| {
+                            ui.set_width(column);
+                            ui.spacing_mut().item_spacing.y = 12.0;
+                            if snap.device.is_none() {
+                                views::searching::show(ui, &mut view);
+                            } else {
+                                views::header::show(ui, &mut view);
+                                views::show_tab(ui, self.tab, &mut view);
+                            }
                         });
-                        ui.add_space(32.0);
                     });
+                    ui.add_space(32.0);
+                });
+                self.scroll_max = (output.content_size.y - output.inner_rect.height()).max(0.0);
             });
 
         for action in actions {

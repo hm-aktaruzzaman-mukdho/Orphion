@@ -23,8 +23,7 @@ pub fn install(ctx: &egui::Context) {
     install_fonts(ctx);
     egui_material_icons::initialize(ctx);
 
-    ctx.set_visuals_of(Theme::Dark, scheme::DARK.visuals());
-    ctx.set_visuals_of(Theme::Light, scheme::LIGHT.visuals());
+    apply_scheme(ctx);
     ctx.all_styles_mut(|style| {
         style.spacing.item_spacing = egui::vec2(8.0, 8.0);
         style.spacing.button_padding = egui::vec2(12.0, 6.0);
@@ -45,6 +44,19 @@ pub fn install(ctx: &egui::Context) {
         ]
         .into();
     });
+}
+
+/// Switches the accent colour: regenerates the light and dark schemes from
+/// `seed` and applies them.
+pub fn set_accent(ctx: &egui::Context, seed: egui::Color32) {
+    Scheme::set_seed(seed);
+    apply_scheme(ctx);
+}
+
+/// Hands the current schemes to egui's built-in widgets.
+fn apply_scheme(ctx: &egui::Context) {
+    ctx.set_visuals_of(Theme::Dark, Scheme::for_dark(true).visuals());
+    ctx.set_visuals_of(Theme::Light, Scheme::for_dark(false).visuals());
 }
 
 /// Loads the platform's UI font (see [`system_fonts`]); egui's bundled font
