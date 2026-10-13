@@ -1,0 +1,222 @@
+{
+    "layouts": [
+        {
+            "name": "Customizing button function",
+            "info": "You may customize touch controls here.<br/><font color='#303030' size='15'>Audio mode:</font> Custommize touch controls for playback or voice assistant.<br/><font color='#303030' size='15'>Call mode:</font>customize touch controls for calling",
+            "type": 1,
+            "left": {
+                "image": "",
+                "double_click": {
+                    "name": "double tap",
+                    "voice": "Answer/End call",
+                    "music": "Play/Pause",
+                    "character": "00000003-0000-1000-8000-00805f9b34fb",
+                    "list": [
+                        {
+                            "name": "Play/Pause",
+                            "cmd": "01"
+                          },
+                          {
+                            "name": "Skip track backward",
+                            "cmd": "02"
+                          },
+                          {
+                            "name": "Skip track forward",
+                            "cmd": "03"
+                          },
+                          {
+                            "name": "Voice assistant",
+                            "cmd": "04"
+                          },
+                          {
+                            "name": "Volume+",
+                            "cmd": "05"
+                          },
+                          {
+                            "name": "Volume-",
+                            "cmd": "06"
+                          },
+                          {
+                            "name": "Gaming mode",
+                            "cmd": "07"
+                          }
+                    ]
+                },
+                "three_click": {
+                    "name": "Triple tap",
+                    "music": "Voice assistant",
+                    "character": "00000005-0000-1000-8000-00805f9b34fb",
+                    "list": [
+                        {
+                            "name": "Play/Pause",
+                            "cmd": "01"
+                          },
+                          {
+                            "name": "Skip track backward",
+                            "cmd": "02"
+                          },
+                          {
+                            "name": "Skip track forward",
+                            "cmd": "03"
+                          },
+                          {
+                            "name": "Voice assistant",
+                            "cmd": "04"
+                          },
+                          {
+                            "name": "Volume+",
+                            "cmd": "05"
+                          },
+                          {
+                            "name": "Volume-",
+                            "cmd": "06"
+                          },
+                          {
+                            "name": "Gaming mode",
+                            "cmd": "07"
+                          }
+                    ]
+                }
+            },
+            "right": {
+                "image": "",
+                "double_click": {
+                    "name": "double tap",
+                    "voice": "Answer/End call",
+                    "music": "Play/Pause",
+                    "character": "00000004-0000-1000-8000-00805f9b34fb",
+                    "list": [
+                        {
+                            "name": "Play/Pause",
+                            "cmd": "01"
+                          },
+                          {
+                            "name": "Skip track backward",
+                            "cmd": "02"
+                          },
+                          {
+                            "name": "Skip track forward",
+                            "cmd": "03"
+                          },
+                          {
+                            "name": "Voice assistant",
+                            "cmd": "04"
+                          },
+                          {
+                            "name": "Volume+",
+                            "cmd": "05"
+                          },
+                          {
+                            "name": "Volume-",
+                            "cmd": "06"
+                          },
+                          {
+                            "name": "Gaming mode",
+                            "cmd": "07"
+                          }
+                    ]
+                },
+                "three_click": {
+                    "name": "Triple tap",
+                    "music": "Gaming mode",
+                    "character": "00000006-0000-1000-8000-00805f9b34fb",
+                    "list": [
+                        {
+                            "name": "Play/Pause",
+                            "cmd": "01"
+                          },
+                          {
+                            "name": "Skip track backward",
+                            "cmd": "02"
+                          },
+                          {
+                            "name": "Skip track forward",
+                            "cmd": "03"
+                          },
+                          {
+                            "name": "Voice assistant",
+                            "cmd": "04"
+                          },
+                          {
+                            "name": "Volume+",
+                            "cmd": "05"
+                          },
+                          {
+                            "name": "Volume-",
+                            "cmd": "06"
+                          },
+                          {
+                            "name": "Gaming mode",
+                            "cmd": "07"
+                          }
+                    ]
+                }
+            }
+        },
+        {
+            "name": "Equalizer",
+            "info": "<font color='#303030' size='15'>Equalizer: </font> You may tune your favorite sound effect via equalizer",
+            "type": 2,
+            "count": 10,
+            "mindb": 8,
+            "maxdb": 8,
+            "character": "0000000B-0000-1000-8000-00805f9b34fb",
+            "freq": "31,62,125,250,500,1k,2k,4k,8k,16k",
+            "sys_eq": [
+                {
+                    "name": "Default",
+                    "eqs": "0,0,0,0,0,0,0,0,0,0",
+                    "img": ""
+                },
+                {
+                    "name": "Pop",
+                    "eqs": "-6,5,-3,-2,5,4,-4,-3,6,4",
+                    "img": ""
+                },
+                {
+                    "name": "Bass",
+                    "eqs": "8,7,5,4,0,0,0,0,0,0",
+                    "img": ""
+                },
+                {
+                    "name": "Rock",
+                    "eqs": "7,6,2,1,-3,-4,2,1,4,5",
+                    "img": ""
+                },
+                {
+                    "name": "Soft",
+                    "eqs": "5,-5,-4,-4,3,2,4,4,0,0",
+                    "img": ""
+                },
+                {
+                    "name": "Classic",
+                    "eqs": "6,7,1,2,-1,1,-4,-6,-7,-8",
+                    "img": ""
+                }
+            ]
+        },
+        {
+            "type": 4,
+            "items": [
+                {
+                    "id": 3,
+                    "title": "Reset to default",
+                    "type": 3,
+                    "jump": "1",
+                    "msg": "Are you sure to reset to default?\\n Reset button functions and equalizer will be default value",
+                    "character": "0000000A-0000-1000-8000-00805f9b34fb",
+                    "cmd": "01"
+                },
+                {
+                    "id": 4,
+                    "title": "Clean pairing records",
+                    "type": 100,
+                    "jump": "1",
+                    "msg": "Are you sure to delete pairing records?\\nHeadsets will auto disconnect to you phone upon deleting",
+                    "character": "0000000A-0000-1000-8000-00805f9b34fb",
+                    "cmd": "02"
+                }
+            ]
+        }
+    ]
+}

@@ -9,7 +9,10 @@ resumed without starting over. None of it is needed to build or run the app.
 | `apk_extracted/`  | The APK unzipped (dex, resources, native libs, `.proto` files) |
 | `decompiled/`     | Java sources and resources produced by jadx 1.5.6 |
 | `tools/jadx/`     | jadx 1.5.6 from the Kali repository (`bin/jadx`, `bin/jadx-gui`) |
-| `panel_json/`     | Control-panel JSON for the MeloBuds Pro (model 19786) from QCY's API: `raw_19786.json` is the full response, `melobuds_pro_19786.json` the `controlPanel` part |
+| `decompiled_simple/` | Single classes re-decompiled with `jadx -m simple` where the normal output was garbled |
+| `panel_json/`     | QCY's control panels: `models/<id>.json` for every earphone (API response + chip family), `catalog/` the product list, `defaults/` the app's built-in fallback panels. Refreshed by `scripts/update-panels.py --fetch`, which also rebuilds the bundle compiled into `qcy-protocol` |
+| `notes/`          | Protocol write-ups: `panel_semantics.md` (the panel format and every layout/item/command id), `jieli.md` (JieLi RCSP as QCY uses it), `zr.md` (ZR chips), `web_research.md` (public sources, with licences) |
+| `web_sources/`    | Local copies of the public sources cited in `notes/web_research.md` (not in git: mixed licences) |
 | `logs/`           | bluetoothctl captures and `qcyctl -vv` protocol traces from real earbuds |
 | `screenshots/`    | GUI captures (`qcy-gui --screenshots research/screenshots`) |
 

@@ -1,0 +1,512 @@
+{
+ "model": "QCY H3 ANC HEADSET",
+ "vendorID": 16767,
+ "chip": "JieLi",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": {
+   "firmwareVersions": "999.0.0",
+   "firmwareversionGte": "0.0.0",
+   "firmwareversionLte": "999.999.999",
+   "controlPanel": {
+    "layouts": [
+     {
+      "img": "http://img.qcymall.com/app_qcy_h3_headphonesapp_black.png",
+      "buttons": [
+       {
+        "keyName": "Volume down button",
+        "events": [
+         {
+          "eventID": 769,
+          "name": "Touch",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 6
+         }
+        ]
+       },
+       {
+        "keyName": "Volume up button",
+        "events": [
+         {
+          "eventID": 1281,
+          "name": "Touch",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 5
+         }
+        ]
+       },
+       {
+        "keyName": "MFB",
+        "events": [
+         {
+          "eventID": 1793,
+          "name": "Touch",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 1
+         },
+         {
+          "eventID": 1794,
+          "name": "Double touch",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 7
+         },
+         {
+          "eventID": 1795,
+          "name": "Triple touch",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 4
+         },
+         {
+          "eventID": 1796,
+          "name": "Touch four times",
+          "list": [
+           {
+            "name": "Not work",
+            "cmd": 0
+           },
+           {
+            "name": "Play/pause",
+            "cmd": 1
+           },
+           {
+            "name": "Previous track",
+            "cmd": 2
+           },
+           {
+            "name": "Next track",
+            "cmd": 3
+           },
+           {
+            "name": "Voice Assistant",
+            "cmd": 4
+           },
+           {
+            "name": "Volume up",
+            "cmd": 5
+           },
+           {
+            "name": "Volume down",
+            "cmd": 6
+           },
+           {
+            "name": "Gaming mode",
+            "cmd": 7
+           }
+          ],
+          "defaultFun": 0
+         }
+        ]
+       }
+      ],
+      "name": "Customizing button function",
+      "type": 14,
+      "info": "You may customize touch controls here.<br/><font  color='#303030'  size='15'>Audio mode：</font>Custom touch function for music play, voice assistant and so on<br/><font  color='#303030'  size='15'>Call mode：</font>Custom touch function for calling"
+     },
+     {
+      "mindb": 8,
+      "sys_eq": [
+       {
+        "q": "0.4,0.8,0.7,1,0.8,1.3,1.2",
+        "eqs": "2.5,-11,1,2.5,3,2,2.5",
+        "name": "Default",
+        "freq": "55,220,500,1800,2800,4500,7500",
+        "iitType": "2,2,2,2,2,2,2",
+        "mastergain": "-5.5"
+       },
+       {
+        "q": "0.4,1.2,1.5,1.5,1.2,0.8,1.2",
+        "eqs": "-3,-12,1,-1,2,3.5,3",
+        "name": "Pop",
+        "freq": "55,220,500,1000,1800,2800,7500",
+        "iitType": "2,2,2,2,2,2,2",
+        "mastergain": "-5.5"
+       },
+       {
+        "q": "0.4,1.2,1.5,1.5,0.9,0.7,0.5",
+        "eqs": "6,-9,1,-1,-3.5,0,-4",
+        "name": "Heavy Bass",
+        "freq": "55,220,500,1000,1800,2800,7500",
+        "iitType": "2,2,2,2,2,2,2",
+        "mastergain": -5
+       },
+       {
+        "q": "0.4,0.7,0.7,1.5,0.7,0.8,0.7,0.7",
+        "eqs": "5.5,-10,0,-1,1.5,4,3,3",
+        "name": "Rock",
+        "freq": "55,220,500,1000,1800,2800,4500,7500",
+        "iitType": "2,2,2,2,2,2,2,2",
+        "mastergain": "-5.5"
+       },
+       {
+        "q": "0.7,1.2,1.5,1.5,1.2,0.8,1.2",
+        "eqs": "-1,-12,1,-1,2,2,2",
+        "name": "Soft",
+        "freq": "55,220,500,1000,1800,2800,7500",
+        "iitType": "2,2,2,2,2,2,2",
+        "mastergain": "-5.5"
+       },
+       {
+        "q": "0.4,1.5,1.5,0.7,1.2,0.8,1.2",
+        "eqs": "4,-5,1,2,2,2,3",
+        "name": "Classic",
+        "freq": "55,220,500,1000,1800,2800,7500",
+        "iitType": "2,2,2,2,2,2,2",
+        "mastergain": "-5.5"
+       }
+      ],
+      "eqs": "0,0,0,0,0,0,0,0,0,0",
+      "iitType": "2,2,2,2,2,2,2,2,2,2",
+      "volumelevel": 0,
+      "count": 10,
+      "basedb": 0,
+      "freq": "55,220,500,1000,1800,2800,4500,7500,10000,22000",
+      "type": 2,
+      "maxdb": 8,
+      "q": "0.4,1.2,1.5,1.5,1.2,0.8,1.2,1.2,1.2,1.2",
+      "character": "0000000B-0000-1000-8000-00805f9b34fb",
+      "name": "Sound effect",
+      "info": "<font color='#303030' size='15'>Equalizer：</font>You can tailor the sound to your preference via the equalizer."
+     },
+     {
+      "modes": [
+       {
+        "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+        "startcmdid": 65792,
+        "endcmdid": 131071,
+        "name": "Noise canceling",
+        "viewtype": 1,
+        "defaultcmd": 65794,
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+        "items": [
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 66816,
+          "endcmdid": 66816,
+          "name": "Adaptive",
+          "describe": "Adaptive",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/zsy_black.png",
+          "img_white": "http://img.qcymall.com/zsy_white.png"
+         },
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 65792,
+          "endcmdid": 65794,
+          "name": "Noisy",
+          "describe": "Noisy environment",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/caoza_black.png",
+          "img_white": "http://img.qcymall.com/caoza_white.png"
+         },
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 66048,
+          "endcmdid": 66050,
+          "name": "Commuting",
+          "describe": "Very noisy environments such as commuting",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/tongxing_black.png",
+          "img_white": "http://img.qcymall.com/tongxing_white.png"
+         },
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 66304,
+          "endcmdid": 66306,
+          "name": "Indoor",
+          "describe": "Quiet environment",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/shinei_black.png",
+          "img_white": "http://img.qcymall.com/shinei_white.png"
+         },
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 66560,
+          "endcmdid": 66560,
+          "name": "Anti-wind noise",
+          "describe": "Anti-wind noise",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/kangfengzao_black.png",
+          "img_white": "http://img.qcymall.com/kangfengzao_white.png"
+         }
+        ],
+        "img_black": "http://img.qcymall.com/noise_reduction_on_black.png",
+        "img_white": "http://img.qcymall.com/noise_reduction_on_white.png"
+       },
+       {
+        "img": "http://img.qcymall.com/qcy_app_anc_03_b.png",
+        "startcmdid": 196868,
+        "endcmdid": 196868,
+        "name": "Transparency",
+        "viewtype": 3,
+        "defaultcmd": 196868,
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_03_a.png",
+        "img_black": "http://img.qcymall.com/tongtou_black.png",
+        "img_white": "http://img.qcymall.com/tongtou_white.png"
+       },
+       {
+        "img": "http://img.qcymall.com/qcy_app_anc_04_b.png",
+        "startcmdid": 131072,
+        "endcmdid": 131072,
+        "name": "Normal",
+        "viewtype": 3,
+        "defaultcmd": 131072,
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_04_a.png",
+        "img_black": "http://img.qcymall.com/noise_reduction_off_black.png",
+        "img_white": "http://img.qcymall.com/noise_reduction_off_white.png"
+       }
+      ],
+      "name": "Noise canceling mode",
+      "type": 9,
+      "info": "<font color='#303030' size='15'>ANC mode：</font>You can adjust the ANC (Active Noise Cancellation) mode here"
+     },
+     {
+      "latitude": "23.345",
+      "name": "Find headset",
+      "type": 3,
+      "info": "<font color='#303030' size='15'>Find headset：</font>The APP will record the location of your earphones, allowing you to locate them on the map or make them emit sound to help you find them.",
+      "longitude": "116.102"
+     },
+     {
+      "name": "Sound channel balance",
+      "type": 8,
+      "info": "<font color='#303030' size='15'>ANC mode：</font>You can adjust the ANC (Active Noise Cancellation) mode here"
+     },
+     {
+      "msg": "Please upgrade the APP to the latest version.",
+      "name": "Rename device",
+      "hasValue": true,
+      "id": 101,
+      "type": 101,
+      "jump": "1"
+     },
+     {
+      "msg": "Please upgrade the APP to the latest version.",
+      "cmdid": 20,
+      "repeat": 65000,
+      "name": "Timing power-off",
+      "hasValue": true,
+      "id": 102,
+      "type": 102,
+      "jump": "1"
+     },
+     {
+      "type": 4,
+      "items": [
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 9,
+        "sub_items": [
+         {
+          "cmd": "FF03100101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03100102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Gaming mode",
+        "type": 206,
+        "jump": "0"
+       },
+       {
+        "manufacturers": 2,
+        "id": 1,
+        "title": "Firmware update",
+        "type": 1,
+        "jump": "0"
+       },
+       {
+        "msg": "Do you want to restore to factory settings?\n Button functions and music equalizer will be reset to factory defaults.",
+        "character": "0000000A-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "01",
+        "title": "Reset to default",
+        "type": 3,
+        "jump": "1"
+       },
+       {
+        "msg": "Are you sure to clear pairing records?\nHeadsets will auto disconnect to you phone upon clearing",
+        "character": "0000000A-0000-1000-8000-00805f9b34fb",
+        "id": 4,
+        "cmd": "02",
+        "title": "Delete pairing records",
+        "type": 100,
+        "jump": "1"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "time": "2026-10-13 14:15:36"
+ }
+}

@@ -1,0 +1,925 @@
+{
+ "model": "QCY MeloBuds N65",
+ "vendorID": 32894,
+ "chip": "JieLi",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": {
+   "firmwareVersions": "999.0.0",
+   "firmwareversionGte": "2.0.8",
+   "firmwareversionLte": "999.999.999",
+   "controlPanel": {
+    "layouts": [
+     {
+      "name": "Customizing button function",
+      "info": "You may customize touch controls here.<br/><font color='#303030' size='15'>Audio mode：</font>Custom touch function for music play, voice assistant and so on<br/><font color='#303030' size='15'>Call mode：</font>Custom touch function for calling",
+      "type": 1,
+      "left": {
+       "image": "http://img.qcymall.com/t30/app_qcy_qt30_left.png",
+       "single_click": {
+        "name": "Touch",
+        "music": "Not work",
+        "character": "00000001-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "ANC mode",
+          "cmd": "0B"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       },
+       "double_click": {
+        "name": "Double touch",
+        "voice": "Answer/end call",
+        "music": "Play/pause",
+        "character": "00000003-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "ANC mode",
+          "cmd": "0B"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       },
+       "three_click": {
+        "name": "Triple touch",
+        "music": "Previous track",
+        "character": "00000005-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "ANC mode",
+          "cmd": "0B"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       },
+       "long_press": {
+        "name": "Long press",
+        "music": "Voice Assistant",
+        "character": "00000009-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "ANC mode",
+          "cmd": "0B"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       }
+      },
+      "right": {
+       "image": "http://img.qcymall.com/t30/app_qcy_qt30_right.png",
+       "single_click": {
+        "name": "Touch",
+        "music": "Not work",
+        "character": "00000002-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "ANC mode",
+          "cmd": "0B"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       },
+       "double_click": {
+        "name": "Double touch",
+        "voice": "Answer/end call",
+        "music": "Play/pause",
+        "character": "00000004-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "ANC mode",
+          "cmd": "0B"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       },
+       "three_click": {
+        "name": "Triple touch",
+        "music": "Next track",
+        "character": "00000006-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "ANC mode",
+          "cmd": "0B"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       },
+       "long_press": {
+        "name": "Long press",
+        "music": "ANC mode",
+        "character": "0000000A-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "ANC mode",
+          "cmd": "0B"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "name": "Sound effect",
+      "info": "<font color='#303030' size='15'>Equalizer：</font>You can tailor the sound to your preference via the equalizer.",
+      "type": 2,
+      "count": 10,
+      "mindb": 8,
+      "maxdb": 8,
+      "basedb": 0,
+      "character": "0000000B-0000-1000-8000-00805f9b34fb",
+      "q": "0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7,0.7",
+      "freq": "31,62,125,250,500,1000,2000,4000,8000,16000",
+      "eqs": "0,0,0,0,0,0,0,0,0,0",
+      "iitType": "2,2,2,2,2,2,2,2,2,2",
+      "volumelevel": 8,
+      "sys_eq": [
+       {
+        "name": "Default",
+        "eqs": "-11,-12.5,-1,-2,9.5,1,6,-3",
+        "mastergain": -12,
+        "q": "0.8,0.4,1.5,1,0.8,2,1.5,3",
+        "freq": "20,150,750,320,2900,2000,10000,6000",
+        "iitType": "2,2,2,2,2,2,5,2",
+        "id": 1
+       },
+       {
+        "name": "Pop",
+        "eqs": "-14,-15,-1,-2,9.5,1,6,-3,-2.5",
+        "mastergain": -12,
+        "q": "0.8,0.4,1.5,1,0.8,2,1.5,3,0.7",
+        "freq": "20,150,750,320,2900,2000,10000,6000,50",
+        "iitType": "2,2,2,2,2,2,5,2,2",
+        "id": 2
+       },
+       {
+        "name": "Heavy Bass",
+        "eqs": "-8,-11,-1,-2,7,4,6,-3,3",
+        "mastergain": -12,
+        "q": "0.8,0.4,1.5,1,0.8,2,1.5,3,0.7",
+        "freq": "20,150,750,320,2900,8000,10000,6000,50",
+        "iitType": "2,2,2,2,2,2,5,2,2",
+        "id": 3
+       },
+       {
+        "name": "Rock",
+        "eqs": "-8,-15,-2,-3,9.5,4,6,-3,3",
+        "mastergain": -12,
+        "q": "0.8,0.6,1.5,1,0.8,2,1.5,3,0.7",
+        "freq": "20,150,750,320,2900,8000,10000,6000,50",
+        "iitType": "2,2,2,2,2,2,5,2,2",
+        "id": 4
+       },
+       {
+        "name": "Soft",
+        "eqs": "-13,-15,0,-2,6.5,2,6,-3,-1.5",
+        "mastergain": -12,
+        "q": "0.8,0.4,1.5,1,0.8,2,1.5,3,0.7",
+        "freq": "20,150,750,320,2900,2000,10000,6000,50",
+        "iitType": "2,2,2,2,2,2,5,2,2",
+        "id": 5
+       },
+       {
+        "name": "Classic",
+        "eqs": "-8,-11,-1,-2,9.5,1,6,-3,3",
+        "mastergain": -12,
+        "q": "0.8,0.4,1.5,1,0.8,2,1.5,3,0.7",
+        "freq": "20,150,750,320,2900,2000,10000,6000,50",
+        "iitType": "2,2,2,2,2,2,5,2,2",
+        "id": 6
+       },
+       {
+        "name": "Game",
+        "img": "http://img.qcymall.com/game_old_black2.png",
+        "checkimg": "http://img.qcymall.com/game_old_yellow.png",
+        "eqs": "-11,-14,-1,-2,11,2,6,-1,-1.5",
+        "mastergain": -12,
+        "q": "0.8,0.4,1.5,1,0.8,1,1.5,3,1",
+        "freq": "20,150,750,320,2900,2000,10000,6000,50",
+        "iitType": "2,2,2,2,2,2,5,2,2",
+        "id": 13
+       }
+      ]
+     },
+     {
+      "modes": [
+       {
+        "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+        "startcmdid": 65792,
+        "endcmdid": 131071,
+        "name": "Noise canceling",
+        "viewtype": 1,
+        "defaultcmd": 65794,
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+        "img_black": "http://img.qcymall.com/noise_reduction_on_black.png",
+        "img_white": "http://img.qcymall.com/noise_reduction_on_white.png",
+        "hidePop": true,
+        "ancInvert": 1500,
+        "items": [
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 66816,
+          "endcmdid": 66816,
+          "name": "Adaptive",
+          "describe": "Adaptive",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/zsy_black.png",
+          "img_white": "http://img.qcymall.com/zsy_white.png",
+          "ancInvert": 1500,
+          "noSpaceTip": "To provide the best user experience, adaptive noise cancellation will turn off spatial audio."
+         },
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 65792,
+          "endcmdid": 65794,
+          "name": "Noisy",
+          "describe": "Noisy environment",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/caoza_black.png",
+          "img_white": "http://img.qcymall.com/caoza_white.png",
+          "ancInvert": 1500
+         },
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 66048,
+          "endcmdid": 66050,
+          "name": "Commuting",
+          "describe": "Very noisy environments such as commuting",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/tongxing_black.png",
+          "img_white": "http://img.qcymall.com/tongxing_white.png",
+          "ancInvert": 1500
+         },
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 66304,
+          "endcmdid": 66306,
+          "name": "Indoor",
+          "describe": "Quiet environment",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/shinei_black.png",
+          "img_white": "http://img.qcymall.com/shinei_white.png",
+          "ancInvert": 1500
+         },
+         {
+          "img": "http://img.qcymall.com/qcy_app_anc_01_b.png",
+          "startcmdid": 66560,
+          "endcmdid": 66560,
+          "name": "Anti-wind noise",
+          "describe": "Anti-wind noise",
+          "imgcheck": "http://img.qcymall.com/qcy_app_anc_01_a.png",
+          "img_black": "http://img.qcymall.com/kangfengzao_black.png",
+          "img_white": "http://img.qcymall.com/kangfengzao_white.png",
+          "ancInvert": 1500
+         }
+        ]
+       },
+       {
+        "img": "http://img.qcymall.com/qcy_app_anc_03_b.png",
+        "startcmdid": 196864,
+        "endcmdid": 196870,
+        "name": "Transparency",
+        "voicecmdid": 196864,
+        "viewtype": 2,
+        "defaultcmd": 196868,
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_03_a.png",
+        "img_black": "http://img.qcymall.com/tongtou_black.png",
+        "img_white": "http://img.qcymall.com/tongtou_white.png",
+        "ancInvert": 1500
+       },
+       {
+        "img": "http://img.qcymall.com/qcy_app_anc_04_b.png",
+        "startcmdid": 131072,
+        "endcmdid": 131072,
+        "name": "Normal",
+        "viewtype": 3,
+        "defaultcmd": 131072,
+        "imgcheck": "http://img.qcymall.com/qcy_app_anc_04_a.png",
+        "img_black": "http://img.qcymall.com/noise_reduction_off_black.png",
+        "img_white": "http://img.qcymall.com/noise_reduction_off_white.png",
+        "ancInvert": 1500
+       }
+      ],
+      "name": "Noise canceling mode",
+      "type": 9,
+      "info": "<font color='#303030' size='15'>ANC mode：</font>You can adjust the ANC (Active Noise Cancellation) mode here"
+     },
+     {
+      "latitude": "23.345",
+      "name": "Find headset",
+      "type": 3,
+      "info": "<font color='#303030' size='15'>Find headset：</font>The APP will record the location of your earphones, allowing you to locate them on the map or make them emit sound to help you find them.",
+      "longitude": "116.102"
+     },
+     {
+      "name": "Sound channel balance",
+      "type": 8,
+      "info": "<font color='#303030' size='15'>ANC mode：</font>You can adjust the ANC (Active Noise Cancellation) mode here"
+     },
+     {
+      "itemName": {
+       "2": "Minimum volume",
+       "4": "Medium volume",
+       "8": "Maximum volume"
+      },
+      "cmdid": 29,
+      "name": "Beep volume",
+      "hasValue": true,
+      "id": 103,
+      "type": 103,
+      "jump": "1"
+     },
+     {
+      "msg": "Please upgrade the APP to the latest version.",
+      "cmdid": 20,
+      "repeat": 65000,
+      "name": "Timing power-off",
+      "hasValue": true,
+      "id": 102,
+      "type": 102,
+      "jump": "1"
+     },
+     {
+      "itemName": {
+       "0500": "5Minute",
+       "0A00": "10Minute",
+       "1E00": "30Minute",
+       "3C00": "60Minute",
+       "FFFF": "Don‘t shut down"
+      },
+      "itemNameIos": [
+       "5Minute",
+       "10Minute",
+       "30Minute",
+       "60Minute",
+       "Don‘t shut down"
+      ],
+      "itemKeyIos": [
+       "0500",
+       "0A00",
+       "1E00",
+       "3C00",
+       "FFFF"
+      ],
+      "cmdid": 31,
+      "name": "Disconnect and power off",
+      "hasValue": true,
+      "id": 103,
+      "type": 1000,
+      "jump": "1"
+     },
+     {
+      "cmdid": 17,
+      "name": "Fit detection",
+      "type": 110,
+      "jump": "1"
+     },
+     {
+      "cmdid": 74,
+      "name": "Gaming mode",
+      "confTip": "Enable and Sync Game Sound Effects",
+      "desc": "Switching Game Mode will reboot the headset",
+      "type": 112,
+      "jump": "1"
+     },
+     {
+      "cmdid": 36,
+      "name": "Multi-Device Connection",
+      "desc": "Connect up to 3 Bluetooth devices at once",
+      "type": 113,
+      "jump": "1"
+     },
+     {
+      "cmdid": 80,
+      "name": "Head Control",
+      "desc": "Enable head gesture for call control.",
+      "type": 114,
+      "jump": "1",
+      "actions": [
+       {
+        "keyID": 1,
+        "keyName": "Incoming Call",
+        "events": [
+         {
+          "eventID": 1,
+          "name": "nod twice",
+          "showTitle": "Incoming CallNod",
+          "helpTip": "After enabling Head Control, you can use this gesture to answer incoming calls.",
+          "list": [
+           {
+            "name": "Answer Call",
+            "cmd": 1
+           },
+           {
+            "name": "Reject Call",
+            "cmd": 2
+           },
+           {
+            "name": "Not work",
+            "cmd": 0
+           }
+          ],
+          "defaultFun": 1
+         },
+         {
+          "eventID": 2,
+          "name": "Shake Head",
+          "showTitle": "Incoming CallShake Head",
+          "helpTip": "After enabling head control, you can use this gesture to reject incoming calls.",
+          "list": [
+           {
+            "name": "Answer Call",
+            "cmd": 1
+           },
+           {
+            "name": "Reject Call",
+            "cmd": 2
+           },
+           {
+            "name": "Not work",
+            "cmd": 0
+           }
+          ],
+          "defaultFun": 2
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "cmdid": 84,
+      "name": "AI Scene Noise Cancellation",
+      "desc": "Automatically switch noise cancellation based on activity status and noise level.",
+      "type": 115,
+      "jump": "1",
+      "actionList": [
+       {
+        "name": "Detecting",
+        "cmd": 0
+       },
+       {
+        "name": "Stationary",
+        "cmd": 1
+       },
+       {
+        "name": "Walking",
+        "cmd": 2
+       },
+       {
+        "name": "Running",
+        "cmd": 3
+       }
+      ],
+      "sceneList": [
+       {
+        "name": "Low",
+        "cmd": 0
+       },
+       {
+        "name": "Medium",
+        "cmd": 1
+       },
+       {
+        "name": "High",
+        "cmd": 2
+       }
+      ],
+      "configs": [
+       {
+        "name": "Noise canceling",
+        "modelID": 1,
+        "sceneID": 3,
+        "levelID": 2,
+        "levelCount": 0,
+        "items": [
+         {
+          "name": "Noisy",
+          "describe": "Noisy environment",
+          "modelID": 1,
+          "sceneID": 1,
+          "levelID": 2,
+          "minLevel": 0,
+          "maxLevel": 2
+         },
+         {
+          "name": "Commuting",
+          "describe": "Very noisy environments such as commuting",
+          "modelID": 1,
+          "sceneID": 2,
+          "levelID": 2,
+          "minLevel": 0,
+          "maxLevel": 2
+         },
+         {
+          "name": "Indoor",
+          "describe": "Quiet environment",
+          "modelID": 1,
+          "sceneID": 3,
+          "levelID": 2,
+          "minLevel": 0,
+          "maxLevel": 2
+         },
+         {
+          "name": "Anti-wind noise",
+          "describe": "Suitable for windy outdoor environments",
+          "modelID": 1,
+          "sceneID": 4,
+          "levelID": 0,
+          "minLevel": 0,
+          "maxLevel": 0
+         }
+        ]
+       },
+       {
+        "modelID": 3,
+        "sceneID": 1,
+        "levelID": 4,
+        "minLevel": 1,
+        "maxLevel": 6,
+        "name": "Transparency"
+       },
+       {
+        "name": "Normal",
+        "modelID": 2,
+        "sceneID": 0,
+        "levelID": 0,
+        "minLevel": 0,
+        "maxLevel": 0
+       }
+      ]
+     },
+     {
+      "name": "Spatial Audio",
+      "cmdid": 91,
+      "id": 116,
+      "type": 116,
+      "jump": "1",
+      "subItem": [
+       {
+        "name": "Close",
+        "index": 1,
+        "mp3Url": "http://img.qcymall.com/close.wav",
+        "previewImg": "http://img.qcymall.com/close_2.jpg",
+        "describe": " ",
+        "img": "http://img.qcymall.com/close_black_1.png",
+        "imgcheck": "http://img.qcymall.com/close_white_1.png"
+       },
+       {
+        "name": "Fixed",
+        "index": 2,
+        "mp3Url": "http://img.qcymall.com/fixed.wav",
+        "previewImg": "http://img.qcymall.com/fixed.gif",
+        "describe": "Enjoy a more immersive surround sound experience with supported music and video apps.",
+        "img": "http://img.qcymall.com/fixed_black_1.png",
+        "imgcheck": "http://img.qcymall.com/fixed_white_1.png"
+       },
+       {
+        "name": "Head Tracking",
+        "index": 3,
+        "mp3Url": "http://img.qcymall.com/headtracking.wav",
+        "previewImg": "http://img.qcymall.com/headtracking.gif",
+        "describe": "Enjoy a more immersive surround sound experience with supported music and video apps, the headphones dynamically adjust the sound field orientation and left/right ear volume in real time based on head movement.",
+        "img": "http://img.qcymall.com/headtracking_black_1.png",
+        "imgcheck": "http://img.qcymall.com/headtracking_white_1.png"
+       }
+      ]
+     },
+     {
+      "type": 4,
+      "items": [
+       {
+        "msg": "Touch control will be banned after Sleeping Mode is activated. * Place earbuds back into charging case to quit Sleep Mode.",
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 16,
+        "sub_items": [
+         {
+          "cmd": "FF03100101",
+          "boolVal": true
+         },
+         {
+          "cmd": "FF03100102",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Sleeping Mode",
+        "type": 204,
+        "jump": "0"
+       },
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 36,
+        "sub_items": [
+         {
+          "cmd": "240101",
+          "boolVal": true
+         },
+         {
+          "cmd": "240100",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Multi-Device Connection",
+        "msg": "Turning on will restart the earphone",
+        "msg_ios": "Turning on will restart the earphone",
+        "type": 200,
+        "jump": "0"
+       },
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 35,
+        "sub_items": [
+         {
+          "cmd": "230101",
+          "boolVal": true
+         },
+         {
+          "cmd": "230100",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "LDAC Switch",
+        "type": 200,
+        "jump": "0",
+        "msg": "Enabling LDAC will restart the device and disable multi-device connection and spatial audio"
+       },
+       {
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "cmdid": 39,
+        "sub_items": [
+         {
+          "cmd": "270101",
+          "boolVal": true
+         },
+         {
+          "cmd": "270100",
+          "boolVal": false
+         }
+        ],
+        "id": 1,
+        "title": "Dynamic EQ",
+        "type": 200,
+        "jump": "0"
+       },
+       {
+        "manufacturers": 12,
+        "id": 1,
+        "title": "Firmware update",
+        "type": 1,
+        "jump": "0"
+       },
+       {
+        "msg": "The headphones will be restarted. Do you want to restore the headphones to their default settings?",
+        "character": "0000000A-0000-1000-8000-00805f9b34fb",
+        "id": 3,
+        "cmd": "01",
+        "title": "Reset to default",
+        "type": 3,
+        "jump": "1"
+       },
+       {
+        "msg": "Are you sure to clear pairing records?\nHeadsets will auto disconnect to you phone upon clearing",
+        "character": "0000000A-0000-1000-8000-00805f9b34fb",
+        "id": 4,
+        "cmd": "02",
+        "title": "Delete pairing records",
+        "type": 100,
+        "jump": "1"
+       },
+       {
+        "msg": "The earbuds will restart. Restore factory settings?",
+        "character": "0000000A-0000-1000-8000-00805f9b34fb",
+        "id": 4,
+        "cmd": "03",
+        "title": "Reset to factory",
+        "type": 100,
+        "jump": "1"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "time": "2026-10-13 14:15:11"
+ }
+}

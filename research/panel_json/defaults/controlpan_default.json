@@ -1,0 +1,326 @@
+{
+    "layouts": [
+        {
+            "name": "Headphone button function customization",
+            "info": "Here you can modify and define the button touch function of the headset. <br/><font color='#303030' size='15'>Audio mode ：</font>Define button touch functions related to playing music and voice assistants. <br/><font color='#303030' size='15'>Call mode ：</font>Define the button touch function when the mobile phone is in a call state",
+            "type": 10,
+            "leftImg": "",
+            "rightImg": "",
+            "music": {
+                "name": "Music mode",
+                "event": [
+                    {
+                        "name": "click",
+                        "left": {
+                            "default": "No effect",
+                            "defaultFun": 0,
+                            "eventID": 1,
+                            "list": [
+                                {
+                                    "name": "No effect",
+                                    "cmd": 0
+                                },
+                                {
+                                    "name": "Play/Pause",
+                                    "cmd": 1
+                                },
+                                {
+                                    "name": "skip track backward",
+                                    "cmd": 2
+                                },
+                                {
+                                    "name": "skip track forward",
+                                    "cmd": 3
+                                },
+                                {
+                                    "name": "Voice assistant",
+                                    "cmd": 4
+                                },
+                                {
+                                    "name": "volume+",
+                                    "cmd": 5
+                                },
+                                {
+                                    "name": "volume-",
+                                    "cmd": 6
+                                },
+                                {
+                                    "name": "Game mode",
+                                    "cmd": 7
+                                }
+                            ]
+                        },
+                        "right": {
+                            "default": "No effect",
+                            "defaultFun": 0,
+                            "eventID": 2,
+                            "list": [
+                                {
+                                    "name": "No effect",
+                                    "cmd": 0
+                                },
+                                {
+                                    "name": "Play/Pause",
+                                    "cmd": 1
+                                },
+                                {
+                                    "name": "skip track backward",
+                                    "cmd": 2
+                                },
+                                {
+                                    "name": "skip track forward",
+                                    "cmd": 3
+                                },
+                                {
+                                    "name": "Voice assistant",
+                                    "cmd": 4
+                                },
+                                {
+                                    "name": "volume+",
+                                    "cmd": 5
+                                },
+                                {
+                                    "name": "volume-",
+                                    "cmd": 6
+                                },
+                                {
+                                    "name": "Game mode",
+                                    "cmd": 7
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "double click",
+                        "left": {
+                            "default": "Play/Pause",
+                            "defaultFun": 1,
+                            "eventID": 3,
+                            "list": [
+                                {
+                                    "name": "No effect",
+                                    "cmd": 0
+                                },
+                                {
+                                    "name": "Play/Pause",
+                                    "cmd": 1
+                                },
+                                {
+                                    "name": "skip track backward",
+                                    "cmd": 2
+                                },
+                                {
+                                    "name": "skip track forward",
+                                    "cmd": 3
+                                },
+                                {
+                                    "name": "Voice assistant",
+                                    "cmd": 4
+                                },
+                                {
+                                    "name": "volume+",
+                                    "cmd": 5
+                                },
+                                {
+                                    "name": "volume-",
+                                    "cmd": 6
+                                },
+                                {
+                                    "name": "Game mode",
+                                    "cmd": 7
+                                }
+                            ]
+                        },
+                        "right": {
+                            "default": "Play/Pause",
+                            "defaultFun": 1,
+                            "eventID": 4,
+                            "list": [
+                                {
+                                    "name": "No effect",
+                                    "cmd": 0
+                                },
+                                {
+                                    "name": "Play/Pause",
+                                    "cmd": 1
+                                },
+                                {
+                                    "name": "skip track backward",
+                                    "cmd": 2
+                                },
+                                {
+                                    "name": "skip track forward",
+                                    "cmd": 3
+                                },
+                                {
+                                    "name": "Voice assistant",
+                                    "cmd": 4
+                                },
+                                {
+                                    "name": "volume+",
+                                    "cmd": 5
+                                },
+                                {
+                                    "name": "volume-",
+                                    "cmd": 6
+                                },
+                                {
+                                    "name": "Game mode",
+                                    "cmd": 7
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "name": "Three strikes",
+                        "left": {
+                            "default": "Game mode",
+                            "defaultFun": 7,
+                            "eventID": 5,
+                            "list": [
+                                {
+                                    "name": "No effect",
+                                    "cmd": 0
+                                },
+                                {
+                                    "name": "Play/Pause",
+                                    "cmd": 1
+                                },
+                                {
+                                    "name": "skip track backward",
+                                    "cmd": 2
+                                },
+                                {
+                                    "name": "skip track forward",
+                                    "cmd": 3
+                                },
+                                {
+                                    "name": "Voice assistant",
+                                    "cmd": 4
+                                },
+                                {
+                                    "name": "volume+",
+                                    "cmd": 5
+                                },
+                                {
+                                    "name": "volume-",
+                                    "cmd": 6
+                                },
+                                {
+                                    "name": "Game mode",
+                                    "cmd": 7
+                                }
+                            ]
+                        },
+                        "right": {
+                            "default": "Voice assistant",
+                            "defaultFun": 4,
+                            "eventID": 6,
+                            "list": [
+                                {
+                                    "name": "No effect",
+                                    "cmd": 0
+                                },
+                                {
+                                    "name": "Play/Pause",
+                                    "cmd": 1
+                                },
+                                {
+                                    "name": "skip track backward",
+                                    "cmd": 2
+                                },
+                                {
+                                    "name": "skip track forward",
+                                    "cmd": 3
+                                },
+                                {
+                                    "name": "Voice assistant",
+                                    "cmd": 4
+                                },
+                                {
+                                    "name": "volume+",
+                                    "cmd": 5
+                                },
+                                {
+                                    "name": "volume-",
+                                    "cmd": 6
+                                },
+                                {
+                                    "name": "Game mode",
+                                    "cmd": 7
+                                }
+                            ]
+                        }
+                    }
+                ]
+            },
+            "voice": {
+                "name": "Call mode",
+                "event": [
+                    {
+                        "name": "double click",
+                        "left": "Answer/hang up",
+                        "right": "Answer/hang up"
+                    }
+                ]
+            }
+        },
+        {
+            "name": "EQ mode",
+            "info": "<font color=#303030' size='15'>EQ mode：</font>You can adjust the equalizer of the Bluetooth headset here to call up the sound effect that suits you",
+            "type": 2,
+            "count": 10,
+            "mindb": 8,
+            "maxdb": 8,
+            "character": "0000000B-0000-1000-8000-00805f9b34fb",
+            "freq": "31,62,125,250,500,1k,2k,4k,8k,16k",
+            "sys_eq": [
+                {
+                    "name": "Default",
+                    "eqs": "0,0,0,0,0,0,0,0,0,0",
+                    "img": ""
+                },
+                {
+                    "name": "Pop",
+                    "eqs": "-6,5,-3,-2,5,4,-4,-3,6,4",
+                    "img": ""
+                },
+                {
+                    "name": "Bass",
+                    "eqs": "8,7,5,4,0,0,0,0,0,0",
+                    "img": ""
+                },
+                {
+                    "name": "Rock",
+                    "eqs": "7,6,2,1,-3,-4,2,1,4,5",
+                    "img": ""
+                },
+                {
+                    "name": "Soft",
+                    "eqs": "5,-5,-4,-4,3,2,4,4,0,0",
+                    "img": ""
+                },
+                {
+                    "name": "Classic",
+                    "eqs": "6,7,1,2,-1,1,-4,-6,-7,-8",
+                    "img": ""
+                }
+            ]
+        },
+        {
+            "type": 4,
+            "items": [
+
+                {
+                    "id": 3,
+                    "title": "Reset to default",
+                    "type": 100,
+                    "jump": "1",
+                    "msg": "Are you sure to reset to default?",
+                    "character": "00001001-0000-1000-8000-00805f9b34fb",
+                    "cmd": "FF020100"
+                }
+            ]
+        }
+    ]
+}

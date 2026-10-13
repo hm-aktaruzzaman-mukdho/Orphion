@@ -6,6 +6,9 @@
 # Large or regenerable research artifacts (see research/README.md)
 /research/apk_extracted/
 /research/decompiled/
+/research/decompiled_simple/
+# Copies of third-party sources found while researching (mixed licences)
+/research/web_sources/
 /research/tools/
 /research/screenshots/
 /dist

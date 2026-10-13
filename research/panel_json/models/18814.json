@@ -1,0 +1,12 @@
+{
+ "model": "QCY Ailypods Neo",
+ "vendorID": 18814,
+ "chip": "JieLi",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": null,
+  "time": "2026-10-13 14:16:03"
+ }
+}

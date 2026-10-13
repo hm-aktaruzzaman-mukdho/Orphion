@@ -1,0 +1,407 @@
+{
+ "model": "QCY T41 Motif",
+ "vendorID": 6520,
+ "chip": "JieLi",
+ "response": {
+  "code": 200,
+  "success": true,
+  "msg": "success",
+  "data": {
+   "firmwareVersions": "999.0.0",
+   "firmwareversionGte": "0.0.0",
+   "firmwareversionLte": "999.999.999",
+   "controlPanel": {
+    "layouts": [
+     {
+      "name": "Customizing button function",
+      "info": "You may customize touch controls here.<br/><font color='#303030' size='15'>Audio mode：</font>Custom touch function for music play, voice assistant and so on<br/><font color='#303030' size='15'>Call mode：</font>Custom touch function for calling",
+      "type": 1,
+      "left": {
+       "image": "asset:///image/app_dt10_left.png",
+       "single_click": {
+        "name": "Touch",
+        "music": "Not work",
+        "character": "00000001-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       },
+       "double_click": {
+        "name": "Double touch",
+        "voice": "Answer/end call",
+        "music": "Play/pause",
+        "character": "00000003-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       },
+       "three_click": {
+        "name": "Triple touch",
+        "music": "Voice Assistant",
+        "character": "00000005-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       }
+      },
+      "right": {
+       "image": "asset:///image/app_dt10_right.png",
+       "single_click": {
+        "name": "Touch",
+        "music": "Not work",
+        "character": "00000002-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       },
+       "double_click": {
+        "name": "Double touch",
+        "voice": "Answer/end call",
+        "music": "Play/pause",
+        "character": "00000004-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       },
+       "three_click": {
+        "name": "Triple touch",
+        "music": "Next track",
+        "character": "00000006-0000-1000-8000-00805f9b34fb",
+        "list": [
+         {
+          "name": "Play/pause",
+          "cmd": "01"
+         },
+         {
+          "name": "Previous track",
+          "cmd": "02"
+         },
+         {
+          "name": "Next track",
+          "cmd": "03"
+         },
+         {
+          "name": "Voice Assistant",
+          "cmd": "04"
+         },
+         {
+          "name": "Volume up",
+          "cmd": "05"
+         },
+         {
+          "name": "Volume down",
+          "cmd": "06"
+         },
+         {
+          "name": "Gaming mode",
+          "cmd": "07"
+         },
+         {
+          "name": "Not work",
+          "cmd": "00"
+         }
+        ]
+       }
+      }
+     },
+     {
+      "name": "Equalizer",
+      "info": "<font color='#303030' size='15'>Equalizer：</font>You can tailor the sound to your preference via the equalizer.",
+      "type": 2,
+      "count": 10,
+      "mindb": 8,
+      "maxdb": 8,
+      "basedb": -5,
+      "character": "0000000B-0000-1000-8000-00805f9b34fb",
+      "freq": "31,62,125,250,500,1k,2k,4k,8k,16k",
+      "sys_eq": [
+       {
+        "name": "Default",
+        "eqs": "0,0,0,0,0,0,0,0,0,0"
+       },
+       {
+        "name": "Pop",
+        "eqs": "0.0,0.0,0.0,-2.0,-8.0,0,3.0,4.0,2.0,0.0"
+       },
+       {
+        "name": "Heavy Bass",
+        "eqs": "5.0,6.0,0.0,-2.0,-10.0,-2.0,4.0,2.0,0.0,0.0"
+       },
+       {
+        "name": "Rock",
+        "eqs": "5.0,4.0,0.0,-2.0,-11.0,-2.0,4.0,2.0,6.0,6.0"
+       },
+       {
+        "name": "Soft",
+        "eqs": "-2.0,-3.0,0.0,-2.0,-10.0,0.0,4.0,4.0,2.0,0"
+       },
+       {
+        "name": "Classic",
+        "eqs": "4.0,4.0,0.0,-2.0,-6.0,0.0,5.0,4.0,4.0,6.0"
+       }
+      ]
+     },
+     {
+      "name": "Find headset",
+      "info": "<font color='#303030' size='15'>Find headset：</font>The APP will record the location of your earphones, allowing you to locate them on the map or make them emit sound to help you find them.",
+      "type": 3,
+      "latitude": "23.345",
+      "longitude": "116.102"
+     },
+     {
+      "name": "Sound channel balance",
+      "info": "<font color='#303030' size='15'>ANC mode：</font>You can adjust the ANC (Active Noise Cancellation) mode here",
+      "type": 8
+     },
+     {
+      "id": 101,
+      "name": "Rename device",
+      "msg": "Please upgrade the APP to the latest version.",
+      "type": 101,
+      "jump": "1",
+      "hasValue": true
+     },
+     {
+      "id": 102,
+      "name": "Timing power-off",
+      "msg": "Please upgrade the APP to the latest version.",
+      "type": 102,
+      "cmdid": 20,
+      "repeat": 65000,
+      "jump": "1",
+      "hasValue": true
+     },
+     {
+      "hasValue": true,
+      "id": 103,
+      "itemName": {
+       "5": "Minimum volume",
+       "8": "Medium volume",
+       "10": "Maximum volume"
+      },
+      "cmdid": 29,
+      "type": 103,
+      "name": "Beep volume",
+      "jump": "1"
+     },
+     {
+      "type": 4,
+      "items": [
+       {
+        "id": 1,
+        "title": "Sleeping Mode",
+        "msg": "Touch control will be banned after Sleeping Mode is activated. * Place earbuds back into charging case to quit Sleep Mode.",
+        "type": 204,
+        "jump": "0",
+        "cmdid": 16,
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "sub_items": [
+         {
+          "boolVal": true,
+          "cmd": "FF03100101"
+         },
+         {
+          "boolVal": false,
+          "cmd": "FF03100102"
+         }
+        ]
+       },
+       {
+        "id": 1,
+        "title": "Gaming mode",
+        "type": 206,
+        "jump": "0",
+        "cmdid": 9,
+        "character": "00001001-0000-1000-8000-00805f9b34fb",
+        "sub_items": [
+         {
+          "boolVal": true,
+          "cmd": "FF03100101"
+         },
+         {
+          "boolVal": false,
+          "cmd": "FF03100102"
+         }
+        ]
+       },
+       {
+        "id": 3,
+        "title": "Reset to default",
+        "type": 3,
+        "jump": "1",
+        "msg": "Do you want to restore to factory settings?\n Button functions and music equalizer will be reset to factory defaults.",
+        "character": "0000000A-0000-1000-8000-00805f9b34fb",
+        "cmd": "01"
+       },
+       {
+        "id": 4,
+        "title": "Delete pairing records",
+        "type": 100,
+        "jump": "1",
+        "msg": "Are you sure to clear pairing records?\nHeadsets will auto disconnect to you phone upon clearing",
+        "character": "0000000A-0000-1000-8000-00805f9b34fb",
+        "cmd": "02"
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "time": "2026-10-13 14:14:27"
+ }
+}
