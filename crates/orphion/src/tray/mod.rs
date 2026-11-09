@@ -57,7 +57,7 @@ pub fn run() -> Result<()> {
     let result = runtime.block_on(sni::run(manager.clone()));
     // The Windows tray must live on this (the main) thread.
     #[cfg(windows)]
-    let result = win::run(manager.clone());
+    let result = win::run(manager.clone(), runtime.handle());
 
     // Release the BLE link so the phone app can connect again.
     runtime.block_on(manager.shutdown(Duration::from_secs(2)));

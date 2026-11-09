@@ -2,7 +2,9 @@
 //!
 //! Windows delivers tray and menu events as window messages to the thread
 //! that created the icon, so this runs a small message loop on the main
-//! thread while the connection manager lives on the tokio runtime.
+//! thread while the connection manager lives on the tokio runtime. The loop
+//! sleeps until a message arrives; device state changes are announced to it
+//! with a thread message, so it uses no CPU while nothing happens.
 
 use std::collections::HashMap;
 use std::time::Duration;
@@ -12,8 +14,11 @@ use qcy_client::manager::{Manager, Snapshot};
 use tracing::info;
 use tray_icon::menu::{CheckMenuItem, Menu, MenuEvent, MenuItem, PredefinedMenuItem, Submenu};
 use tray_icon::{Icon, MouseButton, MouseButtonState, TrayIcon, TrayIconBuilder, TrayIconEvent};
+use windows::Win32::Foundation::{LPARAM, WPARAM};
+use windows::Win32::System::Threading::GetCurrentThreadId;
 use windows::Win32::UI::WindowsAndMessaging::{
-    DispatchMessageW, MSG, PM_REMOVE, PeekMessageW, TranslateMessage, WM_QUIT,
+    DispatchMessageW, MSG, MsgWaitForMultipleObjects, PM_REMOVE, PeekMessageW, PostThreadMessageW,
+    QS_ALLINPUT, TranslateMessage, WM_APP, WM_QUIT,
 };
 
 use super::menu::{self, Action, Entry};
@@ -21,14 +26,18 @@ use super::window::GuiWindow;
 
 /// 32×32 RGBA rendering of `assets/orphion.png`.
 const ICON_RGBA: &[u8] = include_bytes!("../../../../assets/icon-32.rgba");
-/// How often to look for state changes between window messages.
-const TICK: Duration = Duration::from_millis(40);
+/// Longest sleep between looks at the device state. State changes wake the
+/// loop at once; this only covers a wake-up lost while a menu is open (modal
+/// loops drop thread messages).
+const MAX_WAIT: Duration = Duration::from_secs(1);
+/// Thread message meaning "the device state changed".
+const WM_STATE_CHANGED: u32 = WM_APP + 1;
 /// Windows truncates tray tooltips at 127 characters.
 const TOOLTIP_MAX: usize = 127;
 
 /// Runs the tray until the user picks "Quit". Must be called on the main
-/// thread; `manager` runs on a tokio runtime owned by the caller.
-pub fn run(manager: Manager) -> anyhow::Result<()> {
+/// thread; `manager` runs on the tokio runtime behind `runtime`.
+pub fn run(manager: Manager, runtime: &tokio::runtime::Handle) -> anyhow::Result<()> {
     let icon = Icon::from_rgba(ICON_RGBA.to_vec(), 32, 32).context("invalid tray icon")?;
     let mut snapshot = manager.snapshot();
     let mut actions = HashMap::new();
@@ -43,8 +52,40 @@ pub fn run(manager: Manager) -> anyhow::Result<()> {
         .context("cannot create the tray icon")?;
 
     let mut snapshots = manager.subscribe();
+    // Wake this thread whenever the device state changes.
+    // SAFETY: plain Win32 call.
+    let thread = unsafe { GetCurrentThreadId() };
+    let mut changes = manager.subscribe();
+    let notifier = runtime.spawn(async move {
+        while changes.changed().await.is_ok() {
+            // SAFETY: posting to a thread that has a message queue (the
+            // tray icon's window was created on it); fails harmlessly once
+            // the thread is gone.
+            unsafe {
+                let _ = PostThreadMessageW(thread, WM_STATE_CHANGED, WPARAM(0), LPARAM(0));
+            }
+        }
+    });
+    let result = event_loop(&tray, &manager, &mut snapshot, &mut snapshots, &mut actions);
+    notifier.abort();
+    result
+}
+
+fn event_loop(
+    tray: &TrayIcon,
+    manager: &Manager,
+    snapshot: &mut Snapshot,
+    snapshots: &mut tokio::sync::watch::Receiver<Snapshot>,
+    actions: &mut HashMap<String, Action>,
+) -> anyhow::Result<()> {
     let mut window = GuiWindow::default();
     loop {
+        // Sleep until a window message (input, tray events, a state change
+        // notice) arrives.
+        // SAFETY: waits on this thread's message queue only.
+        unsafe {
+            MsgWaitForMultipleObjects(None, false, MAX_WAIT.as_millis() as u32, QS_ALLINPUT);
+        }
         if !pump_messages() {
             break;
         }
@@ -57,7 +98,7 @@ pub fn run(manager: Manager) -> anyhow::Result<()> {
                     return Ok(());
                 }
                 Some(Action::OpenWindow) => window.open(),
-                Some(action) => menu::perform(action, &snapshot, &manager),
+                Some(action) => menu::perform(action, snapshot, manager),
                 None => {}
             }
         }
@@ -76,11 +117,9 @@ pub fn run(manager: Manager) -> anyhow::Result<()> {
 
         // Device state changed: rebuild tooltip and menu.
         if snapshots.has_changed().unwrap_or(false) {
-            snapshot = snapshots.borrow_and_update().clone();
-            refresh(&tray, &snapshot, &mut actions)?;
+            *snapshot = snapshots.borrow_and_update().clone();
+            refresh(tray, snapshot, actions)?;
         }
-
-        std::thread::sleep(TICK);
     }
     Ok(())
 }
