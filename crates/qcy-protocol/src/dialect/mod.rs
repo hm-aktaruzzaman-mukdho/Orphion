@@ -88,6 +88,27 @@ const POLL_ANC_MODELS: &[std::ops::RangeInclusive<u16>] = &[
     23153..=23159,
 ];
 
+/// What [`Codec::refresh`] wants done.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Refresh {
+    /// Run these first, in order (reads, and for JieLi its RCSP requests).
+    pub ops: Vec<Op>,
+    /// Then ask for these settings ([`Codec::request`]), skipping any the
+    /// reads already reported: the settings dump of the QCY protocol holds
+    /// most of them, which saves a round of requests on every connect.
+    pub requests: Vec<CommandId>,
+}
+
+impl Refresh {
+    /// The requested settings `state` does not hold yet.
+    pub fn missing<'a>(&'a self, state: &'a DeviceState) -> impl Iterator<Item = CommandId> + 'a {
+        self.requests
+            .iter()
+            .copied()
+            .filter(|id| state.setting(*id).is_none())
+    }
+}
+
 /// Translates between [`Command`]/[`Update`] and the bytes of one model.
 #[derive(Debug)]
 pub struct Codec {
@@ -135,7 +156,7 @@ impl Codec {
         &mut self,
         panel: &Panel,
         has: impl Fn(Characteristic) -> bool,
-    ) -> Result<Vec<Op>, ProtocolError> {
+    ) -> Result<Refresh, ProtocolError> {
         let mut requests: Vec<CommandId> = panel.read_settings.clone();
         if panel.balance.is_some() {
             requests.push(CommandId::Balance);
@@ -187,12 +208,14 @@ impl Codec {
             }
             Dialect::Qcy | Dialect::Zr => {
                 let zr = self.dialect == Dialect::Zr;
+                // What is on screen first goes first: battery (header) and
+                // the settings dump (noise control and most switches).
                 let mut reads = vec![
-                    Characteristic::VERSION,
                     Characteristic::BATTERY,
                     Characteristic::SETTINGS,
-                    Characteristic::KEYS,
                     Characteristic::EQ,
+                    Characteristic::KEYS,
+                    Characteristic::VERSION,
                 ];
                 if zr {
                     reads.push(Characteristic::ZR_SETTING);
@@ -220,13 +243,24 @@ impl Codec {
                 ops.extend(reads.into_iter().filter(|c| has(*c)).map(Op::Read));
                 if has(Characteristic::COMMAND) {
                     dedup(&mut requests);
-                    for id in requests {
-                        ops.push(Op::Write(Command::Request(id).encode()?));
-                    }
+                    // Answered after the reads: most are already in the
+                    // settings dump (0x1002), and the client skips those.
+                    return Ok(Refresh { ops, requests });
                 }
             }
         }
-        Ok(ops)
+        Ok(Refresh {
+            ops,
+            requests: Vec::new(),
+        })
+    }
+
+    /// The operation asking for one setting (QCY and ZR dialects).
+    pub fn request(&mut self, id: CommandId) -> Result<Op, ProtocolError> {
+        Ok(match &mut self.jieli {
+            Some(jl) => Op::Write(jl.request(id)?),
+            None => Op::Write(Command::Request(id).encode()?),
+        })
     }
 
     /// How often [`Self::poll`] should run, if at all (QCY-protocol models
@@ -615,7 +649,9 @@ mod tests {
     fn jieli_refresh_goes_through_rcsp() {
         let panel = catalog::panel(0x8071);
         let mut codec = Codec::new(0x8071, &panel);
-        let ops = codec.refresh(&panel, |_| true).unwrap();
+        let plan = codec.refresh(&panel, |_| true).unwrap();
+        assert!(plan.requests.is_empty(), "JieLi asks through RCSP");
+        let ops = plan.ops;
         assert!(ops.iter().all(|op| matches!(
             op,
             Op::Write(Write {
@@ -658,6 +694,43 @@ mod tests {
     /// Earbuds (or anything pretending to be them) can send any bytes:
     /// decoding them and folding the result into the state must never
     /// panic, overflow or hang.
+    #[test]
+    fn the_settings_dump_saves_requests() {
+        // MeloBuds Pro: after reading 0x1002 only the settings missing from
+        // its dump are still requested.
+        let panel = catalog::panel(19786);
+        let mut codec = Codec::new(19786, &panel);
+        let plan = codec.refresh(&panel, |_| true).unwrap();
+        let mut state = DeviceState::default();
+        for u in codec.decode(Characteristic::SETTINGS, &crate::samples::SETTINGS) {
+            state.apply(u);
+        }
+        let missing: Vec<CommandId> = plan.missing(&state).collect();
+        assert!(
+            missing.len() < plan.requests.len() / 2,
+            "{missing:?} of {:?}",
+            plan.requests
+        );
+        for id in [
+            CommandId::Anc,
+            CommandId::GameMode,
+            CommandId::Ldac,
+            CommandId::Balance,
+        ] {
+            assert!(
+                plan.requests.contains(&id) && !missing.contains(&id),
+                "{id:?}"
+            );
+        }
+        for id in [
+            CommandId::DeviceName,
+            CommandId::MultiEq2,
+            CommandId::PowerOffTimer,
+        ] {
+            assert!(missing.contains(&id), "{id:?} is not in the dump");
+        }
+    }
+
     #[test]
     fn hostile_device_data_is_harmless() {
         let chars = [
