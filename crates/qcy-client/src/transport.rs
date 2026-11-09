@@ -19,8 +19,10 @@ use crate::Error;
 /// Which earbuds to look for.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub enum Selector {
-    /// Prefer earbuds that are connected for audio, then any paired ones,
-    /// then anything QCY that is advertising.
+    /// The user's own earbuds: only sets paired with this computer for
+    /// audio, preferring one that is connected. Earbuds of other people
+    /// nearby (or anything merely advertising QCY data) are never picked, so
+    /// the programs cannot take over or change somebody else's earbuds.
     #[default]
     Auto,
     /// A specific set, by its classic **or** BLE address.
@@ -57,7 +59,7 @@ impl Endpoint {
 
     pub fn matches(&self, selector: &Selector) -> bool {
         match selector {
-            Selector::Auto => true,
+            Selector::Auto => self.name.is_some(),
             Selector::Address(a) => {
                 *a == self.ble_address || self.advertisement.matches_classic(*a)
             }
@@ -153,4 +155,35 @@ pub(crate) fn hex(data: &[u8]) -> String {
         .map(|b| format!("{b:02x}"))
         .collect::<Vec<_>>()
         .join(" ")
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use qcy_protocol::samples;
+
+    fn endpoint(paired: bool, audio: bool, rssi: Option<i16>) -> Endpoint {
+        Endpoint {
+            id: String::new(),
+            ble_address: "C4:AC:60:89:A4:B1".parse().unwrap(),
+            advertisement: Advertisement::parse(&samples::ADVERTISEMENT).unwrap(),
+            name: paired.then(|| "QCY MeloBuds Pro".to_string()),
+            audio_connected: audio,
+            ble_connected: false,
+            rssi,
+        }
+    }
+
+    #[test]
+    fn auto_never_picks_unpaired_earbuds() {
+        let stranger = endpoint(false, false, Some(-40));
+        assert!(Endpoint::pick(vec![stranger.clone()], &Selector::Auto, true).is_none());
+        // Asking for them explicitly still works.
+        let by_address = Selector::Address(stranger.ble_address);
+        assert!(Endpoint::pick(vec![stranger.clone()], &by_address, true).is_some());
+        // Our own set wins over a closer stranger.
+        let own = endpoint(true, true, Some(-80));
+        let picked = Endpoint::pick(vec![stranger, own], &Selector::Auto, true).unwrap();
+        assert!(picked.name.is_some());
+    }
 }

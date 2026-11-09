@@ -45,8 +45,9 @@ impl Error {
     /// The message used when no earbuds could be found.
     pub(crate) fn not_found() -> Self {
         Error::NotFound(
-            "no QCY earbuds found. Take them out of the case and make sure \
-             they are not connected to the QCY app on your phone."
+            "no QCY earbuds found. Pair them with this computer for audio, \
+             take them out of the case and make sure they are not connected \
+             to the QCY app on your phone (or choose them with --device)."
                 .into(),
         )
     }

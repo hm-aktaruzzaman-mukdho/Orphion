@@ -419,8 +419,9 @@ fn jl_key(g: u16) -> (u8, u8) {
 
 /// Inverse of [`jl_key`].
 fn qcy_gesture(key: u8, clicks: u8) -> u16 {
+    // Device data: 0 clicks is not a gesture, but must not underflow.
     match key {
-        1 => u16::from(clicks) * 2 - 1,
+        1 => (u16::from(clicks) * 2).saturating_sub(1),
         2 => u16::from(clicks) * 2,
         _ => u16::from(key) << 8 | u16::from(clicks),
     }
@@ -582,6 +583,28 @@ mod tests {
         // Presets: FF 0C 04 mode + ten times 127.
         assert_eq!(&w[0].data[8..12], [0xFF, 0x0C, 0x04, 0x02]);
         assert!(w[0].data[12..22].iter().all(|&g| g == 127));
+    }
+
+    #[test]
+    fn odd_key_attributes_do_not_panic() {
+        // A key triplet with 0 clicks (not sent by real earbuds).
+        let mut jl = JieLi::new(false);
+        let params = [4, 2, 1, 0, 3];
+        let mut f = vec![
+            0xFE,
+            0xDC,
+            0xBA,
+            0x00,
+            0xC1,
+            0x00,
+            (params.len() + 2) as u8,
+            0x00,
+            0x01,
+        ];
+        f.extend(params);
+        f.push(0xEF);
+        let u = jl.decode(&f);
+        assert!(u.iter().any(|u| matches!(u, Update::KeyBindings(_))));
     }
 
     #[test]

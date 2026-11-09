@@ -637,4 +637,89 @@ mod tests {
         let mut codec = Codec::new(19745, &panel);
         assert!(codec.encode(&cmd, &cx(&DeviceState::default())).is_err());
     }
+
+    /// A tiny deterministic generator, so failures are reproducible.
+    struct Rng(u64);
+
+    impl Rng {
+        fn next(&mut self) -> u64 {
+            self.0 ^= self.0 << 13;
+            self.0 ^= self.0 >> 7;
+            self.0 ^= self.0 << 17;
+            self.0
+        }
+
+        fn bytes(&mut self, max: usize) -> Vec<u8> {
+            let n = (self.next() as usize) % (max + 1);
+            (0..n).map(|_| self.next() as u8).collect()
+        }
+    }
+
+    /// Earbuds (or anything pretending to be them) can send any bytes:
+    /// decoding them and folding the result into the state must never
+    /// panic, overflow or hang.
+    #[test]
+    fn hostile_device_data_is_harmless() {
+        let chars = [
+            Characteristic::SETTINGS,
+            Characteristic::COMMAND,
+            Characteristic::BATTERY,
+            Characteristic::VERSION,
+            Characteristic::EQ,
+            Characteristic::KEYS,
+            Characteristic::FUNCTION,
+            Characteristic::LANGUAGE,
+            Characteristic::ZR_SETTING,
+            Characteristic::legacy_key(1),
+            Characteristic::RCSP_NOTIFY,
+        ];
+        let mut rng = Rng(0x0DDB_A11C_0FFE_E123);
+        for vendor in [19786, 0x8071, 6513, 19858] {
+            let panel = catalog::panel(vendor);
+            let mut codec = Codec::new(vendor, &panel);
+            let mut state = DeviceState::default();
+            for i in 0..40_000 {
+                let c = chars[i % chars.len()];
+                let mut data = rng.bytes(300);
+                // Make some inputs well-formed enough to reach deep paths.
+                match i % 4 {
+                    // A QCY frame: FF len TLV…
+                    1 if !data.is_empty() => {
+                        data[0] = 0xFF;
+                        if data.len() > 1 {
+                            data[1] = (data.len() - 2) as u8;
+                        }
+                    }
+                    // An RCSP frame with a known opcode and random params.
+                    2 => {
+                        let ops = [0x03u8, 0x07, 0x09, 0xC1, 0xC2, 0xC4, 0xFF];
+                        let params = rng.bytes(60);
+                        let op = ops[(rng.next() as usize) % ops.len()];
+                        let flags = if rng.next() % 2 == 0 { 0x00 } else { 0xC0 };
+                        let body = params.len() + 2;
+                        data = vec![0xFE, 0xDC, 0xBA, flags, op];
+                        data.extend_from_slice(&(body as u16).to_be_bytes());
+                        data.extend([0, 1]);
+                        data.extend(params);
+                        data.push(0xEF);
+                    }
+                    _ => {}
+                }
+                for u in codec.decode(c, &data) {
+                    state.apply(u);
+                }
+                let _ = current_anc(&state);
+                if let Some(keys) = panel.keys_for(|_| true) {
+                    for slot in keys.slots() {
+                        let _ = slot.label_of(0);
+                    }
+                }
+                for item in &panel.items {
+                    if let crate::panel::ItemKind::Switch(sw) = &item.kind {
+                        let _ = sw.is_on(&state);
+                    }
+                }
+            }
+        }
+    }
 }
