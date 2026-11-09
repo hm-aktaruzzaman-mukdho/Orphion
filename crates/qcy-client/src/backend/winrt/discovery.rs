@@ -9,8 +9,11 @@ use std::path::PathBuf;
 use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
+use futures_util::StreamExt;
+use futures_util::stream::{self, BoxStream};
 use qcy_protocol::advert::{Advertisement, MacAddress};
 use qcy_protocol::uuids::COMPANY_IDS;
+use tokio::sync::mpsc;
 use tokio::time::{Instant, sleep};
 use tracing::{debug, info, warn};
 use windows::Devices::Bluetooth::Advertisement::{
@@ -22,14 +25,14 @@ use windows::Devices::Bluetooth::{
     BluetoothLEDevice,
 };
 use windows::Devices::Enumeration::DeviceInformation;
-use windows::Devices::Radios::RadioState;
+use windows::Devices::Radios::{Radio, RadioState};
 use windows::Foundation::TypedEventHandler;
-use windows::core::{HRESULT, Ref};
+use windows::core::{HRESULT, IInspectable, Ref};
 
 use super::gatt::WinGattLink;
 use super::{buffer_bytes, mac_from_u64};
 use crate::Error;
-use crate::transport::{Backend, Endpoint, Selector};
+use crate::transport::{Backend, Endpoint, Selector, Settle};
 
 const POLL_INTERVAL: Duration = Duration::from_millis(300);
 /// `HRESULT_FROM_WIN32(ERROR_DEVICE_NOT_READY)`: what the watcher reports
@@ -71,7 +74,8 @@ impl Backend for WinRt {
                 "this Bluetooth adapter does not support Bluetooth Low Energy".into(),
             ));
         }
-        ensure_radio_on(&adapter).await?;
+        // A radio that is off is accepted: searching reports it, and the
+        // backend's wake-ups notice when it is switched on.
         let backend = Self::default();
         backend.load_cache();
         Ok(backend)
@@ -112,12 +116,13 @@ impl Backend for WinRt {
         let scanner = Scanner::start(Arc::clone(&self.seen))?;
         let deadline = Instant::now() + timeout;
         let mut last_seen = None;
+        let mut settle = Settle::default();
         loop {
             let endpoints = self.endpoints(&classic, Some(started), false).await;
             if let Some(e) = Endpoint::pick(endpoints.clone(), selector, true) {
                 // Give a better-ranked candidate (e.g. the one connected for
                 // audio) a brief chance to show up before settling.
-                if e.audio_connected || Instant::now() + Duration::from_secs(2) > deadline {
+                if settle.ready(&e) {
                     drop(scanner);
                     self.save_cache();
                     info!(address = %e.ble_address, "found endpoint");
@@ -142,6 +147,93 @@ impl Backend for WinRt {
         let (address, random) = parse_id(&endpoint.id)?;
         WinGattLink::open(address, random).await
     }
+
+    async fn wakeups(&self) -> BoxStream<'static, ()> {
+        match watch_changes().await {
+            Ok(stream) => stream,
+            Err(e) => {
+                debug!("cannot watch Bluetooth for changes: {e}");
+                stream::pending().boxed()
+            }
+        }
+    }
+}
+
+/// The objects watched by [`watch_changes`] and their handler tokens; the
+/// handlers are removed when the stream (which owns this) is dropped.
+#[derive(Default)]
+struct Watched {
+    radio: Option<(Radio, i64)>,
+    devices: Vec<(BluetoothDevice, i64)>,
+}
+
+impl Drop for Watched {
+    fn drop(&mut self) {
+        if let Some((radio, token)) = self.radio.take() {
+            radio.RemoveStateChanged(token).ok();
+        }
+        for (device, token) in self.devices.drain(..) {
+            device.RemoveConnectionStatusChanged(token).ok();
+            device.Close().ok();
+        }
+    }
+}
+
+/// Yields when the Bluetooth radio is switched on or a paired device
+/// connects (earbuds taken out of the case reconnect for audio).
+async fn watch_changes() -> windows::core::Result<BoxStream<'static, ()>> {
+    let (tx, rx) = mpsc::unbounded_channel::<()>();
+    let mut watched = Watched::default();
+
+    if let Ok(adapter) = BluetoothAdapter::GetDefaultAsync()?.await {
+        let radio = adapter.GetRadioAsync()?.await?;
+        // The delegate is not `Send`; it must be gone before any `.await`.
+        let token = {
+            let tx = tx.clone();
+            let handler =
+                TypedEventHandler::<Radio, IInspectable>::new(move |radio: Ref<Radio>, _| {
+                    if let Ok(radio) = radio.ok()
+                        && radio.State()? == RadioState::On
+                    {
+                        tx.send(()).ok();
+                    }
+                    Ok(())
+                });
+            radio.StateChanged(&handler)?
+        };
+        watched.radio = Some((radio, token));
+    }
+
+    let selector = BluetoothDevice::GetDeviceSelectorFromPairingState(true)?;
+    let infos = DeviceInformation::FindAllAsyncAqsFilter(&selector)?.await?;
+    for i in 0..infos.Size()? {
+        let id = infos.GetAt(i)?.Id()?;
+        let Ok(device) = BluetoothDevice::FromIdAsync(&id)?.await else {
+            continue;
+        };
+        let token = {
+            let tx = tx.clone();
+            let handler = TypedEventHandler::<BluetoothDevice, IInspectable>::new(
+                move |device: Ref<BluetoothDevice>, _| {
+                    if let Ok(device) = device.ok()
+                        && device.ConnectionStatus()? == BluetoothConnectionStatus::Connected
+                    {
+                        tx.send(()).ok();
+                    }
+                    Ok(())
+                },
+            );
+            device.ConnectionStatusChanged(&handler)?
+        };
+        watched.devices.push((device, token));
+    }
+
+    Ok(
+        stream::unfold((rx, watched), |(mut rx, watched)| async move {
+            rx.recv().await.map(|()| ((), (rx, watched)))
+        })
+        .boxed(),
+    )
 }
 
 impl WinRt {

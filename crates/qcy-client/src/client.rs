@@ -78,8 +78,42 @@ fn unix_time() -> u32 {
 }
 
 impl<L: Link> Earbuds<L> {
-    /// Opens the BLE control link and loads the current settings.
+    /// Opens the BLE control link and loads the current settings before
+    /// returning (what a one-shot tool such as `orphionctl` needs).
     pub async fn connect<B: Backend<Link = L>>(
+        backend: &B,
+        endpoint: &Endpoint,
+    ) -> Result<Self, Error> {
+        let buds = Self::establish(backend, endpoint).await?;
+        buds.refresh().await?;
+        buds.start_polling();
+        Ok(buds)
+    }
+
+    /// Opens the BLE control link and returns as soon as it is up; the
+    /// settings are loaded in the background and show up in [`Self::watch`]
+    /// as they arrive. Long-running front-ends use this so the connection is
+    /// reported without waiting for every read.
+    pub async fn open<B: Backend<Link = L>>(
+        backend: &B,
+        endpoint: &Endpoint,
+    ) -> Result<Self, Error> {
+        let buds = Self::establish(backend, endpoint).await?;
+        let loader = buds.clone();
+        let task = tokio::spawn(async move {
+            if let Err(e) = loader.refresh().await {
+                warn!("loading the settings failed: {e}");
+            }
+        });
+        if let Ok(mut tasks) = buds.inner.tasks.lock() {
+            tasks.push(task);
+        }
+        buds.start_polling();
+        Ok(buds)
+    }
+
+    /// Connects, subscribes and greets the earbuds (dialect handshake).
+    async fn establish<B: Backend<Link = L>>(
         backend: &B,
         endpoint: &Endpoint,
     ) -> Result<Self, Error> {
@@ -140,8 +174,6 @@ impl<L: Link> Earbuds<L> {
         };
         let hello = buds.with_codec(|c| c.connect(unix_time()))?;
         buds.run(hello).await?;
-        buds.refresh().await?;
-        buds.start_polling();
         Ok(buds)
     }
 

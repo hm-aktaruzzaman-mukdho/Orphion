@@ -15,6 +15,7 @@ use std::collections::BTreeSet;
 use std::sync::Arc;
 use std::time::Duration;
 
+use futures_util::StreamExt;
 use qcy_protocol::advert::MacAddress;
 use qcy_protocol::dialect::{Codec, Context, Dialect, Op};
 use qcy_protocol::panel::{AncControl, ModeKind, Panel};
@@ -23,15 +24,23 @@ use qcy_protocol::types::{AncMode, AncSetting, KeyAction, KeyBinding};
 use qcy_protocol::{Characteristic, Command, Update, catalog};
 use tokio::sync::{broadcast, mpsc, watch};
 use tokio::time::sleep;
-use tracing::{info, warn};
+use tracing::{debug, info, warn};
 
 use crate::transport::{Backend, Endpoint, Selector};
 use crate::{ConnectionEvent, Earbuds, Error, Platform};
 
 const SEARCH_TIMEOUT: Duration = Duration::from_secs(10);
 const BACKOFF_START: Duration = Duration::from_secs(3);
-const BACKOFF_MAX: Duration = Duration::from_secs(30);
+/// Longest wait between searches. Waiting is cut short as soon as the
+/// backend reports a reason to look again ([`Backend::wakeups`]: earbuds
+/// reconnecting for audio, Bluetooth switched on), so this only matters for
+/// earbuds that appear without either; each search scans for up to
+/// [`SEARCH_TIMEOUT`], which costs power and may disturb audio.
+const BACKOFF_MAX: Duration = Duration::from_secs(60);
 const QUICK_RETRY: Duration = Duration::from_secs(1);
+/// Signals tend to come in bursts (one connect raises several); wait this
+/// long after one before searching, so the earbuds are ready.
+const WAKEUP_SETTLE: Duration = Duration::from_millis(1500);
 
 /// Where the connection currently stands.
 #[derive(Debug, Clone, PartialEq, Eq, Default)]
@@ -564,7 +573,7 @@ impl<B: Backend> Worker<B> {
                     s.link = LinkStatus::Connecting;
                     s.device = Some(DeviceInfo::from(&endpoint));
                 });
-                Earbuds::connect(&backend, &endpoint).await
+                Earbuds::open(&backend, &endpoint).await
             }
             .await;
             let result = match result {
@@ -593,8 +602,10 @@ impl<B: Backend> Worker<B> {
             }
             Err((backend, e)) if self.want_connected => {
                 // Keep the stack handle unless the stack itself is the problem.
+                // (With Bluetooth merely off it stays, so its wake-ups can
+                // report the radio coming back.)
                 self.backend = match e {
-                    Error::NoAdapter | Error::AdapterOff | Error::Backend(_) => None,
+                    Error::NoAdapter | Error::Backend(_) => None,
                     _ => backend,
                 };
                 warn!(attempt = self.attempt, "connection attempt failed: {e}");
@@ -618,8 +629,21 @@ impl<B: Backend> Worker<B> {
                 });
                 let tx = self.internal_tx.clone();
                 let generation = self.generation;
+                let backend = self.backend.clone();
                 tokio::spawn(async move {
-                    sleep(retry_in).await;
+                    // Retry after the delay, or earlier when the backend
+                    // reports a reason to look again.
+                    let mut wakeups = match &backend {
+                        Some(b) => b.wakeups().await,
+                        None => futures_util::stream::pending().boxed(),
+                    };
+                    tokio::select! {
+                        () = sleep(retry_in) => {}
+                        Some(()) = wakeups.next() => {
+                            debug!("Bluetooth changed; searching again now");
+                            sleep(WAKEUP_SETTLE).await;
+                        }
+                    }
                     tx.send(Internal::Retry { generation }).ok();
                 });
             }

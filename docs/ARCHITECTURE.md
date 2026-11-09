@@ -85,7 +85,12 @@ Two questions decide everything about a model, and each has its own module:
    with backoff while the user wants to be connected (earbuds reboot after
    LDAC / dual-device changes and vanish into the case), and exposes
    `Snapshot`s (with the model's panel and the characteristics it has) plus
-   `Notice`s for snackbars.
+   `Notice`s for snackbars. A waiting retry starts at once when the backend
+   reports a reason to look again (`Backend::wakeups`: a device connected,
+   e.g. earbuds out of the case reconnecting for audio, or Bluetooth switched
+   on). It connects with `Earbuds::open`, which reports the link as soon as
+   it is up and loads the settings in the background; `orphionctl` uses
+   `Earbuds::connect`, which loads them first.
 5. **Front-ends** render the panel and the state and push commands. The
    GUI's views are pure: they return `Action`s that `App` executes after the
    frame. The window and the tray are separate processes of the same

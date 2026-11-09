@@ -13,6 +13,9 @@
 use std::collections::HashMap;
 use std::time::Duration;
 
+use futures_util::StreamExt;
+use futures_util::stream::{self, BoxStream};
+
 use qcy_protocol::advert::{Advertisement, MacAddress};
 use qcy_protocol::uuids::COMPANY_IDS;
 use tokio::time::{Instant, sleep};
@@ -24,7 +27,7 @@ use zbus::zvariant::{ObjectPath, OwnedObjectPath, OwnedValue, Value};
 use super::gatt::GattSession;
 use super::proxies::{ADAPTER_IFACE, Adapter1Proxy, DEVICE_IFACE, SERVICE};
 use crate::Error;
-use crate::transport::{Backend, Endpoint, Selector};
+use crate::transport::{Backend, Endpoint, Selector, Settle};
 
 const AUDIO_SINK_UUID: &str = "0000110b-0000-1000-8000-00805f9b34fb";
 const POLL_INTERVAL: Duration = Duration::from_millis(300);
@@ -45,7 +48,10 @@ pub struct Bluez {
 }
 
 impl Bluez {
-    /// Connects to the system bus and picks the first (preferably powered) adapter.
+    /// Connects to the system bus and picks the first (preferably powered)
+    /// adapter. An adapter that is off is accepted: searching reports
+    /// [`Error::AdapterOff`], and the backend's wake-ups notice when it is
+    /// switched on.
     pub async fn connect() -> Result<Self, Error> {
         let conn = Connection::system().await?;
         let objects = managed_objects(&conn).await?;
@@ -61,10 +67,7 @@ impl Bluez {
             .collect();
         adapters.sort_by_key(|(path, powered)| (!*powered, path.to_string()));
         let (adapter, powered) = adapters.into_iter().next().ok_or(Error::NoAdapter)?;
-        if !powered {
-            return Err(Error::AdapterOff);
-        }
-        debug!(%adapter, "using adapter");
+        debug!(%adapter, powered, "using adapter");
         Ok(Self { conn, adapter })
     }
 
@@ -154,12 +157,13 @@ impl Backend for Bluez {
         let scan = self.start_scan().await?;
         let deadline = Instant::now() + timeout;
         let mut last_seen = None;
+        let mut settle = Settle::default();
         loop {
             let endpoints = self.known_endpoints().await?;
             if let Some(e) = Endpoint::pick(endpoints.clone(), selector, true) {
                 // Give a better-ranked candidate (e.g. the one connected for
                 // audio) a brief chance to show up before settling.
-                if e.audio_connected || Instant::now() + Duration::from_secs(2) > deadline {
+                if settle.ready(&e) {
                     scan.stop().await;
                     info!(address = %e.ble_address, "found endpoint");
                     return Ok(e);
@@ -182,6 +186,44 @@ impl Backend for Bluez {
             .map_err(|e| Error::Backend(format!("invalid device path {:?}: {e}", endpoint.id)))?;
         GattSession::open(&self.conn, &path).await
     }
+
+    async fn wakeups(&self) -> BoxStream<'static, ()> {
+        match wakeup_signals(&self.conn).await {
+            Ok(stream) => stream,
+            Err(e) => {
+                debug!("cannot watch BlueZ for changes: {e}");
+                stream::pending().boxed()
+            }
+        }
+    }
+}
+
+/// BlueZ property changes that make another search worthwhile: a device
+/// connected (earbuds reconnect for audio when taken out of the case) or an
+/// adapter was powered on.
+async fn wakeup_signals(conn: &Connection) -> Result<BoxStream<'static, ()>, Error> {
+    let rule = zbus::MatchRule::builder()
+        .msg_type(zbus::message::Type::Signal)
+        .sender(SERVICE)?
+        .interface("org.freedesktop.DBus.Properties")?
+        .member("PropertiesChanged")?
+        .build();
+    let messages = zbus::MessageStream::for_match_rule(rule, conn, Some(64)).await?;
+    Ok(messages
+        .filter_map(|msg| async move {
+            let msg = msg.ok()?;
+            let (iface, changed, _): (String, HashMap<String, OwnedValue>, Vec<String>) =
+                msg.body().deserialize().ok()?;
+            is_wakeup(&iface, &changed).then_some(())
+        })
+        .boxed())
+}
+
+/// Whether a `PropertiesChanged` signal from BlueZ is a reason to search.
+fn is_wakeup(iface: &str, changed: &HashMap<String, OwnedValue>) -> bool {
+    let turned_on = |key: &str| prop::<bool>(changed, key) == Some(true);
+    (iface == DEVICE_IFACE && turned_on("Connected"))
+        || (iface == ADAPTER_IFACE && turned_on("Powered"))
 }
 
 /// An active discovery session. Call [`ScanGuard::stop`] when done; dropping
@@ -266,4 +308,26 @@ where
     T: TryFrom<OwnedValue>,
 {
     T::try_from(props.get(key)?.try_clone().ok()?).ok()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn changed(key: &str, value: bool) -> HashMap<String, OwnedValue> {
+        HashMap::from([(key.to_string(), OwnedValue::from(value))])
+    }
+
+    #[test]
+    fn wakes_on_connect_and_power_on() {
+        assert!(is_wakeup(DEVICE_IFACE, &changed("Connected", true)));
+        assert!(is_wakeup(ADAPTER_IFACE, &changed("Powered", true)));
+        assert!(!is_wakeup(DEVICE_IFACE, &changed("Connected", false)));
+        assert!(!is_wakeup(ADAPTER_IFACE, &changed("Powered", false)));
+        assert!(!is_wakeup(DEVICE_IFACE, &changed("ServicesResolved", true)));
+        assert!(!is_wakeup(
+            "org.bluez.GattCharacteristic1",
+            &changed("Connected", true)
+        ));
+    }
 }

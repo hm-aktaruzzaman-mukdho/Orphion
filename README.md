@@ -467,8 +467,8 @@ model, without Bluetooth.
 | Symptom | Fix |
 |---|---|
 | "No QCY earbuds found" | Take the buds out of the case; close the QCY phone app (it holds the only control connection, and the earbuds stop advertising while it is connected); make sure Bluetooth is on (Linux: `bluetoothctl show` reports `Powered: yes`). |
-| "Bluetooth is turned off" | Switch Bluetooth on. The GUI and tray reconnect by themselves within about 30 s. |
-| Connecting takes long | BLE connects can take 5–40 s while audio is streaming; the programs retry on their own. |
+| "Bluetooth is turned off" | Switch Bluetooth on. The window and tray reconnect by themselves within a few seconds. |
+| Connecting takes long | BLE connects can take 5–40 s while audio is streaming; the programs retry on their own. Taking the earbuds out of the case (so they reconnect for audio) makes a waiting Orphion look for them at once. |
 | Buds disconnect after toggling LDAC / dual device | Expected: the firmware reboots. The GUI and tray reconnect on their own. |
 | A JieLi model connects but shows no values | Run `orphionctl -vv status` and open an issue with the output: these models are implemented from the app's code but not yet confirmed on hardware. |
 | The phone app cannot connect | Quit the tray (its menu → Quit) and close the window on the computer (or run `orphionctl` without `--keep-connected`). Windows drops an idle link a few seconds after the last program releases it. |

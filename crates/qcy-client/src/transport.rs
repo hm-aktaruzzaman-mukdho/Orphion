@@ -10,6 +10,7 @@
 use std::future::Future;
 use std::time::Duration;
 
+use futures_util::StreamExt;
 use futures_util::stream::BoxStream;
 use qcy_protocol::advert::{Advertisement, MacAddress};
 use qcy_protocol::{Characteristic, Write};
@@ -89,6 +90,25 @@ impl Endpoint {
     }
 }
 
+/// How long a scan keeps looking for a better candidate (one connected for
+/// audio) after first seeing a matching endpoint.
+pub(crate) const SETTLE_AFTER: Duration = Duration::from_millis(1500);
+
+/// Decides when a scan has seen enough: at once for earbuds connected for
+/// audio (the best possible match), otherwise [`SETTLE_AFTER`] after the
+/// first match, rather than waiting out the whole scan.
+#[derive(Debug, Default)]
+pub(crate) struct Settle {
+    first_match: Option<std::time::Instant>,
+}
+
+impl Settle {
+    pub(crate) fn ready(&mut self, best: &Endpoint) -> bool {
+        let first = *self.first_match.get_or_insert_with(std::time::Instant::now);
+        best.audio_connected || first.elapsed() >= SETTLE_AFTER
+    }
+}
+
 /// Data received from a characteristic notification.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Notification {
@@ -118,6 +138,15 @@ pub trait Backend: Clone + Send + Sync + Sized + 'static {
 
     /// Connects to `endpoint` and resolves the control characteristics.
     fn open(&self, endpoint: &Endpoint) -> impl Future<Output = Result<Self::Link, Error>> + Send;
+
+    /// Yields whenever it is worth looking for the earbuds again right away:
+    /// a device connected (earbuds taken out of the case reconnect for
+    /// audio) or Bluetooth was switched on. Lets a waiting connection
+    /// manager react at once instead of after its retry delay. The default
+    /// never yields.
+    fn wakeups(&self) -> impl Future<Output = BoxStream<'static, ()>> + Send {
+        async { futures_util::stream::pending().boxed() }
+    }
 }
 
 /// An open connection to the QCY control service (`0xA001`).
@@ -185,5 +214,18 @@ mod tests {
         let own = endpoint(true, true, Some(-80));
         let picked = Endpoint::pick(vec![stranger, own], &Selector::Auto, true).unwrap();
         assert!(picked.name.is_some());
+    }
+
+    #[test]
+    fn scans_settle_quickly() {
+        let mut settle = Settle::default();
+        assert!(
+            settle.ready(&endpoint(true, true, Some(-50))),
+            "audio match: at once"
+        );
+        let mut settle = Settle::default();
+        assert!(!settle.ready(&endpoint(true, false, Some(-50))));
+        std::thread::sleep(SETTLE_AFTER);
+        assert!(settle.ready(&endpoint(true, false, Some(-50))));
     }
 }
