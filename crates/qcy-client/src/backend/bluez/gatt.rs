@@ -122,17 +122,25 @@ impl Link for GattSession {
 
     /// Enables notifications and returns a stream of everything received.
     async fn notifications(&self) -> Result<BoxStream<'static, Notification>, Error> {
-        let mut streams = Vec::new();
+        // Subscribe to every characteristic first, so nothing is lost...
+        let mut subscribed = Vec::new();
         for (&c, ch) in self.chars.iter().filter(|(_, ch)| ch.notifies) {
-            let proxy = &ch.proxy;
             let props = PropertiesProxy::builder(&self.conn)
                 .destination(SERVICE)?
-                .path(proxy.inner().path().to_owned())?
+                .path(ch.proxy.inner().path().to_owned())?
                 .build()
                 .await?;
-            // Subscribe before enabling notifications so nothing is lost.
-            let signals = props.receive_properties_changed().await?;
-            if let Err(e) = proxy.start_notify().await {
+            subscribed.push((c, &ch.proxy, props.receive_properties_changed().await?));
+        }
+        // ...then enable them all at once: each StartNotify waits for a
+        // radio round trip (slow while audio streams), and BlueZ queues them.
+        let started = futures_util::future::join_all(
+            subscribed.iter().map(|(_, proxy, _)| proxy.start_notify()),
+        )
+        .await;
+        let mut streams = Vec::new();
+        for ((c, _, signals), result) in subscribed.into_iter().zip(started) {
+            if let Err(e) = result {
                 warn!(?c, "StartNotify failed: {e}");
                 continue;
             }
@@ -205,11 +213,18 @@ async fn connect_with_retry(device: &Device1Proxy<'_>) -> Result<(), Error> {
                 Err(e) => Err(Error::from(e)),
             }
         };
+        // Reacts to BlueZ's Connected signal instead of polling for it.
         let watch = async {
-            while !device.connected().await.unwrap_or(false) {
-                sleep(Duration::from_millis(250)).await;
+            let mut changes = device.receive_connected_changed().await;
+            if device.connected().await.unwrap_or(false) {
+                return Ok(());
             }
-            Ok(())
+            while let Some(change) = changes.next().await {
+                if change.get().await.unwrap_or(false) {
+                    return Ok(());
+                }
+            }
+            std::future::pending().await
         };
         let outcome = timeout(CONNECT_TIMEOUT, async {
             tokio::select! {
@@ -242,15 +257,20 @@ fn is_gone(e: &Error) -> bool {
 }
 
 async fn wait_services_resolved(device: &Device1Proxy<'_>) -> Result<(), Error> {
-    let poll = async {
-        loop {
-            if device.services_resolved().await.unwrap_or(false) {
+    // Subscribed before checking, so the change cannot slip in between.
+    let resolved = async {
+        let mut changes = device.receive_services_resolved_changed().await;
+        if device.services_resolved().await.unwrap_or(false) {
+            return;
+        }
+        while let Some(change) = changes.next().await {
+            if change.get().await.unwrap_or(false) {
                 return;
             }
-            sleep(Duration::from_millis(200)).await;
         }
+        std::future::pending::<()>().await
     };
-    timeout(RESOLVE_TIMEOUT, poll)
+    timeout(RESOLVE_TIMEOUT, resolved)
         .await
         .map_err(|_| Error::Timeout("discovering GATT services"))
 }
@@ -298,8 +318,12 @@ async fn resolve_characteristics(
         };
         let flags: Vec<String> = prop(props, "Flags").unwrap_or_default();
         let has = |f: &str| flags.iter().any(|x| x == f);
+        // Only methods (and the MTU, read once) are used: skipping the
+        // property cache saves a GetAll call and a signal subscription per
+        // characteristic.
         let proxy = GattCharacteristic1Proxy::builder(conn)
             .path(path.clone())?
+            .cache_properties(zbus::proxy::CacheProperties::No)
             .build()
             .await?;
         chars.insert(

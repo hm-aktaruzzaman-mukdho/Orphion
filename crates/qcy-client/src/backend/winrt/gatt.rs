@@ -216,6 +216,7 @@ impl WinGattLink {
     /// Registers value handlers and writes the CCCDs of every notifying
     /// characteristic. Fails if the link is unusable, so `open` can retry.
     async fn enable_notifications(&self) -> Result<(), Error> {
+        let mut pending = Vec::new();
         for (&c, Char { ch, .. }) in self.inner.chars.iter().filter(|(_, ch)| ch.notifies) {
             // Register the handler before enabling notifications so nothing is
             // lost. The delegate is not `Send`, so it lives in its own scope.
@@ -244,12 +245,15 @@ impl WinGattLink {
             if let Ok(mut h) = self.inner.handlers.lock() {
                 h.value_changed.push((ch.clone(), token));
             }
-            let status = ch
-                .WriteClientCharacteristicConfigurationDescriptorAsync(
-                    GattClientCharacteristicConfigurationDescriptorValue::Notify,
-                )?
-                .await?;
-            match status {
+            // Started here, awaited together below: each CCCD write waits
+            // for a radio round trip (slow while audio streams).
+            let operation = ch.WriteClientCharacteristicConfigurationDescriptorAsync(
+                GattClientCharacteristicConfigurationDescriptorValue::Notify,
+            )?;
+            pending.push(async move { (c, operation.await) });
+        }
+        for (c, result) in futures_util::future::join_all(pending).await {
+            match result? {
                 GattCommunicationStatus::Success => {}
                 GattCommunicationStatus::Unreachable => return Err(Error::NotConnected),
                 status => warn!(?c, ?status, "enabling notifications failed"),
