@@ -19,6 +19,16 @@ APPS="$DATA/applications"
 AUTOSTART_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/autostart"
 TRAY_ENTRY=io.github.orphion.Orphion.Tray.desktop
 
+# The program path goes into desktop entries, quoted, so PREFIX may contain
+# spaces. Characters that desktop launchers unescape inconsistently are
+# refused, so an entry can never run something other than this program.
+case "$BIN" in
+    *[\"\`\$\\%]* | *$'\n'*)
+        echo "PREFIX must not contain \" \` \$ \\ % or line breaks: $PREFIX" >&2
+        exit 1
+        ;;
+esac
+
 if [[ -x bin/orphion && -x bin/orphionctl ]]; then
     SRC=bin
 else
@@ -55,10 +65,15 @@ fi
 echo "==> Installing binaries to $BIN"
 install -Dm755 "$SRC/orphion" "$SRC/orphionctl" -t "$BIN"
 
-# Desktop sessions often do not have ~/.local/bin in PATH, so use absolute paths.
-install_desktop() { # <source> <destination dir> <command>
+# Desktop sessions often do not have ~/.local/bin in PATH, so use absolute
+# paths, quoted (BIN was checked above).
+install_desktop() { # <source> <destination dir> <arguments>
     install -d "$2"
-    sed "s|^Exec=.*|Exec=$BIN/$3|" "packaging/linux/$1" > "$2/$1"
+    # Passed through the environment: as sed replacement text or an awk -v
+    # value, characters such as | & \ would be interpreted.
+    EXEC_LINE="Exec=\"$BIN/orphion\"${3:+ $3}" \
+        awk '/^Exec=/ { print ENVIRON["EXEC_LINE"]; next } { print }' \
+        "packaging/linux/$1" > "$2/$1"
     echo "    $2/$1"
 }
 
@@ -66,11 +81,11 @@ echo "==> Installing icon"
 install -Dm644 assets/orphion.png "$DATA/icons/hicolor/256x256/apps/orphion.png"
 
 echo "==> Installing the menu entry"
-install_desktop io.github.orphion.Orphion.desktop "$APPS" orphion
+install_desktop io.github.orphion.Orphion.desktop "$APPS" ""
 
 if $AUTOSTART; then
     echo "==> Enabling tray autostart"
-    install_desktop "$TRAY_ENTRY" "$AUTOSTART_DIR" "orphion --tray"
+    install_desktop "$TRAY_ENTRY" "$AUTOSTART_DIR" "--tray"
     # Start it now too. If a tray is already running, this one exits.
     echo "==> Starting the tray"
     nohup "$BIN/orphion" --tray >/dev/null 2>&1 &

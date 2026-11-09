@@ -29,6 +29,7 @@ import argparse
 import io
 import json
 import pathlib
+import re
 import sys
 import time
 import urllib.parse
@@ -47,13 +48,43 @@ API = "https://api.watch.qcy.com/"
 # "999.0.0" makes the server return the newest panel of every model.
 NEWEST_FIRMWARE = "999.0.0"
 
+# The catalogue zip comes from QCY's image server, which only serves plain
+# HTTP (its certificate does not cover the host). It is accepted only from
+# QCY's own domain, and only provides model names and ids; the panels
+# themselves are fetched from the API over HTTPS.
+CATALOG_HOST = re.compile(r"(^|\.)qcymall\.com$")
+CATALOG_NAME = re.compile(r"^[A-Za-z0-9._-]+\.zip$")
+# Limits against oversized answers and zip bombs.
+MAX_DOWNLOAD = 32 * 1024 * 1024
+MAX_JSON = 64 * 1024 * 1024
+
+
+def read_limited(resp, limit=MAX_DOWNLOAD):
+    data = resp.read(limit + 1)
+    if len(data) > limit:
+        sys.exit(f"answer from {resp.geturl()} is larger than {limit} bytes")
+    return data
+
 
 def post(path, fields):
     data = urllib.parse.urlencode(fields).encode()
     req = urllib.request.Request(API + path, data=data, method="POST")
     req.add_header("Content-Type", "application/x-www-form-urlencoded")
     with urllib.request.urlopen(req, timeout=30) as resp:
-        return json.load(resp)
+        return json.loads(read_limited(resp))
+
+
+def catalog_url(url):
+    """Checks a catalogue URL from the API; returns it and its file name."""
+    parts = urllib.parse.urlsplit(url)
+    name = parts.path.rsplit("/", 1)[-1]
+    if (
+        parts.scheme not in ("http", "https")
+        or not CATALOG_HOST.search(parts.hostname or "")
+        or not CATALOG_NAME.match(name)
+    ):
+        sys.exit(f"refusing unexpected catalogue URL {url!r}")
+    return url, name
 
 
 def chip(vendor_id):
@@ -71,14 +102,17 @@ def fetch_catalog():
     )
     if url is None:
         sys.exit(f"no catalogue URL in findProductList answer: {listing}")
+    url, name = catalog_url(url)
     with urllib.request.urlopen(url, timeout=60) as resp:
-        blob = resp.read()
+        blob = read_limited(resp)
     CATALOG.mkdir(parents=True, exist_ok=True)
-    name = url.rsplit("/", 1)[-1]
     (CATALOG / name).write_bytes(blob)
     with zipfile.ZipFile(io.BytesIO(blob)) as z:
-        member = next(n for n in z.namelist() if n.endswith(".json"))
-        catalog = json.loads(z.read(member))
+        # Only read (never extract) the member, after checking its size.
+        info = next(i for i in z.infolist() if i.filename.endswith(".json"))
+        if info.file_size > MAX_JSON:
+            sys.exit(f"catalogue member {info.filename} is too large")
+        catalog = json.loads(z.read(info))
     (CATALOG / name.replace(".zip", ".json")).write_text(
         json.dumps(catalog, ensure_ascii=False, indent=1)
     )
@@ -89,6 +123,9 @@ def fetch_panels(earphones):
     MODELS.mkdir(parents=True, exist_ok=True)
     for product in earphones:
         vid = int(product["vendorID"])
+        if not 0 <= vid <= 0xFFFF:
+            print(f"skipping model id {vid!r}: not a 16-bit id")
+            continue
         answer = post(
             "product/findControlPanels",
             {"modelId": vid, "firmwareVersion": NEWEST_FIRMWARE},

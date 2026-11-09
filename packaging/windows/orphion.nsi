@@ -78,6 +78,7 @@ Var ModeAll
 !insertmacro MUI_PAGE_WELCOME
 Page custom ModePage ModePageLeave
 !insertmacro MUI_PAGE_COMPONENTS
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE CheckSharedFolder
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_FINISHPAGE_RUN
@@ -105,17 +106,22 @@ Page custom ModePage ModePageLeave
   ${EndIf}
 !macroend
 
+; System tools are always started by their full path: a bare name would be
+; looked up in the setup's own folder first (often Downloads), so a planted
+; taskkill.exe or powershell.exe there would run, with administrator rights
+; when installing for everyone.
+
 ; Stops running copies, which would keep the files locked: Orphion (window
 ; and tray), the separate tray of earlier versions, and the programs from
 ; before the rename to Orphion.
 !macro STOP_RUNNING
-  nsExec::Exec 'taskkill /F /IM orphion.exe'
+  nsExec::Exec '"$SYSDIR\taskkill.exe" /F /IM orphion.exe'
   Pop $0
-  nsExec::Exec 'taskkill /F /IM orphion-tray.exe'
+  nsExec::Exec '"$SYSDIR\taskkill.exe" /F /IM orphion-tray.exe'
   Pop $0
-  nsExec::Exec 'taskkill /F /IM qcy-gui.exe'
+  nsExec::Exec '"$SYSDIR\taskkill.exe" /F /IM qcy-gui.exe'
   Pop $0
-  nsExec::Exec 'taskkill /F /IM qcy-tray.exe'
+  nsExec::Exec '"$SYSDIR\taskkill.exe" /F /IM qcy-tray.exe'
   Pop $0
   Sleep 500
 !macroend
@@ -129,7 +135,7 @@ Page custom ModePage ModePageLeave
   ${Else}
     StrCpy $1 "User"
   ${EndIf}
-  nsExec::ExecToLog 'powershell.exe -NoProfile -ExecutionPolicy Bypass -File "$PLUGINSDIR\path.ps1" -Scope $1 -Action ${ACTION} -Dir "$INSTDIR"'
+  nsExec::ExecToLog '"$SYSDIR\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -File "$PLUGINSDIR\path.ps1" -Scope $1 -Action ${ACTION} -Dir "$INSTDIR"'
   Pop $0
   SendMessage ${HWND_BROADCAST} ${WM_WININICHANGE} 0 "STR:Environment" /TIMEOUT=5000
 !macroend
@@ -239,6 +245,10 @@ FunctionEnd
 
 Section "${APP} (required)" SecApp
   SectionIn RO
+  ${If} ${Silent}
+    ; The directory page (and its check) is skipped in silent installs.
+    Call CheckSharedFolder
+  ${EndIf}
   !insertmacro STOP_RUNNING
 
   ; Leftovers of earlier versions in this scope: the separate tray program
@@ -295,6 +305,23 @@ Section /o "Add orphionctl (command line) to the Path" SecPath
   !insertmacro EDIT_PATH Add
   WriteRegDWORD SHCTX "${UNINST_KEY}" "AddedToPath" 1
 SectionEnd
+
+; An installation for everyone is started by every user's Startup folder,
+; so it belongs in a folder only administrators can change, like Program
+; Files. Elsewhere any user could replace orphion.exe and run code in every
+; other user's session.
+Function CheckSharedFolder
+  ${If} $AllUsers != 1
+    Return
+  ${EndIf}
+  StrLen $0 "$PROGRAMFILES64\"
+  StrCpy $1 "$INSTDIR\" $0
+  ${If} $1 != "$PROGRAMFILES64\"
+    MessageBox MB_YESNO|MB_ICONEXCLAMATION|MB_DEFBUTTON2 "Installing for everyone outside Program Files is risky: if other users can change this folder, they can replace ${APP} for everyone, administrators included.$\r$\n$\r$\nInstall into $INSTDIR anyway?" /SD IDNO IDYES done
+      Abort
+    done:
+  ${EndIf}
+FunctionEnd
 
 ; Starts Orphion as the signed-in user, even from an elevated setup.
 Function RunUnelevated

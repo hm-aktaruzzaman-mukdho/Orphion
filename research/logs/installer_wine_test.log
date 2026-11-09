@@ -39,3 +39,16 @@
    HKCU entry: no
 == 4. silent uninstall of the everyone install
    Program Files\Orphion: removed; shared start menu left: 0; HKLM entry: removed
+== security fixes: re-run of the silent install tests (2026-11-09)
+-- just for me
+   exit 0
+   files: LICENSE.txt orphionctl.exe orphion.exe README.txt uninstall.exe 
+   after uninstall: removed
+-- for everyone, default folder (Program Files)
+   exit 0
+   files: LICENSE.txt orphionctl.exe orphion.exe README.txt uninstall.exe 
+   after uninstall: removed
+-- for everyone, into a user folder (must be refused)
+   exit 2
+   installed there: no
+   uninstall entry: none
